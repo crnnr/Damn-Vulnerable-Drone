@@ -141,7 +141,7 @@ Note: Building Damn Vulnerable Drones containers from source can take about 30 m
 "Full-Deploy Mode" allows for the most realistic virtual drone hacking simulation. It deploys a virtually simulated wifi network that you can interact with. This virtual wifi network acts as the data-link connection between the Ground Station and Drone Companion Computer, allowing for interesting attack scenarios. When you deploy the Damn Vulnerable Drone using Full-Deploy Mode you will have access to the "Drone_Wifi" SSID and 192.168.13.0/24 network. The 10.13.0.0/24 network is used as the sore simulator infrastructure network (and shouldn't be targetted.)
 
 The system requirements to run "Full-Deploy Mode" a Kali VM with the following minimum requirements:
-* Kali Linux VM (Ubuntu 22.04 is also supported)
+* Kali Linux VM (No other OS is supported)
   * 8-16 GB RAM
   * 2-4 Processor Cores
   * 100 GB Disk Storage
