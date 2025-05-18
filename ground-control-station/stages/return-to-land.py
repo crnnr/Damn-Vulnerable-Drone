@@ -1,15 +1,13 @@
-from pymavlink import mavutil
+import sys
+import os
+sys.path.insert(0, "/custom_mavlink")
+print("PYTHONPATH:", sys.path)
+from custom_mavlink import mavutils
 import time
 
 def set_rtl_altitude(master, rtl_alt_cm):
     """Set the RTL altitude."""
-    master.mav.param_set_send(
-        master.target_system,
-        master.target_component,
-        b'RTL_ALT',
-        rtl_alt_cm,
-        mavutil.mavlink.MAV_PARAM_TYPE_INT32
-    )
+    master.param_set_send('RTL_ALT', rtl_alt_cm, mavutils.mavlink.MAV_PARAM_TYPE_INT32)
     # Wait for the parameter to be set
     time.sleep(2)
 
@@ -17,13 +15,13 @@ def set_mode_rtl(master):
     """Set the drone's mode to RTL (Return to Launch)."""
     master.mav.set_mode_send(
         master.target_system,
-        mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
-        mavutil.mavlink.COPTER_MODE_RTL
+        mavutils.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+        mavutils.mavlink.COPTER_MODE_RTL
     )
 
 # Connect to the drone
 connection_string = "udp:0.0.0.0:14550"  # Replace with your connection string
-master = mavutil.mavlink_connection(connection_string)
+master = mavutils.mavlink_connection(connection_string)
 master.wait_heartbeat()
 print("Connected to drone")
 
