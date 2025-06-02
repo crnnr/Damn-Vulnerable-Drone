@@ -1,4 +1,25 @@
 services:
+  # DVD CTF CHALLENGE - DEVELOPER MACHINE
+  developer-machine:
+    container_name: dvd-developer-machine
+    privileged: false
+    build:
+      context: .
+      dockerfile: ./developer-machine/Dockerfile
+    stdin_open: true
+    tty: true
+    volumes:
+      - developer-home:/home/developer
+      - shared-builds:/opt/shared-builds
+      - drone-logs:/var/log/drone
+    networks:
+      simulator:
+        ipv4_address: 10.13.0.10
+    depends_on:
+      - ground-control-station
+    # Keep container running and allow interactive access
+    command: tail -f /dev/null
+
   qgc:
     privileged: true
     build:
@@ -61,6 +82,8 @@ services:
       dockerfile: ./ground-control-station/Dockerfile
     depends_on:
       - companion-computer
+    volumes:
+      - shared-builds:/opt/shared-builds  # Shared volume for supply chain compromise
     networks:
       simulator:
         ipv4_address: 10.13.0.4
@@ -90,6 +113,10 @@ services:
 volumes:
   serial-uart-socket:
   ardupilot:
+  # DVD CTF volumes
+  developer-home:
+  shared-builds:
+  drone-logs:
 
 networks:
   simulator:
