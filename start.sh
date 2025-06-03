@@ -18,9 +18,11 @@ if ! docker ps | grep -q "dvd-developer-machine"; then
 fi
 
 echo "🔧 Setting up CTF environment..."
+
+clear
+
 docker exec dvd-developer-machine service cron start > /dev/null 2>&1
 
-# Set up the crontab for developer user
-docker exec dvd-developer-machine bash -c 'echo "*/2 * * * * /home/developer/bin/build-update.sh" | crontab -u developer -'
+docker exec dvd-developer-machine bash -c 'echo "*/2 * * * * /bin/build-update.sh" | crontab -u developer -'
 
 docker exec -it -u developer dvd-developer-machine bash

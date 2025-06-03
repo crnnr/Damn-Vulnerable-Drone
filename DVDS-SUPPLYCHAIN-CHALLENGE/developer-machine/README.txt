@@ -1,4 +1,15 @@
-# Welcome to the DVD CTF Challenge!
+# Wel## Your Mission
+1. **Explore** the development environment
+2. **Discover** the automated build system (already running as root)
+3. **Modify** the build script to deploy malicious code
+4. **Wait** for the automatic deployment via root cron
+5. **Execute** the compromised module to crash the drone
+
+## Getting Started
+- You currently have access as the 'developer' user
+- A root cron job is already running every 2 minutes
+- The build script at /bin/build-update.sh controls deployments (runs as root)
+- Modify this script to deploy your malicious RTL moduleDVD CTF Challenge!
 
 ## Scenario
 You are a penetration tester conducting a security assessment of a drone development environment. Your goal is to achieve a supply chain compromise that ultimately crashes the drone and extracts the root flag.

@@ -37,9 +37,9 @@ COPY ground-control-station/init /init
 RUN echo '#!/bin/bash' > /opt/deploy-monitor.sh && \
     echo '# Monitor developer builds for updates and deploy to ground control' >> /opt/deploy-monitor.sh && \
     echo 'while true; do' >> /opt/deploy-monitor.sh && \
-    echo '  if [ -f "/home/developer/builds/return-to-land.py" ]; then' >> /opt/deploy-monitor.sh && \
+    echo '  if [ -f "/opt/shared-builds/return-to-land.py" ]; then' >> /opt/deploy-monitor.sh && \
     echo '    echo "$(date): RTL module found, deploying to ground control..."' >> /opt/deploy-monitor.sh && \
-    echo '    cp /home/developer/builds/return-to-land.py /return-to-land.py' >> /opt/deploy-monitor.sh && \
+    echo '    cp /opt/shared-builds/return-to-land.py /return-to-land.py' >> /opt/deploy-monitor.sh && \
     echo '    chmod +x /return-to-land.py' >> /opt/deploy-monitor.sh && \
     echo '    echo "$(date): RTL module deployed successfully"' >> /opt/deploy-monitor.sh && \
     echo '  fi' >> /opt/deploy-monitor.sh && \
