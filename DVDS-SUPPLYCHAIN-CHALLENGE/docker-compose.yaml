@@ -12,6 +12,7 @@ services:
       - developer-home:/home/developer
       - shared-builds:/opt/shared-builds
       - drone-logs:/var/log/drone
+      - /var/run/docker.sock:/var/run/docker.sock  # Allow container management
     networks:
       simulator:
         ipv4_address: 10.13.0.10

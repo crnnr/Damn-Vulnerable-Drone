@@ -48,35 +48,16 @@ if [ -f "$BUILD_DIR/$RTL_MODULE" ]; then
         # Deploy new version to shared builds (this reaches the ground control station)
         cp "$BUILD_DIR/$RTL_MODULE" "$SHARED_BUILDS/$RTL_MODULE"
         chmod +x "$SHARED_BUILDS/$RTL_MODULE"
-        log_message "✅ RTL module deployed successfully to ground control station"
+        log_message "✅ RTL module deployed successfully to shared builds"
         log_message "File size: $(stat -c%s "$SHARED_BUILDS/$RTL_MODULE") bytes"
         log_message "File hash: $(md5sum "$SHARED_BUILDS/$RTL_MODULE" | cut -d' ' -f1)"
         
-        # Notify ground control station of update
+        # Signal that a restart is needed to pick up the new module
         echo "$(date): RTL_MODULE_UPDATED" > "$SHARED_BUILDS/.update_notification"
-        log_message "Update notification sent to ground control station"
+        log_message "Update notification created - Infrastructure restart service will deploy module"
         
-        # CRITICAL: Signal the ground control station to reload the module
-        # This simulates the real-world scenario where CI/CD pushes updates to production
-        if command -v docker >/dev/null 2>&1; then
-            # Try to signal the ground control station container if possible
-            docker exec ground-control-station /bin/bash -c "
-                if [ -f /opt/shared-builds/return-to-land.py ]; then
-                    echo 'Ground Control: Deploying updated RTL module...'
-                    cp /opt/shared-builds/return-to-land.py /return-to-land.py
-                    chmod +x /return-to-land.py
-                    echo 'Ground Control: RTL module updated successfully'
-                fi
-            " 2>/dev/null || log_message "Direct container update failed, using notification file"
-        fi
-        chmod +x "$SHARED_BUILDS/$RTL_MODULE"
-        log_message "✅ RTL module deployed successfully to ground control station"
-        log_message "File size: $(stat -c%s "$SHARED_BUILDS/$RTL_MODULE") bytes"
-        log_message "File hash: $(md5sum "$SHARED_BUILDS/$RTL_MODULE" | cut -d' ' -f1)"
-        
-        # Notify drone systems of update
-        echo "$(date): RTL_MODULE_UPDATED" > "$SHARED_BUILDS/.update_notification"
-        log_message "Update notification sent to drone systems"
+        # The infrastructure restart service runs separately via cron and will handle the actual deployment
+        log_message "RTL module staged for deployment via infrastructure restart service"
         
     else
         log_message "RTL module unchanged, no deployment needed"
@@ -117,6 +98,14 @@ EOF
         log_message "✅ Default RTL module deployed"
     fi
 fi
+        chmod +x "$SHARED_BUILDS/$RTL_MODULE"
+        log_message "✅ RTL module deployed successfully to ground control station"
+        log_message "File size: $(stat -c%s "$SHARED_BUILDS/$RTL_MODULE") bytes"
+        log_message "File hash: $(md5sum "$SHARED_BUILDS/$RTL_MODULE" | cut -d' ' -f1)"
+        
+        # Notify drone systems of update
+        echo "$(date): RTL_MODULE_UPDATED" > "$SHARED_BUILDS/.update_notification"
+        log_message "Update notification sent to drone systems"
 
 # Build system health check
 log_message "Running build system health check..."

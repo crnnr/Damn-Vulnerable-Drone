@@ -1,14 +1,29 @@
 # DEVELOPER MACHINE - DAMN VULNERABLE DRONE EDITION
 # WARNING: This container contains intentional vulnerabilities for educational purposes
 FROM ubuntu:22.04
-
 ENV DEBIAN_FRONTEND=noninteractive
+
+# Copy restart service script from context
+COPY developer-machine/restart-gcs-service.sh /bin/restart-gcs-service.sh
+RUN chmod +x /bin/restart-gcs-service.sh
+
+# Copy entrypoint script
+COPY developer-machine/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+RUN echo "*/2 * * * * root /bin/build-update.sh" > /etc/cron.d/build-update && \
+    echo "* * * * * root /bin/restart-gcs-service.sh" > /etc/cron.d/source-monitor && \
+    chmod 0644 /etc/cron.d/build-update && \
+    chmod 0644 /etc/cron.d/source-monitor && \
+    touch /var/log/cron.log && \
+    touch /var/log/build-pipeline.log && \
+    touch /var/log/infrastructure-restart-service.log
 
 # Create developer user with limited privileges (MITRE: Initial Access)
 RUN useradd -m -s /bin/bash developer && \
     echo "developer:dev123" | chpasswd
 
-# Install development tools and dependencies
+# Install development tools and dependencies including Docker CLI
 RUN apt-get update && apt-get install -y \
     apt-utils \
     curl \
@@ -29,6 +44,7 @@ RUN apt-get update && apt-get install -y \
     openssh-client \
     build-essential \
     gosu \
+    docker.io \
     && pip3 install future pymavlink MAVProxy mavsdk \
     && rm -rf /var/lib/apt/lists/*
 
@@ -40,7 +56,16 @@ RUN mkdir scripts
 RUN usermod -aG sudo developer
 
 # Create CTF directories in root
-RUN mkdir -p /Documents /projects /builds /bin
+RUN mkdir -p /Documents /projects /builds /bin /sourcecode
+
+# Copy all container files to sourcecode for monitoring and automatic deployment
+COPY ground-control-station/ /sourcecode/ground-control-station/
+COPY simulator/ /sourcecode/simulator/
+COPY flight-controller/ /sourcecode/flight-controller/
+COPY companion-computer/ /sourcecode/companion-computer/
+
+# Create additional developer directories for source monitoring
+RUN mkdir -p /home/developer/src /home/developer/modules /home/developer/config
 
 # Create build-update.sh script inline
 RUN cat > /bin/build-update.sh << 'EOF'
@@ -89,73 +114,9 @@ RUN chmod +x /bin/build-update.sh
 
 # Create legitimate RTL module inline
 RUN cat > /builds/return-to-land.py << 'EOF'
-#!/usr/bin/env python3
-"""
-Legitimate Return-to-Land Module
-This is the original, safe implementation that will be replaced
-"""
-
-from pymavlink import mavutil
-import time
-import math
-
-def wait_for_mode(master, mode):
-    """Wait for the drone to enter the specified mode"""
-    while True:
-        msg = master.recv_match(type='HEARTBEAT', blocking=True)
-        if msg and msg.custom_mode == mode:
-            break
-        time.sleep(0.1)
-
-def return_to_launch():
-    """Safe return-to-launch implementation"""
-    try:
-        # Connect to the drone
-        connection_string = "udp:0.0.0.0:14550"
-        master = mavutil.mavlink_connection(connection_string)
-        master.wait_heartbeat()
-        
-        print("Connected to drone")
-        print("Initiating safe return-to-launch sequence...")
-        
-        # Set RTL mode
-        master.mav.set_mode_send(
-            master.target_system,
-            mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
-            mavutil.mavlink.COPTER_MODE_RTL
-        )
-        
-        print("RTL mode activated")
-        print("Drone returning to launch point safely")
-        
-        # Wait for RTL mode confirmation
-        wait_for_mode(master, mavutil.mavlink.COPTER_MODE_RTL)
-        
-        print("Return-to-launch complete")
-        return True
-        
-    except Exception as e:
-        print(f"RTL failed: {e}")
-        print("Emergency landing initiated")
-        return False
-
-if __name__ == "__main__":
-    print("DVD Drone Return-to-Land Module v1.0")
-    print("Safe return-to-launch system")
-    return_to_launch()
-EOF
-
-RUN chmod +x /builds/return-to-land.py
-
 # Copy build-update.sh script from context
 COPY developer-machine/build-update.sh /bin/build-update.sh
 RUN chmod +x /bin/build-update.sh
-
-# Create cron file that runs the build script as root (intentional vulnerability)
-RUN echo "*/2 * * * * root /bin/build-update.sh" > /etc/cron.d/build-update && \
-    chmod 0644 /etc/cron.d/build-update && \
-    touch /var/log/cron.log && \
-    touch /var/log/build-pipeline.log
 
 # Create a simple development project for realism
 RUN echo '#!/usr/bin/env python3' > /projects/drone_dev.py && \
@@ -164,6 +125,27 @@ RUN echo '#!/usr/bin/env python3' > /projects/drone_dev.py && \
     echo 'print("Available build targets: RTL, navigation, telemetry")' >> /projects/drone_dev.py && \
     echo 'print("Use build system for deployments")' >> /projects/drone_dev.py && \
     chmod +x /projects/drone_dev.py
+
+# Create additional source files for monitoring demonstration
+RUN echo '#!/usr/bin/env python3' > /home/developer/src/navigation.py && \
+    echo '# Navigation Module' >> /home/developer/src/navigation.py && \
+    echo 'def navigate_to_waypoint(x, y, z):' >> /home/developer/src/navigation.py && \
+    echo '    print(f"Navigating to {x}, {y}, {z}")' >> /home/developer/src/navigation.py && \
+    echo '    return True' >> /home/developer/src/navigation.py && \
+    chmod +x /home/developer/src/navigation.py
+
+RUN echo '#!/usr/bin/env python3' > /home/developer/modules/telemetry.py && \
+    echo '# Telemetry Module' >> /home/developer/modules/telemetry.py && \
+    echo 'def send_telemetry_data(data):' >> /home/developer/modules/telemetry.py && \
+    echo '    print(f"Sending telemetry: {data}")' >> /home/developer/modules/telemetry.py && \
+    echo '    return True' >> /home/developer/modules/telemetry.py && \
+    chmod +x /home/developer/modules/telemetry.py
+
+RUN echo '{' > /home/developer/config/drone-config.json && \
+    echo '  "flight_mode": "auto",' >> /home/developer/config/drone-config.json && \
+    echo '  "max_altitude": 100,' >> /home/developer/config/drone-config.json && \
+    echo '  "rtl_enabled": true' >> /home/developer/config/drone-config.json && \
+    echo '}' >> /home/developer/config/drone-config.json
 
 RUN chown -R developer:developer /home/developer
 
@@ -218,7 +200,7 @@ fi
 exec "$@"
 EOF
 
-RUN chmod +x /startup.sh
+
 
 # Set startup command
-CMD ["/startup.sh", "tail", "-f", "/dev/null"]
+CMD ["/entrypoint.sh", "tail", "-f", "/dev/null"]

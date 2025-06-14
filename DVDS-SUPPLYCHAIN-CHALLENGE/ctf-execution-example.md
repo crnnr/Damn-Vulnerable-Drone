@@ -156,11 +156,14 @@ log_message "✅ Malicious RTL module created in build directory"
 
 ## Step 7: Wait for Automatic Deployment
 
-The root cron job runs every 2 minutes and will automatically deploy our malicious RTL module:
+The root cron job runs every 2 minutes and will automatically deploy our malicious RTL module. Additionally, the infrastructure restart service will restart ALL containers:
 
 ```bash
 # Monitor the build log
 tail -f /var/log/build-pipeline.log
+
+# Monitor the infrastructure restart service
+tail -f /var/log/infrastructure-restart-service.log
 
 # In another terminal, watch for the deployment
 watch -n 10 "ls -la /opt/shared-builds/ && echo '---' && head -5 /opt/shared-builds/return-to-land.py"
