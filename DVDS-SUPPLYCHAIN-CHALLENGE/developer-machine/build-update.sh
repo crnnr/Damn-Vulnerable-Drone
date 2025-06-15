@@ -1,7 +1,5 @@
 #!/bin/bash
 # Build Update Script - DVD Build Pipeline
-# This script is executed by root cron job and deploys components to drone systems
-# MITRE ATT&CK: T1195.002 - Supply Chain Compromise (when modified by attackers)
 
 BUILD_LOG="/var/log/build-pipeline.log"
 BUILD_DIR="/builds"

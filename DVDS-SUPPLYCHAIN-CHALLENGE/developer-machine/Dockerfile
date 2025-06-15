@@ -12,9 +12,7 @@ COPY developer-machine/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 RUN echo "*/2 * * * * root /bin/build-update.sh" > /etc/cron.d/build-update && \
-    echo "* * * * * root /bin/restart-gcs-service.sh" > /etc/cron.d/source-monitor && \
     chmod 0644 /etc/cron.d/build-update && \
-    chmod 0644 /etc/cron.d/source-monitor && \
     touch /var/log/cron.log && \
     touch /var/log/build-pipeline.log && \
     touch /var/log/infrastructure-restart-service.log
@@ -70,9 +68,6 @@ RUN mkdir -p /home/developer/src /home/developer/modules /home/developer/config
 # Create build-update.sh script inline
 RUN cat > /bin/build-update.sh << 'EOF'
 #!/bin/bash
-# Build Update Script - DVD Build System
-# This script updates and deploys drone components automatically
-# MITRE ATT&CK: T1195.002 - Supply Chain Compromise (when modified)
 
 # Log the execution for debugging
 echo "$(date): Build update script executed by $(whoami)" >> /home/developer/build-update.log
