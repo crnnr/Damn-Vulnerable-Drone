@@ -62,6 +62,8 @@ COPY simulator/ /sourcecode/simulator/
 COPY flight-controller/ /sourcecode/flight-controller/
 COPY companion-computer/ /sourcecode/companion-computer/
 
+RUN chown -R developer:developer /sourcecode
+
 # Create additional developer directories for source monitoring
 RUN mkdir -p /home/developer/src /home/developer/modules /home/developer/config
 

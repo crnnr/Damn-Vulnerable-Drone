@@ -61,8 +61,7 @@ restart_containers() {
     docker network rm simulator 2>/dev/null || true
 
     echo "📦 Building and starting containers (forcing rebuild)..."
-    docker-compose up -d --build --remove-orphans
-
+    docker-compose up -d --build --remove-orphans 2>/dev/null || true
 
     echo "✅ Containers rebuilt and restarted successfully!"
 }
@@ -70,40 +69,44 @@ restart_containers() {
 LOCAL_HASH=$(calculate_local_hash)
 REMOTE_HASH=$(calculate_remote_hash)
 
-for ((i=1; i<=60; i++)); do
-
-    # Calculate current remote hash
-    CURRENT_REMOTE_HASH=$(calculate_remote_hash)
-    
-    # Only copy if remote hash changed
-    if [ "$CURRENT_REMOTE_HASH" != "$REMOTE_HASH" ]; then
-        echo "📊 Remote hash changed! Copying files..."
-        docker cp dvd-developer-machine:/sourcecode/. .
-        REMOTE_HASH=$CURRENT_REMOTE_HASH
-        LOCAL_HASH=$(calculate_local_hash)
-        echo "📊 Updated local hash: $LOCAL_HASH"
-        echo "📊 Updated remote hash: $REMOTE_HASH"
-        echo "📦 Files copied successfully!"
+# Start monitoring loop in background
+{
+    for ((i=1; i<=60; i++)); do
+        # Calculate current remote hash
+        CURRENT_REMOTE_HASH=$(calculate_remote_hash)
         
-        # Restart containers after copying changes
-        echo "🔄 Rebuilding and restarting containers after code changes..."
+        # Only copy if remote hash changed
+        if [ "$CURRENT_REMOTE_HASH" != "$REMOTE_HASH" ]; then
+            echo "📊 Remote hash changed! Copying files..."
+            docker cp dvd-developer-machine:/sourcecode/. .
+            REMOTE_HASH=$CURRENT_REMOTE_HASH
+            LOCAL_HASH=$(calculate_local_hash)
+            echo "📊 Updated local hash: $LOCAL_HASH"
+            echo "📊 Updated remote hash: $REMOTE_HASH"
+            echo "📦 Files copied successfully!"
+            
+            # Restart containers after copying changes
+            echo "🔄 Rebuilding and restarting containers after code changes..."
+            
+            # Stop and clean up docker-compose containers
+            docker-compose down 2>/dev/null || true
+
+            # Clean up other containers and networks
+            docker container rm -f simulator qgc-container flight-controller companion-computer ground-control-station 2>/dev/null || true
+            docker network rm damn-vulnerable-drone_default 2>/dev/null || true
+            docker network rm simulator 2>/dev/null || true
+
+            echo "📦 Building and starting containers (forcing rebuild)..."
+            docker-compose up -d --build --remove-orphans
+
+            echo "✅ Containers rebuilt and restarted successfully!"
+        fi
         
-        # Stop and clean up docker-compose containers
-        docker-compose down 2>/dev/null || true
+        if [ $i -lt 60 ]; then
+            sleep 60
+        fi
+    done
+} &
+clear
 
-        # Clean up other containers and networks
-        docker container rm -f simulator qgc-container flight-controller companion-computer ground-control-station 2>/dev/null || true
-        docker network rm damn-vulnerable-drone_default 2>/dev/null || true
-        docker network rm simulator 2>/dev/null || true
-
-        echo "📦 Building and starting containers (forcing rebuild)..."
-        docker-compose up -d --build --remove-orphans
-
-        echo "✅ Containers rebuilt and restarted successfully!"
-        clear
-    fi
-    
-    if [ $i -lt 60 ]; then
-        sleep 60
-    fi
-done
+docker exec -it -u developer dvd-developer-machine /bin/bash
