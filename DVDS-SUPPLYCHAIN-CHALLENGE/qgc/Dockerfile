@@ -66,9 +66,26 @@ RUN \
     --mount=type=cache,target=/var/cache/apt,from=stage_apt,source=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt,from=stage_apt,source=/var/lib/apt \
     --mount=type=cache,target=/etc/apt/sources.list.d,from=stage_apt,source=/etc/apt/sources.list.d \
-    apt-get install --no-install-recommends -y $(cat /tmp/aptDeps.txt) && \
-    rm -rf /tmp/*
+    apt-get install --no-install-recommends -y \
+    fuse \
+    gstreamer1.0-gl \
+    gstreamer1.0-libav \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-plugins-base \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-ugly \
+    libgl1-mesa-dri \
+    libgl1-mesa-glx \
+    libgstreamer-plugins-base1.0-dev \
+    libqt5gui5 \
+    libsdl2-dev \
+    mesa-utils \
+    wget \
+    x-window-system \
+    x11-xserver-utils \
+    xvfb
 
+RUN rm -rf /tmp/*
 # 7) Create user and groups
 RUN groupadd user \
  && useradd -ms /bin/bash user -g user \
