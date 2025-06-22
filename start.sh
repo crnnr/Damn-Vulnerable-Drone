@@ -35,10 +35,18 @@ echo "🔧 Setting up CTF environment..."
 calculate_local_hash() {
     local hash=""
     if [ -d "./flight-controller" ]; then
-        hash+=$(find ./flight-controller -type f -exec sha256sum {} \; 2>/dev/null | sort | sha256sum | cut -d' ' -f1)
+        hash+=$(find ./flight-controller -type f \
+            ! -name "*.swp" ! -name "*.swo" ! -name "*.tmp" ! -name "*~" \
+            ! -name ".DS_Store" ! -name "Thumbs.db" ! -name "*.bak" \
+            ! -name ".#*" ! -name "#*#" \
+            -exec sha256sum {} \; 2>/dev/null | sort | sha256sum | cut -d' ' -f1)
     fi
     if [ -d "./ground-control-station" ]; then
-        hash+=$(find ./ground-control-station -type f -exec sha256sum {} \; 2>/dev/null | sort | sha256sum | cut -d' ' -f1)
+        hash+=$(find ./ground-control-station -type f \
+            ! -name "*.swp" ! -name "*.swo" ! -name "*.tmp" ! -name "*~" \
+            ! -name ".DS_Store" ! -name "Thumbs.db" ! -name "*.bak" \
+            ! -name ".#*" ! -name "#*#" \
+            -exec sha256sum {} \; 2>/dev/null | sort | sha256sum | cut -d' ' -f1)
     fi
     echo "$hash" | sha256sum | cut -d' ' -f1
 }
@@ -46,8 +54,16 @@ calculate_local_hash() {
 # Calculate remote hashes for target folders
 calculate_remote_hash() {
     local hash=""
-    hash+=$(docker exec dvd-developer-machine find /sourcecode/flight-controller -type f -exec sha256sum {} \; 2>/dev/null | sort | sha256sum | cut -d' ' -f1)
-    hash+=$(docker exec dvd-developer-machine find /sourcecode/ground-control-station -type f -exec sha256sum {} \; 2>/dev/null | sort | sha256sum | cut -d' ' -f1)
+    hash+=$(docker exec dvd-developer-machine find /sourcecode/flight-controller -type f \
+        ! -name "*.swp" ! -name "*.swo" ! -name "*.tmp" ! -name "*~" \
+        ! -name ".DS_Store" ! -name "Thumbs.db" ! -name "*.bak" \
+        ! -name ".#*" ! -name "#*#" \
+        -exec sha256sum {} \; 2>/dev/null | sort | sha256sum | cut -d' ' -f1)
+    hash+=$(docker exec dvd-developer-machine find /sourcecode/ground-control-station -type f \
+        ! -name "*.swp" ! -name "*.swo" ! -name "*.tmp" ! -name "*~" \
+        ! -name ".DS_Store" ! -name "Thumbs.db" ! -name "*.bak" \
+        ! -name ".#*" ! -name "#*#" \
+        -exec sha256sum {} \; 2>/dev/null | sort | sha256sum | cut -d' ' -f1)
     echo "$hash" | sha256sum | cut -d' ' -f1
 }
 
@@ -71,42 +87,32 @@ REMOTE_HASH=$(calculate_remote_hash)
 
 # Start monitoring loop in background
 {
-    for ((i=1; i<=60; i++)); do
+    for ((i=1; i<=999; i++)); do
         # Calculate current remote hash
         CURRENT_REMOTE_HASH=$(calculate_remote_hash)
         
         # Only copy if remote hash changed
         if [ "$CURRENT_REMOTE_HASH" != "$REMOTE_HASH" ]; then
-            echo "📊 Remote hash changed! Copying files..."
+            echo "📊 Remote hash changed! Deploying and restarting the build pipline! 🔄"
             docker cp dvd-developer-machine:/sourcecode/. .
             REMOTE_HASH=$CURRENT_REMOTE_HASH
             LOCAL_HASH=$(calculate_local_hash)
-            echo "📊 Updated local hash: $LOCAL_HASH"
-            echo "📊 Updated remote hash: $REMOTE_HASH"
-            echo "📦 Files copied successfully!"
             
-            # Restart containers after copying changes
-            echo "🔄 Rebuilding and restarting containers after code changes..."
-            
-            # Stop and clean up docker-compose containers
             docker-compose down 2>/dev/null || true
 
-            # Clean up other containers and networks
             docker container rm -f simulator qgc-container flight-controller companion-computer ground-control-station 2>/dev/null || true
             docker network rm damn-vulnerable-drone_default 2>/dev/null || true
             docker network rm simulator 2>/dev/null || true
 
-            echo "📦 Building and starting containers (forcing rebuild)..."
             docker-compose up -d --build --remove-orphans
-
-            echo "✅ Containers rebuilt and restarted successfully!"
         fi
         
-        if [ $i -lt 60 ]; then
-            sleep 60
+        if [ $i -lt 999 ]; then
+            sleep 30
         fi
     done
 } &
+
 clear
 
 docker exec -it -u developer dvd-developer-machine /bin/bash

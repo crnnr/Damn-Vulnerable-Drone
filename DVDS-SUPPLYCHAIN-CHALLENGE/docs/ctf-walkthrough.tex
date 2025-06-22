@@ -136,41 +136,93 @@
 \tableofcontents
 \cleardoublepage
 
-\section{Welcome to Your First Hacking Lab!}
+\section{Welcome to Your First Cyber Hacking Lab!}
 
 \begin{storybox}
-\textbf{Your Mission Briefing}
-
-Welcome, future cybersecurity professional! You've just been hired as a junior penetration tester at SecureDrone Inc. Your first assignment? Test the security of a new drone development system that the company is building.
-
-The development team has been working on a cutting-edge drone platform, but management is concerned about security. They've heard scary stories about "supply chain attacks" in the news and want to make sure their system is bulletproof.
-
-Your job is to think like a hacker and try to break into their development environment. Don't worry - this is all legal and part of your job! The system has been specially designed for testing, so you can't hurt anything real.
-
-Are you ready to become a cybersecurity detective?
+\noindent
+\textbf{Operation Briefing: Infiltrate SkyDefence AG} \\
+\\
+\noindent
+You are now a member of the advanced threat actor group \textbf{BitLock}. Your group's objective is to infiltrate and compromise the secure drone manufacturer, \textbf{SkyDefence AG}. After multiple failed direct attacks on SkyDefence AG's hardened perimeter, BitLock strategists devised a new approach: exploiting weaknesses within SkyDefence AG's software supply chain.\\
+\\
+\noindent
+Your reconnaissance identified an ideal target: \textbf{SkyDeliverer AG}, a software development partner trusted by SkyDefence AG to deliver critical software updates for their drones. You've successfully executed a targeted phishing campaign, and you've now gained the credentials of a junior developer at SkyDeliverer AG. \\ 
+\\
+\noindent
+Your mission is clear: leverage this initial access to stealthily navigate the internal environment of SkyDeliverer AG, identify potential weaknesses, and inject malicious code into their build systems. Once deployed, your infected software will propagate into SkyDefence AG's secure drone infrastructure, compromising their drone fleet and achieving BitLock's ultimate objective. \\
+\\
+\noindent
+Prepare yourself for a sophisticated supply chain compromise—your skills in stealth, patience, and technical acumen will be critical. \\
+\\
+\noindent
+Are you ready to infiltrate and pwn the SkyDefence AG?
 \end{storybox}
 
-\subsection{What You'll Learn Today}
+\vspace{2em}
 
-By the end of this lab, you'll understand:
-\begin{itemize}
-    \item What a "supply chain attack" really means
-    \item How hackers use basic Linux commands to explore systems
-    \item Why developers sometimes make security mistakes
-    \item How to think like both an attacker and a defender
-    \item Real techniques used by professional security testers
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, every node/.style={align=center}]
+    % Nodes
+    \node[draw, rectangle, rounded corners, minimum width=5cm, fill=flagblue!15] (bitlock) {BitLock\\(Threat Actor)};
+    
+    \node[draw, rectangle, rounded corners, below=of bitlock, minimum width=5cm, fill=hintgreen!15] (skydeliverer) {SkyDeliverer AG\\(Software Vendor)};
+    
+    \node[draw, rectangle, rounded corners, below=of skydeliverer, minimum width=5cm, fill=warningorange!15] (skydefence) {SkyDefence AG\\(Drone Manufacturer)};
+    
+    % Vertical arrows
+    \draw[->, very thick, red] (bitlock) -- node[right, align=left]{Phishing\\Attack} (skydeliverer);
+    \draw[->, very thick, red] (skydeliverer) -- node[right, align=left]{Supply Chain\\Attack} (skydefence);
+    
+    % Dashed curved arrow for failed direct attack
+    \draw[->, thick, dashed, gray] (bitlock.west) .. controls +(-2,0) and +(-2,0) .. node[left]{Direct Attack (failed)} (skydefence.west);
+\end{tikzpicture}
+
+\small{\textit{Figure: Supply Chain Attack Pathway into SkyDefence AG}}
+\end{center}
+
+\newpage
+
+\subsection{Learning Objectives}
+
+By the end of this exercise, you will be able to:
+\begin{itemize}[itemsep=0.5em]
+    \item Clearly define and explain a \textbf{supply chain attack}.
+    \item Use fundamental \textbf{Linux commands} effectively for reconnaissance and exploration.
+    \item Understand common reasons why developers introduce \textbf{security vulnerabilities}.
+    \item Think critically from both the \textbf{attacker’s and defender’s perspectives}.
+    \item Execute and recognize techniques employed by professional cybersecurity analysts.
 \end{itemize}
 
-\subsection{What is a Supply Chain Attack?}
+\vspace{1em}
+
+\subsection{What You Need}
+
+To successfully complete this lab, ensure you have the following:
+\begin{itemize}[itemsep=0.5em]
+    \item \textbf{Docker Desktop}
+    \item \textbf{Basic knowledge of the linux commandline} is helpful but not mandatory.
+    \item \textbf{Curiosity and patience} to explore and learn.
+\end{itemize}
+
+\vspace{1em}
+
+\subsection{Understanding Supply Chain Attacks}
 
 \begin{hintbox}
-\textbf{Supply Chain Attack Explained Simply}
+\textbf{What is a Supply Chain Attack? (Simple Explanation)}
 
-Imagine you're buying a sandwich from your favorite shop. You trust the shop, so you don't check if someone poisoned the ingredients before they arrived at the shop. A supply chain attack is like poisoning the ingredients at the supplier level - the shop owner doesn't know, and neither do the customers!
+Imagine ordering food at your favorite restaurant. You trust the restaurant completely, so you never question where the ingredients come from or if someone has tampered with them. 
 
-In cybersecurity, this means hackers don't attack the final product directly. Instead, they sneak malicious code into the development process, so when the "clean" software gets installed, it's actually already compromised.
+A \textbf{supply chain attack} is like secretly contaminating these ingredients at the supplier stage—before they ever reach the restaurant. By the time the ingredients are delivered, even the trusted restaurant unknowingly serves compromised meals to customers.
 
-Famous examples: SolarWinds (2020), Codecov (2021), and many npm packages.
+In the cybersecurity world, hackers don't always directly target their primary victims. Instead, they inject malicious code into software or updates during their development phase. Once installed by the end-users, this software is already compromised.
+
+\textbf{Real-world examples include:}
+\begin{itemize}
+    \item \textbf{SolarWinds (2020)} – attackers infiltrated software updates used by major companies and government agencies.
+    \item \textbf{Codecov (2021)} – attackers altered CI/CD pipeline scripts, compromising customer data.
+    \item \textbf{Multiple npm package compromises} – attackers planted malicious code within popular software libraries.
+\end{itemize}
 \end{hintbox}
 
 \newpage
@@ -223,65 +275,108 @@ Docker is a tool that lets you run applications in isolated environments called 
 \end{itemize}
 \end{hintbox}
 
-\begin{center}
-\begin{tikzpicture}[node distance=2.5cm, every node/.style={align=center}]
-  \node[draw, rounded corners, fill=flagblue!20, minimum width=2.5cm] (host) {Host Machine};
-  \node[draw, rounded corners, fill=gray!10, below left=1.2cm and 1.5cm of host] (cont1) {Container 1\\(Developer)};
-  \node[draw, rounded corners, fill=gray!10, below=1.2cm of host] (cont2) {Container 2\\(GCS)};
-  \node[draw, rounded corners, fill=gray!10, below right=1.2cm and 1.5cm of host] (cont3) {Container 3\\(Drone)};
-  \draw[thick] (host) -- (cont1);
-  \draw[thick] (host) -- (cont2);
-  \draw[thick] (host) -- (cont3);
-\end{tikzpicture}
+\newpage
 
-\small{\textit{Figure: Docker Host Running Multiple Isolated Containers}}
-\end{center}
+\section{Setting Up Docker}
+
+This section covers installing Docker on Linux, macOS, and Windows as this is will run the infrastructure which we will need in order to start the lab.\\
+
+ \noindent For Windows and MAC please follow the installation steps over to: \\
+\centerline{ \url{https://docs.docker.com/desktop/mac/install/} }
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{docker-install.png}
+    \caption{Download your corresponding docker image}
+\end{figure}
+    
+Confirm that everything is working by opening your Command Prompt and running:
+\begin{lstlisting}[language=bash]
+sudo docker run hello-world
+\end{lstlisting}
+
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{hello-world.png}
+    \caption{Successful output of "docker run hello-world"}
+\end{figure}
+\noindent
+If you want to install docker on Linux please consult the the docker installation docs to find custom instructions for your distribution: \\
+\centerline{\url{https://docs.docker.com/desktop/setup/install/linux/}}
 
 \section{System Architecture}
 
 \subsection{Container Overview}
 
-The DVD system consists of three main components:
+The lab environment comprises several interconnected components.
 
-\begin{enumerate}
+\begin{enumerate}[itemsep=1 em]
+
     \item \textbf{Developer Machine} (\texttt{dev-workstation})
     \begin{itemize}
-        \item Low privileged developer access
-        \item Build tools and development environment
-        \item Vulnerability: Sudo access to \texttt{crontab}
+        \item working machine of the developer account.
+        \item Equipped with necessary build tools and development environment.
     \end{itemize}
-    
+
+    \item \textbf{Flight Controller} (\texttt{flight-controller})
+    \begin{itemize}
+        \item Core drone firmware.
+        \item Processes virtual sensor data for drone flight controls.
+    \end{itemize}
+
+    \item \textbf{Companion Computer} (\texttt{companion-computer})
+    \begin{itemize}
+        \item Performs advanced onboard processing tasks beyond basic flight control.
+        \item Manages telemetry logs, wireless networks, camera streaming, and autonomous guidance systems.
+        \item Communicates with Ground Control via wireless MAVLink connections.
+    \end{itemize}
+
     \item \textbf{Ground Control Station} (\texttt{ground-control})
     \begin{itemize}
-        \item Main control system for drone operations
-        \item Monitors shared build artifacts
-        \item Deployment target for compromised software
+        \item Central user interface for drone pilots/operators.
+        \item Provides functionalities for mission planning, flight mapping, video streaming, and joystick control.
+        \item Monitors build artifacts and manages software deployments.
     \end{itemize}
-    
-    \item \textbf{Damn Vulnerable Drone} (\texttt{drone-01})
+
+\item \textbf{Simulator} (\texttt{simulator})
     \begin{itemize}
-        \item Drone simulation with MAVLink protocol
-        \item Executes Return-to-Land (RTL) operations
-        \item Target of the supply chain compromise
+        \item For drone physics and environments.
+        \item Manages motor operations, physics calculations, and sensor simulations.
     \end{itemize}
+
 \end{enumerate}
+
+\newpage
 
 \subsection{Network Topology}
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \centering
-\begin{tikzpicture}[node distance=3cm, every node/.style={align=center}]
-    % Nodes
-    \node[draw, rectangle, minimum width=3cm, minimum height=1.5cm] (dev) {Developer Machine\\(172.20.0.2)};
-    \node[draw, rectangle, minimum width=3cm, minimum height=1.5cm, right=of dev] (gcs) {Ground Control Station\\(172.20.0.3)};
-    \node[draw, rectangle, minimum width=3cm, minimum height=1.5cm, right=of gcs] (drone) {Drone Simulation\\(172.20.0.4)};
+\begin{tikzpicture}[node distance=3cm, every node/.style={rectangle, rounded corners, draw, align=center, minimum width=4cm, minimum height=1.2cm}]
+
+    % External Node
+    \node[fill=gray!15] (developer) {Developer Machine};
+
+    % Internal system group
+    \node[fill=blue!10, right=of developer] (gcs) {Ground Control Station};
+    \node[fill=blue!10, below=2cm of gcs] (companion) {Companion Computer};
+    \node[fill=blue!10, below=2cm of companion] (flight) {Flight Controller};
+    \node[fill=blue!10, below=2cm of flight] (simulator) {Simulator (Gazebo)};
+
+    % Adjusted Background box with increased inner sep
+    \node[draw, dashed, thick, rounded corners, inner sep=2.0cm, fit=(gcs)(companion)(flight)(simulator), label={[above]SkyDeliverer AG Drone System}] {};
+
     % Connections
-    \draw[<->, thick] (dev) -- node[above]{Shared Builds} (gcs);
-    \draw[<->, thick] (gcs) -- node[above]{MAVLink} (drone);
-    \draw[<->, dashed, thick] (dev) to[bend right=30] node[below]{Network Access} (drone);
+    \draw[<->, thick] (gcs) -- node[right]{MAVLink} (companion);
+    \draw[<->, thick] (companion) -- node[right]{Serial Link} (flight);
+    \draw[<->, thick] (flight) -- node[right]{Simulation Data} (simulator);
+
 \end{tikzpicture}
-\caption{DVD Network Architecture}
+\caption{Simplified Network Topology: External Attacker vs. Internal Drone System}
 \end{figure}
+
+
 
 \newpage
 
@@ -289,95 +384,141 @@ The DVD system consists of three main components:
 
 \subsection{Starting Your Hacking Environment}
 
-First, let's get our lab environment running. Don't worry about understanding every detail right now - we'll explain as we go!
+First, let's get our lab environment running.
+To get all the infrastructure we need lets fist clone the repo which hosts it. 
+\begin{lstlisting}[language=bash, caption=Cloning the required repo]
+# Open a terminal and clone the repo. Install git if not present.
+git clone https://github.com/crnnr/Damn-Vulnerable-Drone
+\end{lstlisting}
+
+Secondly, lets start the infrastructure.
 
 \begin{lstlisting}[language=bash, caption=Starting the Lab Environment]
-# Open a terminal and navigate to the main project directory
-cd /path/to/Damn-Vulnerable-Drone
+# Open a terminal and navigate to the project directory
+cd Damn-Vulnerable-Drone\DVDS-SUPPLYCHAIN-CHALLENGE
 
 # Execute the start script
-./start.sh
+bash start.sh
 
-# The script will handle starting containers and may connect you
+# ! You will now see the startup of all the containers! 
+# Depending on your setup, this might take a couple of minutes
+
+# The script will handle starting containers and connect you
 # to the developer machine automatically.
 # If not, you can check running containers with:
 # docker ps
 \end{lstlisting}
 
 \begin{hintbox}
+\noindent
 \textbf{What just happened?}
-
+\noindent
 We just started several "virtual computers" (called containers) that simulate a real company's development environment:
 \begin{itemize}
     \item A developer's workstation (where programmers write code)
-    \item A ground control station (where drone operators work)
-    \item A simulated drone (for testing)
+    \item A network which connects the different parts of the drone
+    \item The background webserver which simulate the drone behaviour
 \end{itemize}
 
+\noindent
 Think of it like a miniature version of a real company's IT infrastructure!
 \end{hintbox}
 
-\subsection{Your First Connection}
+If everything worked you now have something that looks something like this:
 
-Now let's connect to the developer's computer and start exploring:
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{developer-cmd.png}
+    \caption{Successful start of lab env}
+\end{figure}
 
-\begin{lstlisting}[language=bash, caption=Connecting to the Developer Machine]
-# Connect to the developer's workstation
-docker exec -it dvd-developer-machine /bin/bash
+\noindent
+You are now connected to the developer machine with the junior developer credentials we acquired through the fishing campaign. You can now look around, familiarize yourself with the environment and explore the container!
 
-# You should see a command prompt that looks like:
-# root@developer-machine:/#
+\newpage
+
+\section{Exploring the Lab Environment}
+
+\subsection{Step 1: Accessing the Damn Vulnerable Drone Webpage}
+
+After successfully starting your lab environment, your simulated drone is now active. Let's begin by accessing the drone’s web management interface:
+
+\begin{enumerate}
+    \item Open your preferred browser.
+    \item Navigate to:
+    \begin{center}
+        \textbf{\url{http://localhost:8000/}}
+    \end{center}
+\end{enumerate}
+
+If everything is correctly set up, you should see something that resembles the page below:
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\textwidth]{damn-vulnerable-drone.png}
+    \caption{Damn Vulnerable Drone Web Interface}
+\end{figure}
+
+On the upper right hand side, you can now click through the different stages of a test environment. Again, based on your Hardware, some steps might take a second to load. However, go ahead and run through the different stage of the Flight stages. 
+
+\newpage
+
+\subsection{Step 2: Exploring the Developer Container}
+
+Back in our developer box, lets look around a little what we can find. \\
+\\
+On the machine execute these commands: \\
+\\
+\begin{lstlisting}[language=bash, caption=Exploring the filesystem]
+# Who are we?
+whoami
+
+# List the content of the current directory we are in.
+ls
+
 \end{lstlisting}
 
-\begin{challengebox}{What user directories can you find on the system?}
-List the user directories you discover
+\begin{hintbox}
+\noindent
+\textbf{The Linux commandline}
+\noindent
+In order to advance the challenge we need to learn some basic linux commandline commands:
+\begin{itemize}
+    \item \textbf{cd}: Allows us to change directories 
+    \item \textbf{ls}: Lists the content of a directory 
+    \item \textbf{nano}: allows us to edit files via commandline 
+\end{itemize}
+
+\noindent
+\textbf{Pro Tip:} Use "Tab" to auto-complete commands 
+\end{hintbox}
+
+\begin{challengebox}{Supply Chain Compromise}
+Look at the output of the second command. 
+
+\texttt{SUPPLY\_CHAIN\_COMPROMISED}
 
 \noindent\rule{\linewidth}{0.4pt}\\[2em]
 \end{challengebox}
 
-\newpage
-
-\section{Phase 1: Initial Access}
-
-\subsection{MITRE ATT\&CK Mapping}
-\textbf{Technique:} T1078 - Valid Accounts
-
-\subsection{Gaining Access to the Developer Machine}
-
-The first step is to gain access to the development environment:
-
-\begin{lstlisting}[language=bash, caption=Starting Container and Access]
-# Start the entire DVD system
-docker-compose up -d
-
-# Connect to the developer machine
-docker exec -it dvd-developer-machine /bin/bash
-
-# Log in as developer
-su - developer
-# Password: dev123
-\end{lstlisting}
-
-\subsection{Initial System Reconnaissance}
-
-After successful login, perform the following exploration steps:
-
-\begin{lstlisting}[language=bash, caption=Basic System Reconnaissance]
-# Current directory and user context
-pwd
-whoami
-id
-
-# Available network connections
-ping -c 3 ground-control
-ping -c 3 drone-01
-
-# Check network configuration
-ip addr show
-route -n
-\end{lstlisting}
 
 \newpage
+
+\subsection{Step 3: Gathering Useful Information}
+
+Look carefully through the output you receive. Attackers often search for sensitive information stored in scripts or project directories.
+
+\begin{hintbox}
+\textbf{What attackers look for:}
+\begin{itemize}[itemsep=0.5em]
+    \item Interesting scripts or automation tools.
+    \item Passwords, keys, or authentication tokens.
+    \item Software versions, build processes, or hints indicating vulnerabilities.
+\end{itemize}
+\end{hintbox}
+
+\vspace{2em}
+
 
 \section{Phase 2: Discovery}
 
