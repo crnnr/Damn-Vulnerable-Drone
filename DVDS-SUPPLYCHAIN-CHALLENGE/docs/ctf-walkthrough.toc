@@ -1,58 +1,59 @@
-\contentsline {section}{\numberline {1}Welcome to Your First Cyber Hacking Lab!}{5}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Learning Objectives}{6}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}What You Need}{6}{subsection.1.2}%
-\contentsline {subsection}{\numberline {1.3}Understanding Supply Chain Attacks}{6}{subsection.1.3}%
-\contentsline {section}{\numberline {2}Background: MITRE ATT\&CK Framework}{7}{section.2}%
-\contentsline {section}{\numberline {3}Background: What is Docker?}{7}{section.3}%
-\contentsline {section}{\numberline {4}Setting Up Docker}{8}{section.4}%
-\contentsline {section}{\numberline {5}System Architecture}{9}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Container Overview}{9}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Network Topology}{10}{subsection.5.2}%
-\contentsline {section}{\numberline {6}Lab Setup - Getting Started}{11}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Starting Your Hacking Environment}{11}{subsection.6.1}%
-\contentsline {section}{\numberline {7}Exploring the Lab Environment}{12}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Step 1: Accessing the Damn Vulnerable Drone Webpage}{12}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Step 2: Exploring the Developer Container}{13}{subsection.7.2}%
-\contentsline {subsection}{\numberline {7.3}Step 3: Gathering Useful Information}{14}{subsection.7.3}%
-\contentsline {section}{\numberline {8}Phase 2: Discovery}{14}{section.8}%
-\contentsline {subsection}{\numberline {8.1}MITRE ATT\&CK Mapping}{14}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Documentation Analysis}{14}{subsection.8.2}%
-\contentsline {subsection}{\numberline {8.3}Build System Analysis}{14}{subsection.8.3}%
-\contentsline {subsection}{\numberline {8.4}Privilege Analysis}{15}{subsection.8.4}%
-\contentsline {section}{\numberline {9}Phase 3 - Finding Our Attack Vector}{15}{section.9}%
-\contentsline {subsection}{\numberline {9.1}MITRE ATT\&CK Mapping}{15}{subsection.9.1}%
-\contentsline {subsection}{\numberline {9.2}The Privilege Escalation Hunt}{15}{subsection.9.2}%
-\contentsline {subsection}{\numberline {9.3}Understanding Cron Jobs}{16}{subsection.9.3}%
-\contentsline {subsection}{\numberline {9.4}Monitoring the Compromise Process}{16}{subsection.9.4}%
-\contentsline {section}{\numberline {10}Phase 4: Supply Chain Compromise}{17}{section.10}%
-\contentsline {subsection}{\numberline {10.1}MITRE ATT\&CK Mapping}{17}{subsection.10.1}%
-\contentsline {subsection}{\numberline {10.2}Analysis of the Compromised Component}{17}{subsection.10.2}%
-\contentsline {subsection}{\numberline {10.3}Deployment Verification}{17}{subsection.10.3}%
-\contentsline {section}{\numberline {11}Phase 5: Impact}{18}{section.11}%
-\contentsline {subsection}{\numberline {11.1}MITRE ATT\&CK Mapping}{18}{subsection.11.1}%
-\contentsline {subsection}{\numberline {11.2}Drone Crash Simulation}{18}{subsection.11.2}%
-\contentsline {subsection}{\numberline {11.3}Flag Extraction}{18}{subsection.11.3}%
-\contentsline {section}{\numberline {12}Defense and Mitigation}{19}{section.12}%
-\contentsline {subsection}{\numberline {12.1}How to Prevent Supply Chain Attacks}{19}{subsection.12.1}%
-\contentsline {subsection}{\numberline {12.2}Implementing Basic Defenses}{20}{subsection.12.2}%
-\contentsline {section}{\numberline {13}Real-World Context}{20}{section.13}%
-\contentsline {subsection}{\numberline {13.1}Famous Supply Chain Attacks}{20}{subsection.13.1}%
-\contentsline {subsection}{\numberline {13.2}Career Paths in Cybersecurity}{21}{subsection.13.2}%
-\contentsline {section}{\numberline {14}Next Steps}{21}{section.14}%
-\contentsline {subsection}{\numberline {14.1}Continue Learning}{21}{subsection.14.1}%
-\contentsline {subsection}{\numberline {14.2}Certification Pathways}{22}{subsection.14.2}%
-\contentsline {section}{\numberline {15}Troubleshooting}{22}{section.15}%
-\contentsline {subsection}{\numberline {15.1}Common Problems}{22}{subsection.15.1}%
-\contentsline {subsubsection}{\numberline {15.1.1}Cron Service Issues}{22}{subsubsection.15.1.1}%
-\contentsline {subsubsection}{\numberline {15.1.2}Network Connection Problems}{22}{subsubsection.15.1.2}%
-\contentsline {subsubsection}{\numberline {15.1.3}Permission Issues}{22}{subsubsection.15.1.3}%
-\contentsline {section}{\numberline {16}Lab Summary}{23}{section.16}%
-\contentsline {subsection}{\numberline {16.1}What You Accomplished}{23}{subsection.16.1}%
-\contentsline {subsection}{\numberline {16.2}Final Thoughts}{23}{subsection.16.2}%
-\contentsline {section}{\numberline {17}Additional Resources}{24}{section.17}%
-\contentsline {subsection}{\numberline {17.1}Further Learning}{24}{subsection.17.1}%
-\contentsline {section}{\numberline {A}Command Reference}{24}{appendix.A}%
-\contentsline {subsection}{\numberline {A.1}Essential Linux Commands}{24}{subsection.A.1}%
-\contentsline {section}{\numberline {B}MITRE ATT\&CK Mapping}{25}{appendix.B}%
-\contentsline {subsection}{\numberline {B.1}Techniques Demonstrated}{25}{subsection.B.1}%
+\contentsline {section}{\numberline {1}Welcome to Your First Cyber Hacking Lab!}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Learning Objectives}{5}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}What You Need}{5}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Understanding Supply Chain Attacks}{5}{subsection.1.3}%
+\contentsline {section}{\numberline {2}Background: MITRE ATT\&CK Framework}{6}{section.2}%
+\contentsline {section}{\numberline {3}Background: What is Docker?}{6}{section.3}%
+\contentsline {section}{\numberline {4}Setting Up Docker}{7}{section.4}%
+\contentsline {section}{\numberline {5}System Architecture}{8}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Container Overview}{8}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Network Topology}{9}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Lab Setup - Getting Started}{10}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Starting Your Hacking Environment}{10}{subsection.6.1}%
+\contentsline {section}{\numberline {7}Exploring the Lab Environment}{11}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Step 1: Accessing the Damn Vulnerable Drone Webpage}{11}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Step 2: Exploring the Developer Container}{12}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Advancing the Attack: Reconnaissance}{13}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Conducting Reconnaissance: Basic Linux Commands}{13}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Analyzing Cronjob Vulnerabilities}{16}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}MITRE ATT\&CK Mapping}{17}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Documentation Analysis}{17}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}Build System Analysis}{17}{subsection.8.5}%
+\contentsline {subsection}{\numberline {8.6}Privilege Analysis}{17}{subsection.8.6}%
+\contentsline {section}{\numberline {9}Phase 3 - Finding Our Attack Vector}{18}{section.9}%
+\contentsline {subsection}{\numberline {9.1}MITRE ATT\&CK Mapping}{18}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}The Privilege Escalation Hunt}{18}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Understanding Cron Jobs}{18}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Monitoring the Compromise Process}{19}{subsection.9.4}%
+\contentsline {section}{\numberline {10}Phase 4: Supply Chain Compromise}{19}{section.10}%
+\contentsline {subsection}{\numberline {10.1}MITRE ATT\&CK Mapping}{19}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}Analysis of the Compromised Component}{19}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.3}Deployment Verification}{20}{subsection.10.3}%
+\contentsline {section}{\numberline {11}Phase 5: Impact}{21}{section.11}%
+\contentsline {subsection}{\numberline {11.1}MITRE ATT\&CK Mapping}{21}{subsection.11.1}%
+\contentsline {subsection}{\numberline {11.2}Drone Crash Simulation}{21}{subsection.11.2}%
+\contentsline {subsection}{\numberline {11.3}Flag Extraction}{21}{subsection.11.3}%
+\contentsline {section}{\numberline {12}Defense and Mitigation}{21}{section.12}%
+\contentsline {subsection}{\numberline {12.1}How to Prevent Supply Chain Attacks}{21}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Implementing Basic Defenses}{22}{subsection.12.2}%
+\contentsline {section}{\numberline {13}Real-World Context}{23}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Famous Supply Chain Attacks}{23}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}Career Paths in Cybersecurity}{23}{subsection.13.2}%
+\contentsline {section}{\numberline {14}Next Steps}{23}{section.14}%
+\contentsline {subsection}{\numberline {14.1}Continue Learning}{23}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Certification Pathways}{24}{subsection.14.2}%
+\contentsline {section}{\numberline {15}Troubleshooting}{24}{section.15}%
+\contentsline {subsection}{\numberline {15.1}Common Problems}{24}{subsection.15.1}%
+\contentsline {subsubsection}{\numberline {15.1.1}Cron Service Issues}{24}{subsubsection.15.1.1}%
+\contentsline {subsubsection}{\numberline {15.1.2}Network Connection Problems}{25}{subsubsection.15.1.2}%
+\contentsline {subsubsection}{\numberline {15.1.3}Permission Issues}{25}{subsubsection.15.1.3}%
+\contentsline {section}{\numberline {16}Lab Summary}{25}{section.16}%
+\contentsline {subsection}{\numberline {16.1}What You Accomplished}{25}{subsection.16.1}%
+\contentsline {subsection}{\numberline {16.2}Final Thoughts}{26}{subsection.16.2}%
+\contentsline {section}{\numberline {17}Additional Resources}{26}{section.17}%
+\contentsline {subsection}{\numberline {17.1}Further Learning}{26}{subsection.17.1}%
+\contentsline {section}{\numberline {A}Command Reference}{26}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Essential Linux Commands}{26}{subsection.A.1}%
+\contentsline {section}{\numberline {B}MITRE ATT\&CK Mapping}{27}{appendix.B}%
+\contentsline {subsection}{\numberline {B.1}Techniques Demonstrated}{27}{subsection.B.1}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

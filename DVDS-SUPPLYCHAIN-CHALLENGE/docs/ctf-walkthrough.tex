@@ -27,7 +27,7 @@
 \newcommand{\faculty}{Faculty Applied Information Technology}
 \newcommand{\studies}{Bachelor of Cyber-Security}
 \newcommand{\thesistitleDE}{Damn Vulnerable Drone Supply Chain Compromise CTF - Technical Walkthrough}
-\newcommand{\submissiondate}{11.\ Mai 2025}
+\newcommand{\submissiondate}{17.\ Juli 2025}
 \newcommand{\supervisor}{Prof.\ Dr.\ Michael Heigl}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -417,7 +417,7 @@ We just started several "virtual computers" (called containers) that simulate a 
 \begin{itemize}
     \item A developer's workstation (where programmers write code)
     \item A network which connects the different parts of the drone
-    \item The background webserver which simulate the drone behaviour
+    \item The background Webserver which simulate the drone behaviour
 \end{itemize}
 
 \noindent
@@ -487,40 +487,167 @@ In order to advance the challenge we need to learn some basic linux commandline 
     \item \textbf{cd}: Allows us to change directories 
     \item \textbf{ls}: Lists the content of a directory 
     \item \textbf{nano}: allows us to edit files via commandline 
+    \item \textbf{nano}: allows us to view the content of a file
 \end{itemize}
 
 \noindent
 \textbf{Pro Tip:} Use "Tab" to auto-complete commands 
 \end{hintbox}
 
-\begin{challengebox}{Supply Chain Compromise}
-Look at the output of the second command. 
-
-\texttt{SUPPLY\_CHAIN\_COMPROMISED}
-
+\begin{challengebox}{Coming home}
+How many "home"-directories exist on the developer machine?
 \noindent\rule{\linewidth}{0.4pt}\\[2em]
 \end{challengebox}
 
+\newpage
+
+\section{Advancing the Attack: Reconnaissance}
+
+Now that you've established a foothold on the developer's machine, it's crucial to begin reconnaissance to find ways to escalate your attack. Professional attackers spend considerable time performing detailed reconnaissance to identify vulnerabilities and potential targets.
+
+\begin{hintbox}
+\noindent
+\textbf{What is Reconnaissance?}
+
+Reconnaissance is the first step in most cyberattacks. It involves collecting valuable information about a target's environment, such as:
+
+\begin{itemize}[itemsep=0.5em]
+    \item Sensitive files containing passwords or API keys.
+    \item SSH keys or other authentication mechanisms.
+    \item Configuration and build scripts that reveal software vulnerabilities.
+\end{itemize}
+
+Effective reconnaissance greatly increases your chances of a successful exploitation.
+\end{hintbox}
+
+\subsection{Conducting Reconnaissance: Basic Linux Commands}
+
+Begin your reconnaissance by exploring the environment systematically. Execute the following Linux commands in the developer container to gather useful information:
+
+\begin{lstlisting}[language=bash, caption=Advanced exploration commands]
+# Navigate to the developer's directory
+cd /home/developer/
+
+# Thoroughly examine directories and their contents
+ls -la
+
+# Look specifically for SSH keys used for remote server access
+ls -la ~/.ssh/
+
+\end{lstlisting}
+
+\begin{hintbox}
+\noindent
+\textbf{What are SSH Keys?}
+
+\noindent
+SSH keys are cryptographic keys used for authentication in the SSH protocol, enabling secure remote access to servers and other systems. They replace passwords with a more secure and often more convenient method of authentication, relying on a pair of keys: a private key kept secret by the user and a public key shared with the server. 
+\end{hintbox}
+
+\vspace{1em}
 
 \newpage
 
-\subsection{Step 3: Gathering Useful Information}
+Since we didn't find anything, let's check what we can accomplish with our current developer account:
 
-Look carefully through the output you receive. Attackers often search for sensitive information stored in scripts or project directories.
+\begin{lstlisting}[language=bash, caption=Checking user privileges]
+# Display your user ID and group memberships
+id
+
+# Check your current user's permissions for sudo commands
+sudo -l
+\end{lstlisting}
 
 \begin{hintbox}
-\textbf{What attackers look for:}
+\noindent
+\textbf{What are Privileges?}
+
+In Linux, \textbf{privileges} define what operations a user is allowed to perform. Regular users typically have limited privileges, whereas administrators (root) have full control over the system.
+
+Attackers usually seek \textbf{privilege escalation} to move from regular user privileges to administrative (root) privileges. With root privileges, attackers can access sensitive files, alter configurations, and maintain persistent access.
+\end{hintbox}
+
+\vspace{1em}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\textwidth]{sudo.png}
+    \caption{Output of privilidge checks in the container"}
+\end{figure}
+
+\vspace{1em}
+
+\newpage
+
+A common method of privilege escalation involves exploiting scheduled tasks, known as \textbf{cronjobs}. Cronjobs are automated tasks scheduled to run periodically, sometimes with administrative privileges. Let's investigate if there are any potentially exploitable cronjobs configured on this system.
+
+Execute the following commands:
+
+\begin{lstlisting}[language=bash, caption=Checking cronjobs]
+# Check cronjobs belonging to your current user
+crontab -l
+
+# Check system-wide cronjobs (typically requiring higher privileges)
+ls -la /etc/cron*
+
+# View cronjob configuration files for scheduled tasks
+cat /etc/crontab
+cat /etc/cron.d/*
+\end{lstlisting}
+
+\begin{hintbox}
+\noindent
+\textbf{What is a Cronjob?}
+
+A \textbf{cronjob} is a scheduled task that automatically runs scripts or commands at specific times. Cronjobs configured to run with \textbf{root privileges} are especially valuable targets for attackers, as modifying them can lead directly to privilege escalation.
+
+Pay particular attention to cronjobs that:
+
 \begin{itemize}[itemsep=0.5em]
-    \item Interesting scripts or automation tools.
-    \item Passwords, keys, or authentication tokens.
-    \item Software versions, build processes, or hints indicating vulnerabilities.
+    \item Run as the \textbf{root user}.
+    \item Execute scripts or binaries located in writable directories.
 \end{itemize}
 \end{hintbox}
 
-\vspace{2em}
+\vspace{1em}
 
+\newpage
 
-\section{Phase 2: Discovery}
+\subsection{Analyzing Cronjob Vulnerabilities}
+
+When analyzing cronjobs for vulnerabilities, look for the following common security issues:
+
+\begin{itemize}[itemsep=0.5em]
+    \item Cronjobs running scripts from directories where you have write permissions.
+    \item Scripts or binaries executed by cronjobs that lack absolute paths, making them susceptible to path manipulation.
+    \item Cronjobs that execute scripts with overly permissive file permissions.
+\end{itemize}
+
+Consider the following example of a vulnerable cronjob:
+
+\begin{lstlisting}[language=bash, caption=Example vulnerable cronjob]
+# /etc/crontab
+* * * * * root /home/developer/scripts/backup.sh
+\end{lstlisting}
+
+This cronjob runs every minute as the \texttt{root} user, executing the script \texttt{backup.sh}. If the developer account has write permissions on this script or the containing directory, it provides a direct pathway to privilege escalation.
+
+\begin{warningbox}
+\noindent
+\textbf{Ethical Reminder:}
+
+While identifying vulnerabilities is critical for defenders and ethical hackers, exploiting them without explicit authorization in a real-world context is illegal and unethical. Always act responsibly and within ethical boundaries.
+\end{warningbox}
+
+\begin{challengebox}{Cronjob Privilege Escalation Pathway}
+Did you discover any cronjobs that run with root privileges?
+List them!
+\noindent\rule{\linewidth}{0.4pt}\\[2em]
+\end{challengebox}
+
+\vspace{1em}
+
+\newpage
 
 \subsection{MITRE ATT\&CK Mapping}
 \textbf{Technique:} T1083 - File and Directory Discovery
