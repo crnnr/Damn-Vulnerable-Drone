@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.3.25)  1 JUL 2025 20:55
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.3.25)  1 JUL 2025 21:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1176,114 +1176,116 @@ Underfull \hbox (badness 10000) in paragraph at lines 675--679
 
 
 [17 <./cron-output.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 700--703
-
- []
-
-
 
 [18]
-
-[19]
-Underfull \hbox (badness 10000) in paragraph at lines 797--798
+Underfull \hbox (badness 10000) in paragraph at lines 708--711
 
  []
 
 
 
-[20] (/usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
+[19]
+
+[20]
+Underfull \hbox (badness 10000) in paragraph at lines 805--806
+
+ []
+
+
+
+[21] (/usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2024/09/23 1.10c listings language file
 )
 
-[21]
-Underfull \hbox (badness 10000) in paragraph at lines 900--901
-
- []
-
-
-Overfull \vbox (51.42812pt too high) detected at line 901
- []
-
-
-
 [22]
-Overfull \hbox (1.59433pt too wide) in paragraph at lines 929--929
-[]    \T1/cmtt/m/n/12 [DRONE CRASHED] Root Flag: DVD{supply_ch41n_c0mpr0m153_1s
-_r34l_7hr347}[] 
+Underfull \hbox (badness 10000) in paragraph at lines 908--909
+
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 936--937
-
+Overfull \vbox (51.42812pt too high) detected at line 909
  []
 
 
 
 [23]
+Overfull \hbox (1.59433pt too wide) in paragraph at lines 937--937
+[]    \T1/cmtt/m/n/12 [DRONE CRASHED] Root Flag: DVD{supply_ch41n_c0mpr0m153_1s
+_r34l_7hr347}[] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 944--945
+
+ []
+
+
 
 [24]
-Underfull \hbox (badness 2662) in paragraph at lines 1022--1023
+
+[25]
+Underfull \hbox (badness 2662) in paragraph at lines 1030--1031
 \T1/cmr/m/n/12 into So-lar-Winds' soft-ware up-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1028--1029
+Underfull \hbox (badness 10000) in paragraph at lines 1036--1037
 []|\T1/cmr/m/n/12 Attackers com-pro-mised a
  []
 
 
-Underfull \hbox (badness 7133) in paragraph at lines 1028--1029
+Underfull \hbox (badness 7133) in paragraph at lines 1036--1037
 \T1/cmr/m/n/12 Ukrainian soft-ware com-pany's
  []
 
 
-Underfull \hbox (badness 6063) in paragraph at lines 1028--1029
+Underfull \hbox (badness 6063) in paragraph at lines 1036--1037
 \T1/cmr/m/n/12 up-date mech-a-nism to spread
  []
 
 
 
-[25]
-
 [26]
-Underfull \hbox (badness 10000) in paragraph at lines 1152--1153
-
- []
-
-
-Underfull \vbox (badness 2359) detected at line 1153
- []
-
-
 
 [27]
+Underfull \hbox (badness 10000) in paragraph at lines 1160--1161
+
+ []
+
+
+Underfull \vbox (badness 2359) detected at line 1161
+ []
+
+
 
 [28]
-Overfull \hbox (28.3508pt too wide) in paragraph at lines 1180--1181
+
+[29]
+Overfull \hbox (28.3508pt too wide) in paragraph at lines 1188--1189
 []\T1/cmr/m/n/12 OWASP Top 10 for Con-tain-ers: []$\T1/cmtt/m/n/12 https : / / 
 owasp . org / www-[]project-[]container-[]top-[]10/$[] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1239--1240
+Underfull \hbox (badness 10000) in paragraph at lines 1247--1248
 []|\T1/cmr/m/n/12 Using de-vel-oper cre-den-tials
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1242--1243
+Underfull \hbox (badness 10000) in paragraph at lines 1250--1251
 []|\T1/cmr/m/n/12 Exploiting sudo NOPASSWD
  []
 
 
-Underfull \hbox (badness 6125) in paragraph at lines 1243--1244
+Underfull \hbox (badness 6125) in paragraph at lines 1251--1252
 []|\T1/cmr/m/n/12 Injecting ma-li-cious code into
  []
 
 
 
-[29]
+[30]
 
-[30] (./ctf-walkthrough.aux)
+[31] (./ctf-walkthrough.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -1292,8 +1294,8 @@ Package rerunfilecheck Info: File `ctf-walkthrough.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 29952 strings out of 475171
- 576322 string characters out of 5767095
+ 29956 strings out of 475171
+ 576379 string characters out of 5767095
  1427982 words of memory out of 5000000
  52148 multiletter control sequences out of 15000+600000
  574362 words of font info for 70 fonts, out of 8000000 for 9000
@@ -1308,10 +1310,10 @@ re/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/share/texmf-dist/f
 onts/type1/public/cm-super/sfsx1728.pfb></usr/share/texmf-dist/fonts/type1/publ
 ic/cm-super/sfti1095.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sft
 t1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on ctf-walkthrough.pdf (30 pages, 1381228 bytes).
+Output written on ctf-walkthrough.pdf (31 pages, 1382363 bytes).
 PDF statistics:
- 825 PDF objects out of 1000 (max. 8388607)
- 748 compressed objects within 8 object streams
- 324 named destinations out of 1000 (max. 500000)
+ 835 PDF objects out of 1000 (max. 8388607)
+ 757 compressed objects within 8 object streams
+ 328 named destinations out of 1000 (max. 500000)
  528 words of extra memory for PDF output out of 10000 (max. 10000000)
 

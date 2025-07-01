@@ -63,7 +63,7 @@ RUN chown -R developer:developer /sourcecode
 RUN mkdir -p /home/developer/src /home/developer/modules /home/developer/config
 
 COPY developer-machine/build-update.sh /bin/build-update.sh
-RUN chmod +x /bin/build-update.sh
+RUN chmod 644 /bin/build-update.sh
 
 RUN chown -R developer:developer /home/developer
 

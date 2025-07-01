@@ -680,6 +680,14 @@
 
     \newpage
 
+    Now that we have an potentially malicious cronjobs running as root, let's look at how we can exploit it.
+    Let's start by looking at the build-update.script that we gets executed by the cronjob.
+
+    \begin{lstlisting}[language=bash, caption=Viewing build-update.script]
+    cat /opt/build-update.sh
+    \end{lstlisting}
+
+    \newpage
     Consider the following example of a vulnerable cronjob:
 
     \begin{lstlisting}[language=bash, caption=Example vulnerable cronjob]
