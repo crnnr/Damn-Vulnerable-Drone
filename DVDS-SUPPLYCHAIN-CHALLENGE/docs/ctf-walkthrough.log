@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.3.25)  1 JUL 2025 22:01
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.3.25)  1 JUL 2025 23:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1200,114 +1200,143 @@ Underfull \hbox (badness 10000) in paragraph at lines 716--722
 
 
 [18 <./script-permissions.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 747--750
+Underfull \hbox (badness 10000) in paragraph at lines 754--758
+
+ []
+
+<directory-out.png, id=323, 791.20593pt x 176.91093pt>
+File: directory-out.png Graphic file (type png)
+<use directory-out.png>
+Package pdftex.def Info: directory-out.png  used on input line 761.
+(pdftex.def)             Requested size: 455.24411pt x 101.79047pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 766--769
+[]\T1/cmr/m/n/12 Look at the con-tent of the \T1/cmtt/m/n/12 /sourcecode \T1/cm
+r/m/n/12 di-rec-tory. Where do
+ []
+
+
+Underfull \hbox (badness 8038) in paragraph at lines 766--769
+\T1/cmr/m/n/12 we need to go if we want to mod-ify the \T1/cmtt/m/n/12 return t
+o land \T1/cmr/m/n/12 step?
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 766--769
 
  []
 
 
 
-[19]
+[19 <./directory-out.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 797--800
+
+ []
+
+
 
 [20]
-Underfull \hbox (badness 10000) in paragraph at lines 844--845
+
+[21]
+Underfull \hbox (badness 10000) in paragraph at lines 894--895
 
  []
 
 
 
-[21] (/usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
+[22] (/usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2024/09/23 1.10c listings language file
 )
 
-[22]
-Underfull \hbox (badness 10000) in paragraph at lines 947--948
-
- []
-
-
-Overfull \vbox (51.42812pt too high) detected at line 948
- []
-
-
-
 [23]
-Overfull \hbox (1.59433pt too wide) in paragraph at lines 976--976
-[]    \T1/cmtt/m/n/12 [DRONE CRASHED] Root Flag: DVD{supply_ch41n_c0mpr0m153_1s
-_r34l_7hr347}[] 
+Underfull \hbox (badness 10000) in paragraph at lines 997--998
+
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 983--984
-
+Overfull \vbox (51.42812pt too high) detected at line 998
  []
 
 
 
 [24]
+Overfull \hbox (1.59433pt too wide) in paragraph at lines 1026--1026
+[]    \T1/cmtt/m/n/12 [DRONE CRASHED] Root Flag: DVD{supply_ch41n_c0mpr0m153_1s
+_r34l_7hr347}[] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1033--1034
+
+ []
+
+
 
 [25]
-Underfull \hbox (badness 2662) in paragraph at lines 1069--1070
+
+[26]
+Underfull \hbox (badness 2662) in paragraph at lines 1119--1120
 \T1/cmr/m/n/12 into So-lar-Winds' soft-ware up-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1075--1076
+Underfull \hbox (badness 10000) in paragraph at lines 1125--1126
 []|\T1/cmr/m/n/12 Attackers com-pro-mised a
  []
 
 
-Underfull \hbox (badness 7133) in paragraph at lines 1075--1076
+Underfull \hbox (badness 7133) in paragraph at lines 1125--1126
 \T1/cmr/m/n/12 Ukrainian soft-ware com-pany's
  []
 
 
-Underfull \hbox (badness 6063) in paragraph at lines 1075--1076
+Underfull \hbox (badness 6063) in paragraph at lines 1125--1126
 \T1/cmr/m/n/12 up-date mech-a-nism to spread
  []
 
 
 
-[26]
-
 [27]
-Underfull \hbox (badness 10000) in paragraph at lines 1199--1200
-
- []
-
-
-Underfull \vbox (badness 2359) detected at line 1200
- []
-
-
 
 [28]
+Underfull \hbox (badness 10000) in paragraph at lines 1249--1250
+
+ []
+
+
+Underfull \vbox (badness 2359) detected at line 1250
+ []
+
+
 
 [29]
-Overfull \hbox (28.3508pt too wide) in paragraph at lines 1227--1228
+
+[30]
+Overfull \hbox (28.3508pt too wide) in paragraph at lines 1277--1278
 []\T1/cmr/m/n/12 OWASP Top 10 for Con-tain-ers: []$\T1/cmtt/m/n/12 https : / / 
 owasp . org / www-[]project-[]container-[]top-[]10/$[] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1286--1287
+Underfull \hbox (badness 10000) in paragraph at lines 1336--1337
 []|\T1/cmr/m/n/12 Using de-vel-oper cre-den-tials
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1289--1290
+Underfull \hbox (badness 10000) in paragraph at lines 1339--1340
 []|\T1/cmr/m/n/12 Exploiting sudo NOPASSWD
  []
 
 
-Underfull \hbox (badness 6125) in paragraph at lines 1290--1291
+Underfull \hbox (badness 6125) in paragraph at lines 1340--1341
 []|\T1/cmr/m/n/12 Injecting ma-li-cious code into
  []
 
 
 
-[30]
+[31]
 
-[31] (./ctf-walkthrough.aux)
+[32] (./ctf-walkthrough.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -1316,10 +1345,10 @@ Package rerunfilecheck Info: File `ctf-walkthrough.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 29969 strings out of 475171
- 576651 string characters out of 5767095
- 1428024 words of memory out of 5000000
- 52156 multiletter control sequences out of 15000+600000
+ 30016 strings out of 475171
+ 577331 string characters out of 5767095
+ 1428081 words of memory out of 5000000
+ 52181 multiletter control sequences out of 15000+600000
  574362 words of font info for 70 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  108i,12n,107p,10957b,2137s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1332,10 +1361,10 @@ re/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/share/texmf-dist/f
 onts/type1/public/cm-super/sfsx1728.pfb></usr/share/texmf-dist/fonts/type1/publ
 ic/cm-super/sfti1095.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sft
 t1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on ctf-walkthrough.pdf (31 pages, 1392854 bytes).
+Output written on ctf-walkthrough.pdf (32 pages, 1420213 bytes).
 PDF statistics:
- 843 PDF objects out of 1000 (max. 8388607)
- 763 compressed objects within 8 object streams
- 333 named destinations out of 1000 (max. 500000)
- 533 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 874 PDF objects out of 1000 (max. 8388607)
+ 791 compressed objects within 8 object streams
+ 355 named destinations out of 1000 (max. 500000)
+ 538 words of extra memory for PDF output out of 10000 (max. 10000000)
 

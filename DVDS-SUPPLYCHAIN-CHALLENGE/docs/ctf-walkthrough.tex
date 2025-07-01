@@ -680,7 +680,7 @@
 
     \newpage
 
-    Now that we have an potentially malicious cronjobs running as root, let's look at how we can exploit it.
+    Now that we have found an potentially vulnerable cronjob running as root, let's look at how we can exploit it.
     Let's start by looking at the build-update.script that we gets executed by the cronjob.
 
     \begin{lstlisting}[language=bash, caption=Viewing build-update.script]
@@ -727,6 +727,56 @@
 
     \newpage
 
+    Looking at the content of the script, we can see that it is used to update the software components of the SkyDeliverer AG.
+    
+    \vspace{1em}
+
+    \begin{lstlisting}[language=bash, caption=Content of build-update.sh]
+    #!/bin/bash
+    BUILD_LOG="/var/log/build-pipeline.log"
+    BUILD_DIR="/builds"
+    SHARED_BUILDS="/opt/shared-builds"
+    SOURCE_DIR="/sourcecode"
+    ARTIFACT_DIR="/opt/artifacts"
+    RTL_MODULE="return-to-land.py"
+    BUILD_VERSION=$(date +%Y%m%d_%H%M%S)
+
+    log_message() {
+        echo "$(date '+%Y-%m-%d %H:%M:%S') [BUILD-PIPELINE] $1" >> "$BUILD_LOG"
+    }
+    run_stage() {
+        local stage_name="$1"
+        local status="$2"
+        log_message "[$stage_name] $status"
+    }
+    ....
+    \end{lstlisting}    
+    \noindent
+    Looking at the file we can see, that the code is located in the \texttt{/sourcecode} directory. \\
+    \\
+    Take a look at the content of the \texttt{/sourcecode} directory by running: 
+
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=1.0\textwidth]{directory-out.png}
+        \caption{Output of the sourcecode directory listing}
+    \end{figure}
+
+    \begin{challengebox}{Getting to the source}
+    Look at the content of the \texttt{/sourcecode} directory.
+    Where do we need to go if we want to modify the \texttt{return to land} step?
+    \noindent\rule{\linewidth}{0.4pt}\\[2em]
+    \end{challengebox}
+
+    \newpage
+
+
+
+
+
+
+
+    
     Consider the following example of a vulnerable cronjob:
 
     \begin{lstlisting}[language=bash, caption=Example vulnerable cronjob]
