@@ -1,4 +1,4 @@
-    \documentclass[12pt]{scrartcl}
+\documentclass[12pt]{scrartcl}
     \usepackage[a4paper,margin=2.5cm]{geometry}
     \usepackage[hidelinks]{hyperref}
     \usepackage[utf8]{inputenc}
@@ -684,10 +684,49 @@
     Let's start by looking at the build-update.script that we gets executed by the cronjob.
 
     \begin{lstlisting}[language=bash, caption=Viewing build-update.script]
-    cat /opt/build-update.sh
+    ls -al /bin/build-update.sh
+    \end{lstlisting}
+
+    Using this command we can see different properties of the file:
+
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=1.0\textwidth]{script-permissions.png}
+        \caption{Output of build-update script checks in the container}
+    \end{figure}
+
+    \noindent
+
+    \begin{itemize}
+        \item \textbf{File Permissions:} The first column shows the file's permissions, such as \texttt{-rwxr-xr-x}. This indicates:
+        \begin{itemize}
+            \item \texttt{-}: Regular file.
+            \item \texttt{rwx}: The owner has read, write, and execute permissions.
+            \item \texttt{r-x}: The group has read and execute permissions.
+            \item \texttt{r-x}: Others have read and execute permissions.
+        \end{itemize}
+        \item \textbf{Number of Links:} The second column shows the number of hard links to the file.
+        \item \textbf{Owner:} The third column displays the username of the file's owner, e.g., \texttt{root}.
+        \item \textbf{Group:} The fourth column shows the group associated with the file, e.g., \texttt{root}.
+        \item \textbf{File Size:} The fifth column indicates the size of the file in bytes.
+        \item \textbf{Last Modified Date:} The sixth through eighth columns show the date and time the file was last modified.
+        \item \textbf{File Name:} The final column displays the name of the file, \texttt{build-update.sh}.
+    \end{itemize}
+
+    \noindent
+    This information is crucial for understanding the file's accessibility and potential vulnerabilities. For example, if the file is writable by the current user or group, it could be exploited to escalate privileges.\\
+    \\
+    \noindent
+    We can see that the file is owned by root and we can only \texttt{view} it. \\
+    We can do so by running: \\
+    
+    \begin{lstlisting}[language=bash, caption=Viewing the build-update script]
+    # View the content of the build-update script
+    cat /bin/build-update.sh
     \end{lstlisting}
 
     \newpage
+
     Consider the following example of a vulnerable cronjob:
 
     \begin{lstlisting}[language=bash, caption=Example vulnerable cronjob]
