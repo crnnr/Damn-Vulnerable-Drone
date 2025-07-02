@@ -27,6 +27,9 @@ ENV VEHICLE ArduCopter
 RUN groupadd ${USER_NAME} --gid ${USER_GID}\
     && useradd -l -m ${USER_NAME} -u ${USER_UID} -g ${USER_GID} -s /bin/bash
 
+# Use a working mirror to avoid 400 Bad Request errors
+RUN sed -i 's/archive.ubuntu.com/mirror.kakao.com/g' /etc/apt/sources.list
+
 # Install prerequisites 
 # Install prerequisites and clear cache
 RUN apt-get update && apt-get install -y sudo socat net-tools lsb-release python3-pip tzdata git; git config --global url.https://github.com/.insteadOf git://github.com/
