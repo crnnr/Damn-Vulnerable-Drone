@@ -22,9 +22,6 @@ RUN \
         software-properties-common \
         wget
 
-RUN \
-    add-apt-repository ppa:kisak/kisak-mesa -y
-
 # ------------------------------------------------------------------------- #
 # FINAL STAGE
 # ------------------------------------------------------------------------- #
@@ -61,12 +58,12 @@ RUN \
     --mount=type=cache,target=/etc/apt/sources.list.d,from=stage_apt,source=/etc/apt/sources.list.d \
     apt-get install --no-install-recommends -y ca-certificates
 
-# 6) Install everything in aptDeps.txt
+# 6) Install everything needed for QGroundControl using standard repositories
 RUN \
     --mount=type=cache,target=/var/cache/apt,from=stage_apt,source=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt,from=stage_apt,source=/var/lib/apt \
     --mount=type=cache,target=/etc/apt/sources.list.d,from=stage_apt,source=/etc/apt/sources.list.d \
-    apt-get install --no-install-recommends -y \
+    apt-get update && apt-get install --no-install-recommends -y \
     fuse \
     gstreamer1.0-gl \
     gstreamer1.0-libav \
@@ -81,7 +78,8 @@ RUN \
     libsdl2-dev \
     mesa-utils \
     wget \
-    x-window-system \
+    x11-common \
+    x11-utils \
     x11-xserver-utils \
     xvfb
 
