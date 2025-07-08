@@ -2,23 +2,27 @@
 \contentsline {subsection}{\numberline {1.1}Learning Objectives}{4}{subsection.1.1}%
 \contentsline {subsection}{\numberline {1.2}What You Need}{4}{subsection.1.2}%
 \contentsline {subsection}{\numberline {1.3}Understanding Supply Chain Attacks}{4}{subsection.1.3}%
-\contentsline {section}{\numberline {2}Background: MITRE ATT\&CK Framework}{6}{section.2}%
-\contentsline {section}{\numberline {3}Background: What is Docker?}{6}{section.3}%
-\contentsline {section}{\numberline {4}Setting Up Docker}{7}{section.4}%
-\contentsline {section}{\numberline {5}System Architecture}{8}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Container Overview}{8}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Network Topology}{9}{subsection.5.2}%
-\contentsline {section}{\numberline {6}Lab Setup - Getting Started}{10}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Starting Your Hacking Environment}{10}{subsection.6.1}%
-\contentsline {section}{\numberline {7}Exploring the Lab Environment}{11}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Step 1: Accessing the Damn Vulnerable Drone Webpage}{11}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Step 2: Exploring the Developer Container}{12}{subsection.7.2}%
-\contentsline {section}{\numberline {8}Advancing the Attack: Reconnaissance}{13}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Conducting Reconnaissance: Basic Linux Commands}{13}{subsection.8.1}%
-\contentsline {section}{\numberline {9}SSH Keys}{15}{section.9}%
-\contentsline {section}{\numberline {10}Cronjobs}{16}{section.10}%
-\contentsline {subsection}{\numberline {10.1}Analyzing Cronjob Vulnerabilities}{16}{subsection.10.1}%
-\contentsline {section}{\numberline {11}Diving into the Code}{20}{section.11}%
-\contentsline {section}{\numberline {12}Modifying the Build Process}{21}{section.12}%
-\contentsline {subsection}{\numberline {12.1}Entering the Pipeline}{22}{subsection.12.1}%
+\contentsline {section}{\numberline {2}Background: MITRE ATT\&CK Framework}{5}{section.2}%
+\contentsline {section}{\numberline {3}Background: What is Docker?}{5}{section.3}%
+\contentsline {section}{\numberline {4}Setting Up Docker}{6}{section.4}%
+\contentsline {section}{\numberline {5}System Architecture}{7}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Container Overview}{7}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Network Topology}{8}{subsection.5.2}%
+\contentsline {section}{\numberline {6}Lab Setup - Getting Started}{9}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Starting Your Hacking Environment}{9}{subsection.6.1}%
+\contentsline {section}{\numberline {7}Exploring the Lab Environment}{10}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Step 1: Accessing the Damn Vulnerable Drone Webpage}{10}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Step 2: Exploring the Developer Container}{11}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Advancing the Attack: Reconnaissance}{12}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Conducting Reconnaissance: Basic Linux Commands}{12}{subsection.8.1}%
+\contentsline {section}{\numberline {9}SSH Keys}{14}{section.9}%
+\contentsline {section}{\numberline {10}Cronjobs}{15}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Analyzing Cronjob Vulnerabilities}{15}{subsection.10.1}%
+\contentsline {section}{\numberline {11}Diving into the Code}{19}{section.11}%
+\contentsline {section}{\numberline {12}Modifying the Build Process}{20}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Entering the Pipeline}{21}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}The Decoded Malicious Payload}{22}{subsection.12.2}%
+\contentsline {section}{\numberline {13}Conclusion}{23}{section.13}%
+\contentsline {section}{\numberline {14}Closing remarks}{24}{section.14}%
+\contentsline {subsection}{\numberline {14.1}MITRE ATT\&CK Tactics and Techniques}{24}{subsection.14.1}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

