@@ -1,144 +1,143 @@
 \documentclass[12pt]{scrartcl}
-    \usepackage[a4paper,margin=2.5cm]{geometry}
-    \usepackage[hidelinks]{hyperref}
-    \usepackage[utf8]{inputenc}
-    \usepackage[T1]{fontenc}
-    \usepackage{fancyhdr}
-    \usepackage{graphicx}
-    \usepackage{xcolor}
-    \usepackage{listings}
-    \usepackage{amsmath}
-    \usepackage{amsfonts}
-    \usepackage{amssymb}
-    \usepackage{booktabs}
-    \usepackage{longtable}
-    \usepackage{enumitem}
-    \usepackage{framed}
-    \usepackage{setspace}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{framed}
+\usepackage{setspace}
 
-    % for the landscape diagram page
-    \usepackage{pdflscape}
+% for the landscape diagram page
+\usepackage{pdflscape}
 
-    % for the TikZ diagram
-    \usepackage{tikz}
-    \usetikzlibrary{positioning, arrows.meta, shapes, fit, calc}
+% for the TikZ diagram
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, shapes, fit, calc}
+% Variablen definieren
+\newcommand{\faculty}{Faculty Applied Information Technology}
+\newcommand{\studies}{Bachelor of Cyber-Security}
+\newcommand{\thesistitleDE}{Damn Vulnerable Drone Supply Chain Compromise CTF - Technical Walkthrough}
+\newcommand{\submissiondate}{17.\ Juli 2025}
+\newcommand{\supervisor}{Prof.\ Dr.\ Michael Heigl}
 
-    % Variablen definieren
-    \newcommand{\faculty}{Faculty Applied Information Technology}
-    \newcommand{\studies}{Bachelor of Cyber-Security}
-    \newcommand{\thesistitleDE}{Damn Vulnerable Drone Supply Chain Compromise CTF - Technical Walkthrough}
-    \newcommand{\submissiondate}{17.\ Juli 2025}
-    \newcommand{\supervisor}{Prof.\ Dr.\ Michael Heigl}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{alertred}{rgb}{0.8,0.1,0.1}
+\definecolor{flagblue}{rgb}{0.1,0.3,0.8}
+\definecolor{hintgreen}{rgb}{0.1,0.7,0.2}
+\definecolor{warningorange}{rgb}{0.9,0.5,0.1}
 
-    \definecolor{codegreen}{rgb}{0,0.6,0}
-    \definecolor{codegray}{rgb}{0.5,0.5,0.5}
-    \definecolor{codepurple}{rgb}{0.58,0,0.82}
-    \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-    \definecolor{alertred}{rgb}{0.8,0.1,0.1}
-    \definecolor{flagblue}{rgb}{0.1,0.3,0.8}
-    \definecolor{hintgreen}{rgb}{0.1,0.7,0.2}
-    \definecolor{warningorange}{rgb}{0.9,0.5,0.1}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
 
-    \lstdefinestyle{mystyle}{
-        backgroundcolor=\color{backcolour},   
-        commentstyle=\color{codegreen},
-        keywordstyle=\color{magenta},
-        numberstyle=\tiny\color{codegray},
-        stringstyle=\color{codepurple},
-        basicstyle=\ttfamily\footnotesize,
-        breakatwhitespace=false,         
-        breaklines=true,                 
-        captionpos=b,                    
-        keepspaces=true,                 
-        numbers=left,                    
-        numbersep=5pt,                  
-        showspaces=false,                
-        showstringspaces=false,
-        showtabs=false,                  
-        tabsize=2
-    }
+\lstset{style=mystyle}
 
-    \lstset{style=mystyle}
+% Custom environments for different types of content
+\newenvironment{flagbox}{%
+\def\FrameCommand{\fboxsep=\FrameSep\colorbox{flagblue!20}}%
+\MakeFramed {\advance\hsize-\width \FrameRestore}}%
+{\endMakeFramed}
 
-    % Custom environments for different types of content
-    \newenvironment{flagbox}{%
-    \def\FrameCommand{\fboxsep=\FrameSep\colorbox{flagblue!20}}%
-    \MakeFramed {\advance\hsize-\width \FrameRestore}}%
-    {\endMakeFramed}
+\newenvironment{hintbox}{%
+\def\FrameCommand{\fboxsep=\FrameSep\colorbox{hintgreen!20}}%
+\MakeFramed {\advance\hsize-\width \FrameRestore}}%
+{\endMakeFramed}
 
-    \newenvironment{hintbox}{%
-    \def\FrameCommand{\fboxsep=\FrameSep\colorbox{hintgreen!20}}%
-    \MakeFramed {\advance\hsize-\width \FrameRestore}}%
-    {\endMakeFramed}
+\newenvironment{warningbox}{%
+\def\FrameCommand{\fboxsep=\FrameSep\colorbox{warningorange!20}}%
+\MakeFramed {\advance\hsize-\width \FrameRestore}}%
+{\endMakeFramed}
 
-    \newenvironment{warningbox}{%
-    \def\FrameCommand{\fboxsep=\FrameSep\colorbox{warningorange!20}}%
-    \MakeFramed {\advance\hsize-\width \FrameRestore}}%
-    {\endMakeFramed}
+\newenvironment{storybox}{%
+\def\FrameCommand{\fboxsep=\FrameSep\colorbox{gray!10}}%
+\MakeFramed {\advance\hsize-\width \FrameRestore}}%
+{\endMakeFramed}
 
-    \newenvironment{storybox}{%
-    \def\FrameCommand{\fboxsep=\FrameSep\colorbox{gray!10}}%
-    \MakeFramed {\advance\hsize-\width \FrameRestore}}%
-    {\endMakeFramed}
+% Custom environment for challenge boxes
+\newenvironment{challengebox}[1]{%
+\def\FrameCommand{\fboxsep=\FrameSep\colorbox{flagblue!10}}%
+\MakeFramed{\advance\hsize-\width \FrameRestore}
+\noindent\textbf{Challenge:} #1\\[0.5em]
+\vspace{0.5em}
+\begin{minipage}{0.95\linewidth}
+}{%
+\\[1em]
+\noindent\rule{\linewidth}{0.4pt}\\[2em] % Dedicated answer field
+\end{minipage}
+\endMakeFramed
+}
 
-    % Custom environment for challenge boxes
-    \newenvironment{challengebox}[1]{%
-    \def\FrameCommand{\fboxsep=\FrameSep\colorbox{flagblue!10}}%
-    \MakeFramed{\advance\hsize-\width \FrameRestore}
-    \noindent\textbf{Challenge:} #1\\[0.5em]
-    \vspace{0.5em}
-    \begin{minipage}{0.95\linewidth}
-    }{%
-    \\[1em]
-    \noindent\rule{\linewidth}{0.4pt}\\[2em] % Dedicated answer field
-    \end{minipage}
-    \endMakeFramed
-    }
+\pagestyle{fancy}
+\fancyhf{}
+\rfoot{Page \thepage}
 
-    \pagestyle{fancy}
-    \fancyhf{}
-    \rfoot{Page \thepage}
+\begin{document}
 
-    \begin{document}
+\begin{titlepage}
+\begin{center}
+    {\Large Technische Hochschule Deggendorf\\
+    \faculty\par}
+    \vspace{0.2cm}
+    {\Large Studiengang \studies\\}
+    \vspace{2\baselineskip}
+    {\Huge\bfseries \thesistitleDE\par}
+    \vspace{3\baselineskip}
+\end{center}
 
-    \begin{titlepage}
-    \begin{center}
-        {\Large Technische Hochschule Deggendorf\\
-        \faculty\par}
-        \vspace{0.2cm}
-        {\Large Studiengang \studies\\}
-        \vspace{2\baselineskip}
-        {\Huge\bfseries \thesistitleDE\par}
-        \vspace{3\baselineskip}
-    \end{center}
+\vfill
 
-    \vfill
-
-    \parbox[t]{0.4\textwidth}{
-        \textbf{Vorgelegt von:}\\[0.5em]
+\parbox[t]{0.4\textwidth}{
+    \textbf{Vorgelegt von:}\\[0.5em]
         Christof Renner\\
         Matrikelnummer: 22301943\\
         Manuel Friedl\\
-        Matrikelnummer: 1236626\\
+        Matrikelnummer: 12306626\\
         Felix Hahl\\
         Matrikelnummer:\\[1em]
         \\
         Am: \submissiondate\par
     }
-    \hfill
-    \parbox[t]{0.4\textwidth}{
-        \textbf{Prüfungsleitung:}\\[0.5em]
-        \supervisor
+\hfill
+\parbox[t]{0.4\textwidth}{
+    \textbf{Prüfungsleitung:}\\[0.5em]
+    \supervisor
     }
     \end{titlepage}
 
-    \cleardoublepage
-    \tableofcontents
-    \cleardoublepage
+\cleardoublepage
+\tableofcontents
+\cleardoublepage
 
-    \section{Welcome to Your First Cyber Hacking Lab!}
+\section{Welcome to Your First Cyber Hacking Lab!}
 
-    \begin{storybox}
+\begin{storybox}
     \noindent
     \textbf{Operation Briefing: Infiltrate SkyDefence AG} \\
     \\
@@ -156,81 +155,80 @@
     \\
     \noindent
     Are you ready to infiltrate and pwn the SkyDefence AG?
-    \end{storybox}
+\end{storybox}
 
-    \vspace{2em}
+\vspace{2em}
 
-    \begin{center}
-    \begin{tikzpicture}[node distance=2cm, every node/.style={align=center}]
-        % Nodes
-        \node[draw, rectangle, rounded corners, minimum width=5cm, fill=flagblue!15] (bitlock) {BitLock\\(Threat Actor)};
+\begin{center}
+\begin{tikzpicture}[node distance=2cm, every node/.style={align=center}]
+    % Nodes
+    \node[draw, rectangle, rounded corners, minimum width=5cm, fill=flagblue!15] (bitlock) {BitLock\\(Threat Actor)};
         
-        \node[draw, rectangle, rounded corners, below=of bitlock, minimum width=5cm, fill=hintgreen!15] (skydeliverer) {SkyDeliverer AG\\(Software Vendor)};
+    \node[draw, rectangle, rounded corners, below=of bitlock, minimum width=5cm, fill=hintgreen!15] (skydeliverer) {SkyDeliverer AG\\(Software Vendor)};
         
-        \node[draw, rectangle, rounded corners, below=of skydeliverer, minimum width=5cm, fill=warningorange!15] (skydefence) {SkyDefence AG\\(Drone Manufacturer)};
+    \node[draw, rectangle, rounded corners, below=of skydeliverer, minimum width=5cm, fill=warningorange!15] (skydefence) {SkyDefence AG\\(Drone Manufacturer)};
         
-        % Vertical arrows
-        \draw[->, very thick, red] (bitlock) -- node[right, align=left]{Phishing\\Attack} (skydeliverer);
-        \draw[->, very thick, red] (skydeliverer) -- node[right, align=left]{Supply Chain\\Attack} (skydefence);
+    % Vertical arrows
+    \draw[->, very thick, red] (bitlock) -- node[right, align=left]{Phishing\\Attack} (skydeliverer);
+    \draw[->, very thick, red] (skydeliverer) -- node[right, align=left]{Supply Chain\\Attack} (skydefence);
         
-        % Dashed curved arrow for failed direct attack
-        \draw[->, thick, dashed, gray] (bitlock.west) .. controls +(-2,0) and +(-2,0) .. node[left]{Direct Attack (failed)} (skydefence.west);
-    \end{tikzpicture}
+    % Dashed curved arrow for failed direct attack
+    \draw[->, thick, dashed, gray] (bitlock.west) .. controls +(-2,0) and +(-2,0) .. node[left]{Direct Attack (failed)} (skydefence.west);
+\end{tikzpicture}
 
-    \small{\textit{Figure: Supply Chain Attack Pathway into SkyDefence AG}}
-    \end{center}
+\small{\textit{Figure: Supply Chain Attack Pathway into SkyDefence AG}}
+\end{center}
 
-    \newpage
+\newpage
 
-    \subsection{Learning Objectives}
+\subsection{Learning Objectives}
+By the end of this exercise, you will be able to:
+\begin{itemize}[itemsep=0.5em]
+    \item Clearly define and explain a \textbf{supply chain attack}.
+    \item Use fundamental \textbf{Linux commands} effectively for reconnaissance and exploration.
+    \item Understand common reasons why developers introduce \textbf{security vulnerabilities}.
+    \item Think critically from both the \textbf{attacker’s and defender’s perspectives}.
+    \item Execute and recognize techniques employed by professional cybersecurity analysts.
+\end{itemize}
 
-    By the end of this exercise, you will be able to:
-    \begin{itemize}[itemsep=0.5em]
-        \item Clearly define and explain a \textbf{supply chain attack}.
-        \item Use fundamental \textbf{Linux commands} effectively for reconnaissance and exploration.
-        \item Understand common reasons why developers introduce \textbf{security vulnerabilities}.
-        \item Think critically from both the \textbf{attacker’s and defender’s perspectives}.
-        \item Execute and recognize techniques employed by professional cybersecurity analysts.
+\vspace{1em}
+
+\subsection{What You Need}
+
+To successfully complete this lab, ensure you have the following:
+\begin{itemize}[itemsep=0.5em]
+    \item \textbf{Hardware Requirements:}
+    \begin{itemize}
+        \item CPU: Minimum 4 CPU cores (8 cores recommended)
+        \item RAM: Minimum 8GB (16GB recommended)
+        \item Disk Space: At least 20GB of free space
+        \item Internet connection for downloading Docker images
     \end{itemize}
+    \item \textbf{Docker Desktop}
+    \item \textbf{Basic knowledge of the linux commandline} is helpful but not mandatory.
+    \item \textbf{Curiosity and patience} to explore and learn.
+\end{itemize}
 
-    \vspace{1em}
+\vspace{1em}
 
-    \subsection{What You Need}
+\subsection{Understanding Supply Chain Attacks}
 
-    To successfully complete this lab, ensure you have the following:
-    \begin{itemize}[itemsep=0.5em]
-        \item \textbf{Hardware Requirements:}
-        \begin{itemize}
-            \item CPU: Minimum 4 CPU cores (8 cores recommended)
-            \item RAM: Minimum 8GB (16GB recommended)
-            \item Disk Space: At least 20GB of free space
-            \item Internet connection for downloading Docker images
-        \end{itemize}
-        \item \textbf{Docker Desktop}
-        \item \textbf{Basic knowledge of the linux commandline} is helpful but not mandatory.
-        \item \textbf{Curiosity and patience} to explore and learn.
-    \end{itemize}
+\begin{hintbox}
+\textbf{What is a Supply Chain Attack? (Simple Explanation)}
+\\
+Imagine ordering food at your favorite restaurant. You trust the restaurant completely, so you never question where the ingredients come from or if someone has tampered with them. 
+\\
+A \textbf{supply chain attack} is like secretly contaminating these ingredients at the supplier stage—before they ever reach the restaurant. By the time the ingredients are delivered, even the trusted restaurant unknowingly serves compromised meals to customers.
+\\
+In the cybersecurity world, hackers don't always directly target their primary victims. Instead, they inject malicious code into software or updates during their development phase. Once installed by the end-users, this software is already compromised.
 
-    \vspace{1em}
+\end{hintbox}
 
-    \subsection{Understanding Supply Chain Attacks}
+\newpage
 
-    \begin{hintbox}
-    \textbf{What is a Supply Chain Attack? (Simple Explanation)}
+\section{Background: MITRE ATT\&CK Framework}
 
-    Imagine ordering food at your favorite restaurant. You trust the restaurant completely, so you never question where the ingredients come from or if someone has tampered with them. 
-
-    A \textbf{supply chain attack} is like secretly contaminating these ingredients at the supplier stage—before they ever reach the restaurant. By the time the ingredients are delivered, even the trusted restaurant unknowingly serves compromised meals to customers.
-
-    In the cybersecurity world, hackers don't always directly target their primary victims. Instead, they inject malicious code into software or updates during their development phase. Once installed by the end-users, this software is already compromised.
-
-    \end{hintbox}
-
-    \newpage
-
-    \section{Background: MITRE ATT\&CK Framework}
-
-    \begin{hintbox}
+\begin{hintbox}
     \textbf{What is the MITRE ATT\&CK Framework?}
 
     The MITRE ATT\&CK Framework is a globally recognized knowledge base of cyberattack techniques and tactics. It helps security professionals understand how real-world attackers operate, map their activities, and improve defenses.
@@ -243,27 +241,27 @@
     \end{itemize}
 
     In this lab, you'll see MITRE IDs (like T1078) that map your actions to real attacker behaviors!
-    \end{hintbox}
+\end{hintbox}
 
-    \begin{center}
-    \begin{tikzpicture}[node distance=1.5cm, every node/.style={align=center}]
-    \node[draw, rounded corners, fill=flagblue!20, minimum width=2.5cm] (initial) {Initial Access};
-    \node[draw, rounded corners, fill=hintgreen!20, right=of initial] (persistence) {Persistence};
-    \node[draw, rounded corners, fill=warningorange!20, right=of persistence] (priv) {Privilege Escalation};
-    \node[draw, rounded corners, fill=gray!20, right=of priv] (impact) {Impact};
-    \draw[->, thick] (initial) -- (persistence);
-    \draw[->, thick] (persistence) -- (priv);
-    \draw[->, thick] (priv) -- (impact);
-    \end{tikzpicture}
+\begin{center}
+\begin{tikzpicture}[node distance=1.5cm, every node/.style={align=center}]
+\node[draw, rounded corners, fill=flagblue!20, minimum width=2.5cm] (initial) {Initial Access};
+\node[draw, rounded corners, fill=hintgreen!20, right=of initial] (persistence) {Persistence};
+\node[draw, rounded corners, fill=warningorange!20, right=of persistence] (priv) {Privilege Escalation};
+\node[draw, rounded corners, fill=gray!20, right=of priv] (impact) {Impact};
+\draw[->, thick] (initial) -- (persistence);
+\draw[->, thick] (persistence) -- (priv);
+\draw[->, thick] (priv) -- (impact);
+\end{tikzpicture}
 
-    \small{\textit{Figure: Example MITRE ATT\&CK Tactics Progression}}
-    \end{center}
+\small{\textit{Figure: Example MITRE ATT\&CK Tactics Progression}}
+\end{center}
 
-    \vspace{1em}
+\vspace{1em}
 
-    \section{Background: What is Docker?}
+\section{Background: What is Docker?}
 
-    \begin{hintbox}
+\begin{hintbox}
     \textbf{Docker in a Nutshell}
 
     Docker is a tool that lets you run applications in isolated environments called \textbf{containers}. Think of containers as lightweight, portable virtual computers that always work the same way, no matter where you run them.
@@ -274,71 +272,70 @@
         \item Each container is separate and safe to experiment in
         \item Used by real companies for development and deployment
     \end{itemize}
-    \end{hintbox}
+\end{hintbox}
 
-    \newpage
+\newpage
 
-    \section{Setting Up Docker}
+\section{Setting Up Docker}
+This section covers installing Docker on Linux, macOS, and Windows as this is will run the infrastructure which we will need in order to start the lab.\\
 
-    This section covers installing Docker on Linux, macOS, and Windows as this is will run the infrastructure which we will need in order to start the lab.\\
+\noindent For Windows and MAC please follow the installation steps over to: \\
+\centerline{ \url{https://docs.docker.com/desktop/mac/install/} }
 
-    \noindent For Windows and MAC please follow the installation steps over to: \\
-    \centerline{ \url{https://docs.docker.com/desktop/mac/install/} }
-
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[width=0.8\textwidth]{docker-install.png}
-        \caption{Download your corresponding docker image}
-    \end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{docker-install.png}
+    \caption{Download your corresponding docker image}
+\end{figure}
         
-    Confirm that everything is working by opening your Command Prompt and running:
-    \begin{lstlisting}[language=bash]
+Confirm that everything is working by opening your Command Prompt and running:
+\begin{lstlisting}[language=bash]
     sudo docker run hello-world
-    \end{lstlisting}
+\end{lstlisting}
 
 
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[width=0.7\textwidth]{hello-world.png}
-        \caption{Successful output of "docker run hello-world"}
-    \end{figure}
-    \noindent
-    If you want to install docker on Linux please consult the the docker installation docs to find custom instructions for your distribution: \\
-    \centerline{\url{https://docs.docker.com/desktop/setup/install/linux/}}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{hello-world.png}
+    \caption{Successful output of "docker run hello-world"}
+\end{figure}
+\noindent
+If you want to install docker on Linux please consult the the docker installation docs to find custom instructions for your distribution: \\
+\url{https://docs.docker.com/desktop/setup/install/linux/}
 
-    \section{System Architecture}
+\section{System Architecture}
 
-    \subsection{Container Overview}
+\subsection{Container Overview}
 
-    The lab environment comprises several interconnected components.
+The lab environment comprises several interconnected components.\\
 
-    \begin{enumerate}[itemsep=1 em]
+\begin{enumerate}[itemsep=1 em]
 
-        \item \textbf{Developer Machine} (\texttt{dev-workstation})
-        \begin{itemize}
-            \item working machine of the developer account.
-            \item Equipped with necessary build tools and development environment.
-        \end{itemize}
+    \item \textbf{Developer Machine} (\texttt{dev-workstation})
+    \begin{itemize}
+        \item working machine of the developer account.
+        \item Equipped with necessary build tools and development environment.
+    \end{itemize}
 
-        \item \textbf{Flight Controller} (\texttt{flight-controller})
-        \begin{itemize}
-            \item Core drone firmware.
-            \item Processes virtual sensor data for drone flight controls.
-        \end{itemize}
+    \item \textbf{Flight Controller} (\texttt{flight-controller})
+    \begin{itemize}
+        \item Core drone firmware.
+        \item Processes virtual sensor data for drone flight controls.
+    \end{itemize}
 
-        \item \textbf{Companion Computer} (\texttt{companion-computer})
-        \begin{itemize}
-            \item Performs advanced onboard processing tasks beyond basic flight control.
-            \item Manages telemetry logs, wireless networks, camera streaming, and autonomous guidance systems.
-            \item Communicates with Ground Control via wireless MAVLink connections.
-        \end{itemize}
+    \item \textbf{Companion Computer} (\texttt{companion-computer})
+    \begin{itemize}
+        \item Performs advanced onboard processing tasks beyond basic flight control.
+        \item Manages telemetry logs, wireless networks, camera streaming, and autonomous guidance systems.
+        \item Communicates with Ground Control via wireless MAVLink connections.
+    \end{itemize}
 
-        \item \textbf{Ground Control Station} (\texttt{ground-control})
-        \begin{itemize}
-            \item Central user interface for drone pilots/operators.
-            \item Provides functionalities for mission planning, flight mapping, video streaming, and joystick control.
-            \item Monitors build artifacts and manages software deployments.
-        \end{itemize}
+    \item \textbf{Ground Control Station} (\texttt{ground-control})
+    \begin{itemize}
+        \item Central user interface for drone pilots/operators.
+        \item Provides functionalities for mission planning, flight mapping, video streaming, and joystick control.
+        \item Monitors build artifacts and manages software deployments.
+    \end{itemize}
 
     \item \textbf{Simulator} (\texttt{simulator})
         \begin{itemize}
@@ -346,13 +343,13 @@
             \item Manages motor operations, physics calculations, and sensor simulations.
         \end{itemize}
 
-    \end{enumerate}
+\end{enumerate}
 
-    \newpage
+\newpage
 
-    \subsection{Network Topology}
+\subsection{Network Topology}
 
-    \begin{figure}[h!]
+\begin{figure}[h!]
     \centering
     \begin{tikzpicture}[node distance=3cm, every node/.style={rectangle, rounded corners, draw, align=center, minimum width=4cm, minimum height=1.2cm}]
 
@@ -375,26 +372,26 @@
 
     \end{tikzpicture}
     \caption{Simplified Network Topology: External Attacker vs. Internal Drone System}
-    \end{figure}
+\end{figure}
 
 
 
-    \newpage
+\newpage
 
-    \section{Lab Setup - Getting Started}
+\section{Lab Setup - Getting Started}
 
-    \subsection{Starting Your Hacking Environment}
+\subsection{Starting Your Hacking Environment}
 
-    First, let's get our lab environment running.
-    To get all the infrastructure we need lets fist clone the repo which hosts it. 
-    \begin{lstlisting}[language=bash, caption=Cloning the required repo]
+First, let's get our lab environment running.
+To get all the infrastructure we need lets fist clone the repo which hosts it. 
+\begin{lstlisting}[language=bash, caption=Cloning the required repo]
     # Open a terminal and clone the repo. Install git if not present.
     git clone https://github.com/crnnr/Damn-Vulnerable-Drone
-    \end{lstlisting}
+\end{lstlisting}
 
-    Secondly, lets start the infrastructure.
+Secondly, lets start the infrastructure.
 
-    \begin{lstlisting}[language=bash, caption=Starting the Lab Environment]
+\begin{lstlisting}[language=bash, caption=Starting the Lab Environment]
     # Open a terminal and navigate to the project directory
     cd Damn-Vulnerable-Drone\DVDS-SUPPLYCHAIN-CHALLENGE
 
@@ -408,78 +405,75 @@
     # to the developer machine automatically.
     # If not, you can check running containers with:
     # docker ps
-    \end{lstlisting}
+\end{lstlisting}
 
-    \begin{hintbox}
-    \noindent
-    \textbf{What just happened?}
-    \noindent
-    We just started several "virtual computers" (called containers) that simulate a real company's development environment:
-    \begin{itemize}
-        \item A developer's workstation (where programmers write code)
-        \item A network which connects the different parts of the drone
-        \item The background Webserver which simulate the drone behaviour
-    \end{itemize}
+\begin{hintbox}
+\noindent
+\textbf{What just happened?}
+\noindent
+We just started several "virtual computers" (called containers) that simulate a real company's development environment:
+\begin{itemize}
+    \item A developer's workstation (where programmers write code)
+    \item A network which connects the different parts of the drone
+    \item The background Webserver which simulate the drone behaviour
+\end{itemize}
 
-    \noindent
-    Think of it like a miniature version of a real company's IT infrastructure!
-    \end{hintbox}
+\noindent
+Think of it like a miniature version of a real company's IT infrastructure!
+\end{hintbox}
 
-    If everything worked you now have something that looks something like this:
+If everything worked you now have something that looks something like this:
 
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[width=0.7\textwidth]{developer-cmd.png}
-        \caption{Successful start of lab env}
-    \end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.7\textwidth]{developer-cmd.png}
+    \caption{Successful start of lab env}
+\end{figure}
 
-    \noindent
-    You are now connected to the developer machine with the junior developer credentials we acquired through the fishing campaign. You can now look around, familiarize yourself with the environment and explore the container!
+\noindent
+You are now connected to the developer machine with the junior developer credentials we acquired through the fishing campaign. You can now look around, familiarize yourself with the environment and explore the container!
 
-    \newpage
+\newpage
 
-    \section{Exploring the Lab Environment}
+\section{Exploring the Lab Environment}
 
-    \subsection{Step 1: Accessing the Damn Vulnerable Drone Webpage}
+\subsection{Step 1: Accessing the Damn Vulnerable Drone Webpage}
 
-    After successfully starting your lab environment, your simulated drone is now active. Let's begin by accessing the drone’s web management interface:
+After successfully starting your lab environment, your simulated drone is now active. Let's begin by accessing the drone’s web management interface:
 
-    \begin{enumerate}
-        \item Open your preferred browser.
-        \item Navigate to:
-        \begin{center}
-            \textbf{\url{http://localhost:8000/}}
-        \end{center}
-    \end{enumerate}
+\begin{enumerate}
+    \item Open your preferred browser.
+    \item Navigate to:
+    \begin{center}
+        \textbf{\url{http://localhost:8000/}}
+    \end{center}
+\end{enumerate}
+If everything is correctly set up, you should see something that resembles the page below:
 
-    If everything is correctly set up, you should see something that resembles the page below:
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\textwidth]{damn-vulnerable-drone.png}
+    \caption{Damn Vulnerable Drone Web Interface}
+\end{figure}
+On the upper right hand side, you can now click through the different stages of a test environment. Again, based on your Hardware, some steps might take a second to load. However, go ahead and run through the different stage of the Flight stages. 
 
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[width=1.0\textwidth]{damn-vulnerable-drone.png}
-        \caption{Damn Vulnerable Drone Web Interface}
-    \end{figure}
+\newpage
 
-    On the upper right hand side, you can now click through the different stages of a test environment. Again, based on your Hardware, some steps might take a second to load. However, go ahead and run through the different stage of the Flight stages. 
-
-    \newpage
-
-    \subsection{Step 2: Exploring the Developer Container}
-
-    Back in our developer box, lets look around a little what we can find. \\
+\subsection{Step 2: Exploring the Developer Container}
+Back in our developer box, lets look around a little what we can find. \\
     \\
     On the machine execute these commands: \\
     \\
-    \begin{lstlisting}[language=bash, caption=Exploring the filesystem]
+\begin{lstlisting}[language=bash, caption=Exploring the filesystem]
     # Who are we?
     whoami
 
     # List the content of the current directory we are in.
     ls
 
-    \end{lstlisting}
+\end{lstlisting}
 
-    \begin{hintbox}
+\begin{hintbox}
     \noindent
     \textbf{The Linux commandline}
     \noindent
@@ -493,20 +487,19 @@
 
     \noindent
     \textbf{Pro Tip:} Use "Tab" to auto-complete commands 
-    \end{hintbox}
+\end{hintbox}
 
-    \begin{challengebox}{Coming home}
+\begin{challengebox}{Coming home}
     How many "home"-directories exist on the developer machine?
     \noindent\rule{\linewidth}{0.4pt}\\[2em]
-    \end{challengebox}
+\end{challengebox}
 
-    \newpage
+\newpage
 
-    \section{Advancing the Attack: Reconnaissance}
+\section{Advancing the Attack: Reconnaissance}
+Now that you've established a foothold on the developer's machine, it's crucial to begin reconnaissance to find ways to escalate your attack. Professional attackers spend considerable time performing detailed reconnaissance to identify vulnerabilities and potential targets.
 
-    Now that you've established a foothold on the developer's machine, it's crucial to begin reconnaissance to find ways to escalate your attack. Professional attackers spend considerable time performing detailed reconnaissance to identify vulnerabilities and potential targets.
-
-    \begin{hintbox}
+\begin{hintbox}
     \noindent
     \textbf{What is Reconnaissance?}
 
@@ -519,13 +512,13 @@
     \end{itemize}
 
     Effective reconnaissance greatly increases your chances of a successful exploitation.
-    \end{hintbox}
+\end{hintbox}
 
-    \subsection{Conducting Reconnaissance: Basic Linux Commands}
+\subsection{Conducting Reconnaissance: Basic Linux Commands}
 
-    Begin your reconnaissance by exploring the environment systematically. Execute the following Linux commands in the developer container to gather useful information:
+Begin your reconnaissance by exploring the environment systematically. Execute the following Linux commands in the developer container to gather useful information:
 
-    \begin{lstlisting}[language=bash, caption=Advanced exploration commands]
+\begin{lstlisting}[language=bash, caption=Advanced exploration commands]
     # Navigate to the developer's directory
     cd /home/developer/
 
@@ -535,93 +528,90 @@
     # Look specifically for SSH keys used for remote server access
     ls -la ~/.ssh/
 
-    \end{lstlisting}
+\end{lstlisting}
 
-    \begin{hintbox}
+\begin{hintbox}
     \noindent
     \textbf{What are SSH Keys?}
 
     \noindent
     SSH keys are cryptographic keys used for authentication in the SSH protocol, enabling secure remote access to servers and other systems. They replace passwords with a more secure and often more convenient method of authentication, relying on a pair of keys: a private key kept secret by the user and a public key shared with the server. 
-    \end{hintbox}
+\end{hintbox}
 
-    \vspace{1em}
+\vspace{1em}
 
-    \newpage
+\newpage
+Since we didn't find anything, let's check what we can accomplish with our current developer account:
 
-    Since we didn't find anything, let's check what we can accomplish with our current developer account:
-
-    \begin{lstlisting}[language=bash, caption=Checking user privileges]
+\begin{lstlisting}[language=bash, caption=Checking user privileges]
     # Display your user ID and group memberships
     id
 
     # Check your current user's permissions for sudo commands
     sudo -l
-    \end{lstlisting}
+\end{lstlisting}
 
-    \begin{hintbox}
+\begin{hintbox}
     \noindent
     \textbf{What are Privileges?}
 
     In Linux, \textbf{privileges} define what operations a user is allowed to perform. Regular users typically have limited privileges, whereas administrators (root) have full control over the system.
 
     Attackers usually seek \textbf{privilege escalation} to move from regular user privileges to administrative (root) privileges. With root privileges, attackers can access sensitive files, alter configurations, and maintain persistent access.
-    \end{hintbox}
+\end{hintbox}
 
-    \vspace{1em}
+\vspace{1em}
 
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[width=1.0\textwidth]{sudo.png}
-        \caption{Output of privilege checks in the container}
-    \end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\textwidth]{sudo.png}
+    \caption{Output of privilege checks in the container}
+\end{figure}
 
-    \vspace{1em}
+\vspace{1em}
 
-    \noindent
-    Since we seem to have no special privileges, let's look for other ways an attacker might use.
+\noindent
+Since we seem to have no special privileges, let's look for other ways an attacker might use.
 
-    \newpage
+\newpage
 
-    \section{SSH Keys}
-    One way to we could use to further our reach into into the network are \textbf{SSH-Keys}.
-    SSH keys can be used to authenticate to other systems without needing a password, making them a valuable asset for an attacker. If we can find and use the developer's SSH keys, we may be able to access other machines in the network.
+\section{SSH Keys}
+One way to we could use to further our reach into into the network are \textbf{SSH-Keys}.\\
+SSH keys can be used to authenticate to other systems without needing a password, making them a valuable asset for an attacker. If we can find and use the developer's SSH keys, we may be able to access other machines in the network.
 
-    \begin{hintbox}
+\begin{hintbox}
     \noindent
     \textbf{What are SSH Keys?}
 
     SSH keys are cryptographic keys used for authentication in the SSH protocol, enabling secure remote access to servers and other systems. They replace passwords with a more secure and often more convenient method of authentication, relying on a pair of keys: a private key kept secret by the user and a public key shared with the server.
-    \end{hintbox}
+\end{hintbox}
 
-    \vspace{1em}
+\vspace{1em}
+We can check if the developer has any SSH keys configured by looking in the \texttt{~/.ssh/} directory.
 
-    We can check if the developer has any SSH keys configured by looking in the \texttt{~/.ssh/} directory.
-
-    \begin{lstlisting}[language=bash, caption=Checking for SSH keys]
+\begin{lstlisting}[language=bash, caption=Checking for SSH keys]
     # List SSH keys in the developer's .ssh directory
     ls -la ~/.ssh/
-    \end{lstlisting}
+\end{lstlisting}
 
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[width=1.0\textwidth]{ssh-keys.png}
-        \caption{Output of SSH key checks in the container}
-    \end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\textwidth]{ssh-keys.png}
+    \caption{Output of SSH key checks in the container}
+\end{figure}
 
-    \noindent
-    Seeing as there is no .ssh directory, we can assume that the developer has not set up any SSH keys.
-    Looking at this we should look into escalating our privileges on the local machine.
+\noindent
+Seeing as there is no .ssh directory, we can assume that the developer has not set up any SSH keys.
+Looking at this we should look into escalating our privileges on the local machine.
 
-    \newpage
+\newpage
 
-    \section{Cronjobs}
+\section{Cronjobs}
+A common method of privilege escalation (both on Linux and Windows!) involves exploiting scheduled tasks. In Linux these are known as \textbf{cronjobs}. Cronjobs are automated tasks scheduled to run periodically under a defined user account.\\
+\\
+Let's investigate if there are any cronjobs configured on this system.\\
 
-    A common method of privilege escalation (both on Linux and Windows!) involves exploiting scheduled tasks. In Linux these are known as \textbf{cronjobs}. Cronjobs are automated tasks scheduled to run periodically under a defined user account.
-
-    Let's investigate if there are any cronjobs configured on this system.
-
-    \begin{lstlisting}[language=bash, caption=Checking cronjobs]
+\begin{lstlisting}[language=bash, caption=Checking cronjobs]
     # Check cronjobs belonging to your current user
     crontab -l
 
@@ -631,9 +621,9 @@
     # View cronjob configuration files for scheduled tasks
     cat /etc/crontab
     cat /etc/cron.d/*
-    \end{lstlisting}
+\end{lstlisting}
 
-    \begin{hintbox}
+\begin{hintbox}
     \noindent
     \textbf{What do cronjobs look like?}
 
@@ -652,87 +642,85 @@
     \end{itemize}
     For example, \texttt{0 5 * * 1 user1 /path/to/script.sh} runs the script every Monday at 5:00 AM in the user1's context.
 
-    \end{hintbox}
+\end{hintbox}
 
-    \subsection{Analyzing Cronjob Vulnerabilities}
+\subsection{Analyzing Cronjob Vulnerabilities}
+When analyzing cronjobs for vulnerabilities, look for the following common security issues:
 
-    When analyzing cronjobs for vulnerabilities, look for the following common security issues:
-
-    \begin{itemize}[itemsep=0.5em]
+\begin{itemize}[itemsep=0.5em]
         \item Cronjobs running scripts from directories where you have write permissions.
         \item Scripts or binaries executed by cronjobs that lack absolute paths, making them susceptible to path manipulation.
         \item Cronjobs that execute scripts with overly permissive file permissions.
     \end{itemize}
 
-    Looking at the output of the previous commands, we can see that there are multiple cronjobs configured on the system.
+Looking at the output of the previous commands, we can see that there are multiple cronjobs configured on the system.
 
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[height=0.7\textwidth]{cron-output.png}
-        \caption{Output of cron job checks in the container}
-    \end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[height=0.7\textwidth]{cron-output.png}
+    \caption{Output of cron job checks in the container}
+\end{figure}
 
-    \begin{challengebox}{Finding Cronjobs}
+\begin{challengebox}{Finding Cronjobs}
     Did you find any cronjobs that run with root privileges or execute scripts that you can modify? \\
     \\
     List them below!\\
-    \noindent\rule{\linewidth}{0.4pt}\\[2em]
-    \end{challengebox}
+\noindent\rule{\linewidth}{0.4pt}\\[2em]
+\end{challengebox}
 
-    \newpage
+\newpage
+Now that we have found an potentially vulnerable cronjob running as root, let's look at how we can exploit it.\\
+Let's start by looking at the build-update.script that we gets executed by the cronjob.
 
-    Now that we have found an potentially vulnerable cronjob running as root, let's look at how we can exploit it.
-    Let's start by looking at the build-update.script that we gets executed by the cronjob.
-
-    \begin{lstlisting}[language=bash, caption=Viewing build-update.script]
+\begin{lstlisting}[language=bash, caption=Viewing build-update.script]
     ls -al /bin/build-update.sh
-    \end{lstlisting}
+\end{lstlisting}
 
-    Using this command we can see different properties of the file:
+Using this command we can see different properties of the file:
 
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[width=1.0\textwidth]{script-permissions.png}
-        \caption{Output of build-update script checks in the container}
-    \end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\textwidth]{script-permissions.png}
+    \caption{Output of build-update script checks in the container}
+\end{figure}
 
-    \noindent
+\noindent
 
+\begin{itemize}
+    \item \textbf{File Permissions:} The first column shows the file's permissions, such as \texttt{-rwxr-xr-x}. This indicates:
     \begin{itemize}
-        \item \textbf{File Permissions:} The first column shows the file's permissions, such as \texttt{-rwxr-xr-x}. This indicates:
-        \begin{itemize}
-            \item \texttt{-}: Regular file.
-            \item \texttt{rwx}: The owner has read, write, and execute permissions.
-            \item \texttt{r-x}: The group has read and execute permissions.
-            \item \texttt{r-x}: Others have read and execute permissions.
-        \end{itemize}
-        \item \textbf{Number of Links:} The second column shows the number of hard links to the file.
-        \item \textbf{Owner:} The third column displays the username of the file's owner, e.g., \texttt{root}.
-        \item \textbf{Group:} The fourth column shows the group associated with the file, e.g., \texttt{root}.
-        \item \textbf{File Size:} The fifth column indicates the size of the file in bytes.
-        \item \textbf{Last Modified Date:} The sixth through eighth columns show the date and time the file was last modified.
-        \item \textbf{File Name:} The final column displays the name of the file, \texttt{build-update.sh}.
+        \item \texttt{-}: Regular file.
+        \item \texttt{rwx}: The owner has read, write, and execute permissions.
+        \item \texttt{r-x}: The group has read and execute permissions.
+        \item \texttt{r-x}: Others have read and execute permissions.
     \end{itemize}
+    \item \textbf{Number of Links:} The second column shows the number of hard links to the file.
+    \item \textbf{Owner:} The third column displays the username of the file's owner, e.g., \texttt{root}.
+    \item \textbf{Group:} The fourth column shows the group associated with the file, e.g., \texttt{root}.
+    \item \textbf{File Size:} The fifth column indicates the size of the file in bytes.
+    \item \textbf{Last Modified Date:} The sixth through eighth columns show the date and time the file was last modified.
+    \item \textbf{File Name:} The final column displays the name of the file, \texttt{build-update.sh}.
+\end{itemize}
 
-    \noindent
-    This information is crucial for understanding the file's accessibility and potential vulnerabilities. For example, if the file is writable by the current user or group, it could be exploited to escalate privileges.\\
-    \\
-    \noindent
-    We can see that the file is owned by root and we can only \texttt{view} it. \\
-    We can do so by running: \\
+\noindent
+This information is crucial for understanding the file's accessibility and potential vulnerabilities. For example, if the file is writable by the current user or group, it could be exploited to escalate privileges.\\
+\\
+\noindent
+We can see that the file is owned by root and we can only \texttt{view} it. \\
+We can do so by running: \\
     
-    \begin{lstlisting}[language=bash, caption=Viewing the build-update script]
+\begin{lstlisting}[language=bash, caption=Viewing the build-update script]
     # View the content of the build-update script
     cat /bin/build-update.sh
-    \end{lstlisting}
+\end{lstlisting}
 
-    \newpage
+\newpage
 
-    Looking at the content of the script, we can see that it is used to update the software components of the SkyDeliverer AG.
+Looking at the content of the script, we can see that it is used to update the software components of the SkyDeliverer AG.
     
-    \vspace{1em}
+\vspace{1em}
 
-    \begin{lstlisting}[language=bash, caption=Content of build-update.sh]
+\begin{lstlisting}[language=bash, caption=Content of build-update.sh]
     #!/bin/bash
     BUILD_LOG="/var/log/build-pipeline.log"
     BUILD_DIR="/builds"
@@ -751,40 +739,39 @@
         log_message "[$stage_name] $status"
     }
     ....
-    \end{lstlisting}    
-    \noindent
-    Looking at the file we can see, that the code is located in the \texttt{/sourcecode} directory. \\
-    \\
-    Take a look at the content of the \texttt{/sourcecode} directory by running: 
+\end{lstlisting}    
+\noindent
+Looking at the file we can see, that the code is located in the \texttt{/sourcecode} directory. \\
+\\
+Take a look at the content of the \texttt{/sourcecode} directory by running: 
 
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[width=1.0\textwidth]{directory-out.png}
-        \caption{Output of the sourcecode directory listing}
-    \end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\textwidth]{directory-out.png}
+    \caption{Output of the sourcecode directory listing}
+\end{figure}
 
-    \begin{challengebox}{Getting to the source}
+\begin{challengebox}{Getting to the source}
     Look at the content of the \texttt{/sourcecode} directory.
     Where do we need to go if we want to modify the \texttt{return to land} step?
     \noindent\rule{\linewidth}{0.4pt}\\[2em]
-    \end{challengebox}
+\end{challengebox}
 
-    \newpage
+\newpage
 
-    \section{Diving into the Code}
+\section{Diving into the Code}
+Looking at the found source we see the structure of the different containers. A quick look into the "ground-control-station" directory reveals a "stages" folder, which contains the different stages of the drone flight.\\
+\\
+Seeing as we want to crash the drone at the "return to home" stage, lets take a look into the corresponding stage file.
 
-    Looking at the found source we see the structure of the different containers. A quick look into the "ground-control-station" directory reveals a "stages" folder, which contains the different stages of the drone flight.
-
-    Seeing as we want to crash the drone at the "return to home" stage, lets take a look into the corresponding stage file.
-
-    \begin{lstlisting}[language=bash, caption=Viewing the return to home stage]
+\begin{lstlisting}[language=bash, caption=Viewing the return to home stage]
     # View the content of the return to home stage
     cat /sourcecode/ground-control-station/stages/return-to-land.py
-    \end{lstlisting}
+\end{lstlisting}
 
-    This reveals the following:
+This reveals the following:
 
-    \begin{lstlisting}[language=python, caption=Content of return-to-land.py]
+\begin{lstlisting}[language=python, caption=Content of return-to-land.py]
     from pymavlink import mavutil
     import time
 
@@ -821,79 +808,79 @@
     # Set mode to RTL
     set_mode_rtl(master)
     print("Returning to Launch")
-    \end{lstlisting}
+\end{lstlisting}
 
-    \newpage
+\newpage
 
-    \section{Modifying the Build Process}
+\section{Modifying the Build Process}
 
-    \noindent
-    \textbf{Taking a blue team perspective} \\
-    \\
-    \noindent
-    As a defensive security professional there might be steps implemented that could trigger alarms when executing these supply chain attacks. \\
-    This could include implementing static code analysis and vulnerability scanning in build pipelines. \\
-    \\
-    \noindent
-    \textbf{Static Code Analysis \& Vulnerability Scanning} \\
-    \\
-    \noindent
-    Static Application Security Testing tools analyze source code without executing it to identify potential security vulnerabilities and coding errors. \\
-    \\
-    When integrated into CI/CD pipelines, these tools can:
+\noindent
+\textbf{Taking a blue team perspective} \\
+\\
+\noindent
+As a defensive security professional there might be steps implemented that could trigger alarms when executing these supply chain attacks. \\
+This could include implementing static code analysis and vulnerability scanning in build pipelines. \\
+\\
+\noindent
+\textbf{Static Code Analysis \& Vulnerability Scanning} \\
+\\
+\noindent
+Static Application Security Testing tools analyze source code without executing it to identify potential security vulnerabilities and coding errors. \\
+\\
+When integrated into CI/CD pipelines, these tools can:
     
-    \begin{itemize}
-        \item Automatically scan every code commit or pull request
-        \item Block builds that contain known vulnerabilities or malicious code patterns
-        \item Generate detailed reports of security issues with remediation guidance
-        \item Enforce secure coding standards and best practices
-    \end{itemize}
-    \noindent
-    So in theory this means that, if we modify the code in a way that is not expected, it could trigger an alarm and alert the security team.
+\begin{itemize}
+    \item Automatically scan every code commit or pull request
+    \item Block builds that contain known vulnerabilities or malicious code patterns
+    \item Generate detailed reports of security issues with remediation guidance
+    \item Enforce secure coding standards and best practices
+\end{itemize}
+\noindent
+So in theory this means that, if we modify the code in a way that is not expected, it could trigger an alarm and alert the security team.
 
-    \noindent
-    In order to avoid this, we will modify the code in a way that is not immediately obvious. We will do this by obviouscating the code, so it cannot immediately be recognized as malicious.
+\noindent
+In order to avoid this, we will modify the code in a way that is not immediately obvious. We will do this by obviouscating the code, so it cannot immediately be recognized as malicious.
 
-    \begin{hintbox}
+\begin{hintbox}
     \noindent
     \textbf{What is Code Obfuscation?}
     \noindent
     Code obfuscation is the practice of making code difficult to understand while preserving its functionality.
     This is often done to protect intellectual property, prevent reverse engineering, or hide malicious intent in supply chain attacks.
-    \end{hintbox}
+\end{hintbox}
 
-    Some methods of code obfuscation include:
-    \begin{itemize}
-        \item Renaming variables and functions to meaningless names
-        \item Adding unnecessary code that does not affect functionality
-        \item Using complex control flow structures
-        \item Encoding strings or data in a way that is not immediately readable
-    \end{itemize}
-    \noindent
-    We are going to to use the latter method: encoding strings or data in a way that is not scannable by automated tools.
-    This will allow us to modify the code in a way that is not scannable by automated tools.
+Some methods of code obfuscation include:
+\begin{itemize}
+    \item Renaming variables and functions to meaningless names
+    \item Adding unnecessary code that does not affect functionality
+    \item Using complex control flow structures
+    \item Encoding strings or data in a way that is not immediately readable
+\end{itemize}
+\noindent
+We are going to to use the latter method: encoding strings or data in a way that is not scannable by automated tools.\\
+This will allow us to modify the code in a way that is not scannable by automated tools.
 
-    \newpage
+\newpage
 
-    \subsection{Entering the Pipeline}
+\subsection{Entering the Pipeline}
 
-    \noindent
-    For an even more stealthy approach, we are not going to modify the code directly, but rather inject our malicious code into the build pipeline. 
-    This way, even if someone looks at the code, they will not see our malicious code directly. Instead, we will modify the build pipeline to execute our malicious code during the build process. \\
-    \noindent
-    In our use case, the "Build Pipeline" is simulated by the Dockerfile of the docker container. We will modify the Dockerfile of the \texttt{ground-control-station} container to execute our malicious code during the build process.
+\noindent
+For an even more stealthy approach, we are not going to modify the code directly, but rather inject our malicious code into the build pipeline.\\ 
+This way, even if someone looks at the code, they will not see our malicious code directly. Instead, we will modify the build pipeline to execute our malicious code during the build process. \\
+\noindent
+In our use case, the "Build Pipeline" is simulated by the Dockerfile of the docker container. We will modify the Dockerfile of the \texttt{ground-control-station} container to execute our malicious code during the build process.
     
-    \noindent
-    We will slightly alter the Dockerfile of the \texttt{ground-control-station} container like this:
-    \begin{lstlisting}[language=bash, caption=Modifying the Dockerfile]
+\noindent
+We will slightly alter the Dockerfile of the \texttt{ground-control-station} container like this:
+\begin{lstlisting}[language=bash, caption=Modifying the Dockerfile]
     # Open the Dockerfile in the ground-control-station directory
     nano /sourcecode/ground-control-station/Dockerfile
-    \end{lstlisting}
+\end{lstlisting}
     
-    \noindent
-    In the Dockerfile, we will add a line to insert our malicious code into the build process. The malicious code is base64-encoded to avoid detection by simple text-based security scanners:
+\noindent
+In the Dockerfile, we will add a line to insert our malicious code into the build process. The malicious code is base64-encoded to avoid detection by simple text-based security scanners:
     
-    \begin{lstlisting}[language=bash, caption=Adding malicious code to the Dockerfile]
+\begin{lstlisting}[language=bash, caption=Adding malicious code to the Dockerfile]
     [... previous Dockerfile content...]
     COPY ground-control-station/missions /missions
     COPY ground-control-station/init /init
@@ -904,9 +891,9 @@
     RUN chmod +x /init
 
     CMD echo "Ground Control Online..." && /usr/bin/expect /init
-    \end{lstlisting}
+\end{lstlisting}
     
-    \begin{hintbox}
+\begin{hintbox}
     \textbf{What does this malicious code do?}
     
     When decoded, the base64 string contains Python code that:
@@ -916,14 +903,14 @@
         \item Forces the drone to shut down mid-flight, simulating a crash
         \item Maintains connection to avoid suspicion
     \end{itemize}
-    \end{hintbox}
+\end{hintbox}
 
-    \subsection{The Decoded Malicious Payload}
+\subsection{The Decoded Malicious Payload}
 
-    \noindent
-    When the base64 string is decoded, it creates the following malicious Python file:
+\noindent
+When the base64 string is decoded, it creates the following malicious Python file:
 
-    \begin{lstlisting}[language=python, caption=Decoded malicious return-to-land.py]
+\begin{lstlisting}[language=python, caption=Decoded malicious return-to-land.py]
     from pymavlink import mavutil
     import time
 
@@ -960,66 +947,65 @@
             time.sleep(1)
     except KeyboardInterrupt:
         pass
-    \end{lstlisting}
+\end{lstlisting}
 
-    \newpage
+\newpage
 
-    \section{Conclusion}
-    \noindent
-    Shortly after modifying the Dockerfile the scheduled cron job will execute the build-update script, which will in turn build the Docker image for the ground control station.
+\section{Conclusion}
+\noindent
+Shortly after modifying the Dockerfile the scheduled cron job will execute the build-update script, which will in turn build the Docker image for the ground control station.
 
-    \begin{figure}[htbp]
-        \centering
-        \includegraphics[width=1.0\textwidth]{restart.png}
-        \caption{Restart of the ground control station container}
-    \end{figure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\textwidth]{restart.png}
+    \caption{Restart of the ground control station container}
+\end{figure}
 
-    \noindent
-    After the build is complete, the ground control station will be restarted and our malicious code will be executed during the "return to home" stage of the drone flight. This will cause the drone to crash mid-flight. \\
-    \\
-    \noindent
-    You can now go back to the web interface of the drone and start a new flight:
-
-    \begin{figure}[htbp]
+\noindent
+After the build is complete, the ground control station will be restarted and our malicious code will be executed during the "return to home" stage of the drone flight. This will cause the drone to crash mid-flight. \\
+\\
+\noindent
+You can now go back to the web interface of the drone and start a new flight:
+\begin{figure}[htbp]
         \centering
         \includegraphics[width=1.0\textwidth]{crash.png}
         \caption{Crash of the drone during return to home}
-    \end{figure}
+\end{figure}
 
-    \noindent
-    As you can see the first 3 stages of the flight are successful, but during the "return to home" stage, the drone crashes due to the malicious payload. \\
-    \\
-    \noindent
-    The drone will not return to the home position, but instead crash mid-flight but will suddenly turn off all motors and fall to the ground. The forth stage never coming to a close as the drone does not reach its home again.
+\noindent
+ As you can see the first 3 stages of the flight are successful, but during the "return to home" stage, the drone crashes due to the malicious payload. \\
+\\
+\noindent
+The drone will not return to the home position, but instead crash mid-flight but will suddenly turn off all motors and fall to the ground. The forth stage never coming to a close as the drone does not reach its home again.
 
-    \newpage
+\newpage
 
-    \section{Closing remarks}
+\section{Closing remarks}
 
-    \noindent
-    In this lab, we explored how an attacker can exploit vulnerabilities in a software supply chain to compromise a drone system. We learned how to:
-    \begin{itemize}
-        \item Use Docker 
-        \item Explore a simulated drone environment
-        \item Conduct reconnaissance to find vulnerabilities
-        \item Exploit cronjobs to escalate privileges
-        \item Modify build processes to inject malicious code
-    \end{itemize}
+\noindent
+In this lab, we explored how an attacker can exploit vulnerabilities in a software supply chain to compromise a drone system. We learned how to:
+\begin{itemize}
+    \item Use Docker 
+    \item Explore a simulated drone environment
+    \item Conduct reconnaissance to find vulnerabilities
+    \item Exploit cronjobs to escalate privileges
+    \item Modify build processes to inject malicious code
+\end{itemize}
 
-    \noindent
+\noindent
 
-    \subsection{MITRE ATT\&CK Tactics and Techniques}
+\subsection{MITRE ATT\&CK Tactics and Techniques}
     \noindent
-    This lab exercise aligns with the following MITRE ATT\&CK tactics and techniques:
-    \begin{itemize}
-        \item \textbf{Initial Access:} Phishing (T1566)
-        \item \textbf{Execution:} Command and Scripting Interpreter (T1059)
-        \item \textbf{Persistence:} Cron (T1053)
-        \item \textbf{Privilege Escalation:} Exploitation for Privilege Escalation (T1068)
-        \item \textbf{Defense Evasion:} Obfuscated Files or Information (T1027)
-        \item \textbf{Impact:} Denial of Service (T1499)
-    \end{itemize}
-    \noindent
-    Understanding these tactics and techniques helps us recognize how attackers operate and how to defend against such attacks.
-    You can look them up in the MITRE ATT\&CK framework: \url{https://attack.mitre.org/}
+This lab exercise aligns with the following MITRE ATT\&CK tactics and techniques:
+\begin{itemize}
+    \item \textbf{Initial Access:} Phishing (T1566)
+    \item \textbf{Execution:} Command and Scripting Interpreter (T1059)
+    \item \textbf{Persistence:} Cron (T1053)
+    \item \textbf{Privilege Escalation:} Exploitation for Privilege Escalation (T1068)
+    \item \textbf{Defense Evasion:} Obfuscated Files or Information (T1027)
+    \item \textbf{Impact:} Denial of Service (T1499)
+\end{itemize}
+\noindent
+Understanding these tactics and techniques helps us recognize how attackers operate and how to defend against such attacks.\\
+You can look them up in the MITRE ATT\&CK framework: \url{https://attack.mitre.org/}
 \end{document}
