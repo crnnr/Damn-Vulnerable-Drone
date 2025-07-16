@@ -314,29 +314,6 @@
         \item \textbf{Dokumentation von Mindestanforderungen:} Klare Definition der Systemvoraussetzungen und Bereitstellung von Installationsanleitungen für verschiedene Host-Systeme.
     \end{itemize}
     
-    \begin{figure}[h]
-    \centering
-    \begin{tikzpicture}[scale=0.8, every node/.style={rectangle, rounded corners, draw, minimum width=3cm, minimum height=1cm}]
-        % Problem nodes
-        \node[fill=red!20] (problem1) at (0,0) {Grafikprobleme};
-        \node[fill=red!20] (problem2) at (0,-2) {Performance-Engpässe};
-        \node[fill=red!20] (problem3) at (0,-4) {Netzwerk-Isolation};
-        
-        % Solution nodes
-        \node[fill=green!20] (solution1) at (6,0) {Headless-Modus};
-        \node[fill=green!20] (solution2) at (6,-2) {Ressourcen-Optimierung};
-        \node[fill=green!20] (solution3) at (6,-4) {Alternative Visualisierung};
-        
-        % Arrows
-        \draw[->, thick] (problem1) -- (solution1);
-        \draw[->, thick] (problem2) -- (solution2);
-        \draw[->, thick] (problem3) -- (solution3);
-        \draw[->, thick] (problem1) -- (solution3);
-        \draw[->, thick] (problem2) -- (solution1);
-    \end{tikzpicture}
-    \caption{Probleme und Lösungsansätze bei VM-Herausforderungen}
-    \end{figure}
-    
     \subsection{Performance-Optimierung}
     
     Ein weiterer kritischer Aspekt war die Performance-Optimierung, insbesondere für Systeme mit begrenzten Ressourcen:
