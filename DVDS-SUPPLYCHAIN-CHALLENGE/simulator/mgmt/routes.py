@@ -13,7 +13,6 @@ import yaml
 import re
 
 
-
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
@@ -43,19 +42,44 @@ def send_stop_telemetry_request():
     except requests.exceptions.RequestException as e:
         logging.error("Failed to send telemetry data: %s", str(e))
 
-@main.route('/qgc', methods=['POST'])
+@main.route("/qgc", methods=["POST"])
 def open_qgc():
     client = docker.from_env()
+    container_name = "ground-control-station"
+    script_path = "/usr/local/bin/launch_qgc.sh"
+
     try:
-        container = client.containers.get('qgc-container')
-        exec_result = container.exec_run('/usr/local/bin/entrypoint.sh')
+        container = client.containers.get(container_name)
+        if container.status != "running":
+            return make_response(
+                f"Container {container_name} is not running (status: {container.status})",
+                400,
+            )
+
+        # make sure the script exists & is executable (still as root)
+        for test_cmd, error_txt in [
+            (f'test -f "{script_path}"', "Script not found"),
+            (f'test -x "{script_path}"', "Script is not executable"),
+        ]:
+            rc, _ = container.exec_run(test_cmd)
+            if rc != 0:
+                return make_response(f"{error_txt}: {script_path}", 400)
+
+        exec_result = container.exec_run(script_path, user="gcs")
+        output = exec_result.output.decode(errors="ignore").strip()
+
         if exec_result.exit_code == 0:
-            response = make_response('Success', 200)
+            return make_response(f"Success:\n{output}", 200)
         else:
-            response = make_response('Command failed', 400)
+            return make_response(
+                f"Command failed with exit code {exec_result.exit_code}:\n{output}",
+                400,
+            )
+
+    except docker.errors.NotFound:
+        return make_response(f"Container not found: {container_name}", 400)
     except Exception as e:
-        response = make_response(f'Error: {str(e)}', 400)
-    return response
+        return make_response(f"Unexpected error: {str(e)}", 500)
 
 @main.route('/')
 def index():
@@ -166,7 +190,7 @@ def stage2():
     client = docker.from_env()
     container = client.containers.get('ground-control-station')
     logging.info('Triggering Stage 2...')
-    command = "python3 /arm-and-takeoff.py"
+    command = "python3 /opt/gcs/stages/arm-and-takeoff.py"
     
     # Log the command before executing it
     logging.info("Executing command: %s", command)
@@ -197,7 +221,7 @@ def stage3():
     client = docker.from_env()
     container = client.containers.get('ground-control-station')
     logging.info('Triggering Stage 3...')
-    command = "python3 /autopilot-flight.py"
+    command = "python3 /opt/gcs/stages/autopilot-flight.py"
     
     # Log the command before executing it
     logging.info("Executing command: %s", command)
@@ -227,7 +251,7 @@ def stage4():
     client = docker.from_env()
     container = client.containers.get('ground-control-station')
     logging.info('Triggering Stage 4...')
-    command = "python3 /return-to-land.py"
+    command = "python3 /opt/gcs/stages/return-to-land.py"
     
     # Log the command before executing it
     logging.info("Executing command: %s", command)
@@ -255,7 +279,7 @@ def stage5():
     client = docker.from_env()
     container = client.containers.get('ground-control-station')
     logging.info('Triggering Stage 5...')
-    command = "python3 /post-flight-analysis.py"
+    command = "python3 /opt/gcs/stages/post-flight-analysis.py"
 
     stage1 = Stage.query.filter_by(name='Stage 1').first()
     stage1.status = 'Enabled'
@@ -414,44 +438,54 @@ def convert_code_blocks(text):
         text = re.sub(r'(?<!`)`([^`]+)`(?!`)', r'<code>\1</code>', text)
     return text
 
-@main.route('/attacks/<tactic>/<filename>')
-def render_yaml(tactic, filename):
-    # Ensure the filename ends with .yaml
-    if not filename.endswith('.yaml'):
-        filename += '.yaml'
-    
-    # Define the directory where YAML files are stored
-    yaml_dir = 'templates/pages/attacks/{}/'.format(tactic)
-    
-    # Construct the full path to the YAML file
-    file_path = os.path.join(yaml_dir, filename)
-    
-    # Check if the file exists
-    if not os.path.exists(file_path):
-        abort(404)  # Return a 404 error if the file does not exist
-    
-    # Read the YAML file content
-    with open(file_path, 'r') as file:
-        yaml_content = yaml.safe_load(file)
-    
-    # Extract data from YAML
-    title = yaml_content.get('title', 'No Title')
-    description = yaml_content.get('description', '')
-    breadcrumb = yaml_content.get('breadcrumb', [])
-    sections = yaml_content.get('sections', [])
+SLUG_OVERRIDES = {}
 
-    # Convert code blocks in sections
-    for section in sections:
-        if 'content' in section and isinstance(section['content'], str):
-            section['content'] = convert_code_blocks(section['content'])
-        if 'steps' in section:
-            for step in section['steps']:
-                if isinstance(step['description'], str):
-                    step['description'] = convert_code_blocks(step['description'])
+def slugify(title: str) -> str:
+    """
+    Convert a human-readable title into a GitHub-Wiki-friendly slug.
 
-    # Render the HTML content within the template
-    return render_template('pages/attacks/template.html', title=title, description=description, breadcrumb=breadcrumb, sections=sections)
+    * Spaces/underscores → dash
+    * Keep A-Z, a-z, 0-9, dash, &
+    * Strip everything else
+    * Collapse multiple dashes
+    """
+    s = title.strip()
+    s = re.sub(r"[ _]+", "-", s)          # spaces/underscores → -
+    s = re.sub(r"[^A-Za-z0-9\-\&]", "", s)  # drop symbols except dash & &
+    s = re.sub(r"-{2,}", "-", s)          # -- → -
+    return s
 
+
+@main.route("/attacks/<tactic>/<filename>")
+def redirect_attack_scenario(tactic: str, filename: str):
+    """
+    Example:
+        /attacks/navigation/altitude-spoofing  →
+        https://github.com/nicholasaleks/Damn-Vulnerable-Drone/wiki/Altitude-Spoofing
+    """
+    # ── Locate & load the YAML file ─────────────────────────────
+    base_name = filename.rsplit(".", 1)[0]          # strip .yaml if present
+    yaml_path = os.path.join(
+        "templates", "pages", "attacks", tactic, f"{base_name}.yaml"
+    )
+
+    if not os.path.exists(yaml_path):
+        abort(404)
+
+    with open(yaml_path, "r", encoding="utf-8") as f:
+        yaml_content = yaml.safe_load(f) or {}
+
+    title = yaml_content.get("title", base_name)
+
+    # ── Build the Wiki slug ────────────────────────────────────
+    wiki_slug = SLUG_OVERRIDES.get(title, slugify(title))
+
+    wiki_url = (
+        f"https://github.com/nicholasaleks/Damn-Vulnerable-Drone/wiki/{wiki_slug}"
+    )
+
+    # ── Redirect the user ──────────────────────────────────────
+    return redirect(wiki_url, code=302)
 
 ###############################
 # Errors
