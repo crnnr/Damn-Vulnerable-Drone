@@ -198,8 +198,8 @@
         
         \item \textbf{Lernwert:} Jeder Schritt der Challenge sollte wichtige Sicherheitskonzepte vermitteln.
         
-        \item \textbf{Zugänglichkeit:} Die Challenge sollte für Studierende mit grundlegenden Linux-Kenntnissen lösbar sein.
-        
+        \item \textbf{Zugänglichkeit:} Die Challenge sollte für Studierende unabhängig von ihrem Kenntnisstand zugänglich sein, ohne dass tiefgehende Vorkenntnisse nötig sind.
+
         \item \textbf{Skalierbarkeit:} Die Umgebung sollte auf verschiedenen Systemen lauffähig sein, mit minimalen Anforderungen.
     \end{itemize}
     
@@ -210,16 +210,12 @@
     Die Implementierung erfolgte in mehreren Phasen:
     
     \begin{enumerate}
-        \item \textbf{Container-Setup:} Erstellung der Docker-Container für die verschiedenen Komponenten des Systems. Wir verwendeten Alpine Linux als Basis für die meisten Container, um die Größe zu minimieren.
-        
-        \item \textbf{Integration der Drohnensimulation:} Konfiguration von ArduPilot SITL (Software-in-the-Loop) und Gazebo für die realistische Simulation des Drohnenverhaltens.
-        
+        \item \textbf{Container-Setup:} Erstellung der Docker-Container für die verschiedenen Komponenten des Systems.
+                
         \item \textbf{Implementierung der Build-Pipeline:} Entwicklung der automatisierten Build- und Deployment-Prozesse, die als Angriffsziel dienen. Dies umfasste die Erstellung von Cron-Jobs und Bash-Skripten.
         
-        \item \textbf{Implementierung der Schwachstellen:} Gezielte Integration von Sicherheitslücken, insbesondere im Zusammenhang mit Berechtigungen und unsicheren Automatisierungsprozessen.
-        
-        \item \textbf{Entwicklung des Web-Interfaces:} Erstellung einer benutzerfreundlichen Weboberfläche zur Steuerung der Simulation und Visualisierung des Drohnenverhaltens.
-        
+        \item \textbf{Implementierung der Schwachstellen:} Gezielte Integration von Sicherheitslücken, explizit der Einbau eines Cron-Jobs, der als Root ausgeführt wird und die Build-Update-Skripte enthält. Diese Skripte wurden so gestaltet, dass sie anfällig für Code-Injektionen sind.
+               
         \item \textbf{Dokumentation und Walkthrough:} Erstellung detaillierter Anleitungen sowohl für die Setup-Phase als auch für die Lösung der Challenge.
     \end{enumerate}
     
@@ -228,7 +224,7 @@
     Der Hauptangriffspfad der Challenge beinhaltet folgende Schritte:
     
     \begin{enumerate}
-        \item \textbf{Initiale Zugriff:} Teilnehmer erhalten Zugang zur Entwickler-Maschine mit den Anmeldedaten eines Junior-Entwicklers (developer:dev123).
+        \item \textbf{Initiale Zugriff:} Teilnehmer erhalten Zugang zur Entwickler-Maschine mit den "gephishten" Anmeldedaten eines Junior-Entwicklers.
         
         \item \textbf{Reconnaissance:} Erkundung der Umgebung, um Systemstrukturen und potenzielle Angriffspunkte zu identifizieren.
         
@@ -285,48 +281,33 @@
 
     Dabei wurde in regelmäßige Abstimmungen und gemeinsame Review-Sessions sichergestellt, dass alle Komponenten nahtlos zusammenarbeiten.
 
+    \newpage
+
     \section{Technische Herausforderungen und Lösungen}
-    
-    \subsection{Blockers: Schwierigkeiten mit virtuellen Maschinen}
-    
-    Während der Entwicklung des Projekts stießen wir auf mehrere signifikante technische Herausforderungen, insbesondere im Zusammenhang mit der Ausführung in virtuellen Maschinen:
-    Das ursprüngliche Projekt war dabei nur für eine Kali-Linux VM konzeptioniert, dies führte ursprünglich zu Problemen, da für den Start der ersten Phase der Drohnensimulation eine GPU erforderlich war, die in der VM nicht verfügbar war. Aufgrund verschiedener Treiberprobleme gestaltete sich ein GPU-Passtrhough als schwierig.
-    Nach weiterem Testing wurde jedoch klar, dass die Simulation ebenso auf Barebone-Systemen lauffähig war, was die Abhängigkeit von einer GPU in der VM überflüssig machte.
-    
-    \subsection{Blockers: Performance bei Start der Simulation}
+        
+        \subsection{Blockers: Schwierigkeiten mit virtuellen Maschinen}
+        
+        \paragraph{Problemstellung:}
+        Während der Entwicklung des Projekts stießen wir auf signifikante technische Herausforderungen im Zusammenhang mit der Ausführung in virtuellen Maschinen. Das ursprüngliche Projekt war für eine Kali-Linux VM konzipiert, was zu Problemen führte, da für den Start der ersten Phase der Drohnensimulation eine GPU erforderlich war, die in der VM nicht verfügbar war. Aufgrund verschiedener Treiberprobleme gestaltete sich ein GPU-Passthrough als schwierig.
+        
+        \paragraph{Lösungsansatz:}
+        Nach weiterem Testing wurde festgestellt, dass die Simulation ebenso auf Barebone-Systemen lauffähig war. Diese Erkenntnis machte die Abhängigkeit von einer GPU in der VM überflüssig und ermöglichte einen flexibleren Einsatz der Simulationsumgebung auf verschiedenen Systemkonfigurationen.
+        
+        \subsection{Blockers: Performance bei Start der Container}
 
-    Ein weiteres Problem trat beim Start der Simulation auf, da mehrere Container gleichzeitig gestartet wurden, was zu einer hohen Systemlast führte.
-    Dieses Problem konnte nur teilweise gelöst werden. Da bei der 
+        \paragraph{Problemstellung:}
+        Ein weiteres Problem trat beim Start der Container auf. Da mehrere Container gleichzeitig gestartet wurden, führte dies zu einer hohen Systemlast und Performanceeinbußen, besonders auf Systemen mit begrenzten Ressourcen.
+        
+        \paragraph{Lösungsansatz:}
+        Dieses Problem konnte nur teilweise gelöst werden. Da im Rahmen des Supply-Chain-Angriffs die Container der Drohne neu gestartet werden müssen, wurde ein weitgehendes Caching implementiert. Diese Optimierung reduzierte die Startzeit und die benötigte Rechenleistung erheblich, ohne die Funktionalität der Simulation zu beeinträchtigen.
 
-    \subsection{Lösungsansätze}
-    
-    Um diese Herausforderungen zu bewältigen, haben wir verschiedene Lösungsansätze entwickelt:
-    
-    \begin{itemize}
-        \item \textbf{Headless-Modus:} Implementierung eines "Headless"-Modus für Gazebo, der ohne grafische Oberfläche arbeitet und die 3D-Visualisierung auf ein Minimum reduziert.
+        \subsection{Blockers: Sourceanpassung beim Container Rebuild}
+
+        \paragraph{Problemstellung:}
+        Ein weiteres Problem trat bei der Sourceanpassung auf. Hier bestand die Schwierigkeit darin, dass die Container beim Rebuild nicht die angepasste Source verwendeten, sondern auf die Original-Source zurückgriffen. Dies verhinderte effektiv die Simulation des Supply-Chain-Angriffs, da modifizierter Code nicht in den Build-Prozess einfließen konnte.
         
-        \item \textbf{Ressourcen-Optimierung:} Anpassung der Container-Konfigurationen zur Minimierung des Ressourcenverbrauchs, insbesondere durch Verwendung leichtgewichtiger Linux-Distributionen.
-        
-        \item \textbf{Performance-Monitoring:} Entwicklung von Skripten zur Überwachung der Systemleistung und automatischen Anpassung der Simulationsparameter.
-        
-        \item \textbf{Alternative Visualisierung:} Implementierung einer webbasierten Visualisierung, die weniger ressourcenintensiv ist als die native Gazebo-Darstellung.
-        
-        \item \textbf{Dokumentation von Mindestanforderungen:} Klare Definition der Systemvoraussetzungen und Bereitstellung von Installationsanleitungen für verschiedene Host-Systeme.
-    \end{itemize}
-    
-    \subsection{Performance-Optimierung}
-    
-    Ein weiterer kritischer Aspekt war die Performance-Optimierung, insbesondere für Systeme mit begrenzten Ressourcen:
-    
-    \begin{itemize}
-        \item \textbf{Container-Konfiguration:} Feinabstimmung der Docker-Container-Ressourcen (CPU, Speicher) für optimale Performance.
-        
-        \item \textbf{Simulation-Vereinfachung:} Reduzierung der Komplexität des Gazebo-Modells und der Physik-Simulation.
-        
-        \item \textbf{Parallelisierung:} Verteilung rechenintensiver Prozesse auf mehrere Container und Optimierung der Kommunikation zwischen ihnen.
-        
-        \item \textbf{Caching-Strategien:} Implementierung von Caching-Mechanismen für häufig verwendete Daten und Simulationsergebnisse.
-    \end{itemize}
+        \paragraph{Lösungsansatz:}
+        Diese Herausforderung wurde durch eine Anpassung der Dockerfile und der Start-Skripte gelöst. Die Änderungen stellten sicher, dass die angepasste Source immer verwendet wird und beim Rebuild korrekt in die Container integriert wird. Dadurch konnte der Supply-Chain-Angriffspfad wie vorgesehen implementiert werden.
 
     \newpage
 
@@ -360,18 +341,6 @@
         \item \textbf{Graceful Degradation:} Implementierung von Fallback-Mechanismen, die bei Ausfall nicht-kritischer Komponenten einen eingeschränkten Betrieb ermöglichen.
         
         \item \textbf{Verbesserte Startskripte:} Ergänzung der Docker-Compose-Konfiguration um Abhängigkeitsbeziehungen und Wartezeiten, um Race-Conditions beim Systemstart zu vermeiden.
-    \end{itemize}
-    
-    \subsection{Feedback und Iterationen}
-    
-    Basierend auf internem Feedback wurden mehrere Verbesserungen vorgenommen:
-    
-    \begin{itemize}
-        \item \textbf{Verbesserte Dokumentation:} Ergänzung der Anleitungen mit spezifischeren Erläuterungen zu den Supply-Chain-Angriffsvektoren.
-        
-        \item \textbf{Performance-Optimierungen:} Reduzierung der Container-Baseline-Images und Entfernung nicht benötigter Dienste zur Verringerung des Ressourcenverbrauchs.
-          
-        \item \textbf{Resiliente Netzwerkkonfiguration:} Verbesserte Netzwerkeinstellungen, um mit temporären Verbindungsunterbrechungen zwischen Containern besser umgehen zu können.
     \end{itemize}
 
     \newpage
