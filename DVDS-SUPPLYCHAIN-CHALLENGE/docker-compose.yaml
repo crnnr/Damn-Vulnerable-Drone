@@ -1,29 +1,6 @@
 services:
-  qgc:
-    privileged: true
-    build:
-      context: .
-      dockerfile: ./qgc/Dockerfile
-      args:
-        BASEIMAGE: ubuntu
-        BASETAG: 22.04
-    environment:
-      # -----------DEFAULT VALUE DO NOT MODIFY-----------
-      - DISPLAY=${DISPLAY}
-      - QT_NO_MITSHM=1
-      - XDG_RUNTIME_DIR=/tmp
-      - HEADLESS=0
-    volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
-    devices:
-      - /dev/dri:/dev/dri
-    container_name: qgc-container
-    image: kestr3l/qgc-app:nobg-4.0.0 
-    networks:
-      simulator:
-        ipv4_address: 10.13.0.6
-
   flight-controller:
+    image: n1ckaleks/damn-vulnerable-drone-flight-controller:latest
     container_name: flight-controller
     privileged: true
     build:
@@ -36,8 +13,11 @@ services:
         ipv4_address: 10.13.0.2
 
   companion-computer:
+    image: n1ckaleks/damn-vulnerable-drone-companion-computer:latest
     container_name: companion-computer
     privileged: true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - "3000:3000"
     build:
@@ -54,20 +34,32 @@ services:
         ipv4_address: 10.13.0.3
 
   ground-control-station:
+    image: n1ckaleks/damn-vulnerable-drone-ground-control-station:latest
     container_name: ground-control-station
     privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_NO_MITSHM=1
+      - XDG_RUNTIME_DIR=/tmp
+      - XAUTHORITY=/home/gcs/.Xauthority
+      - HEADLESS=0
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ${HOME}/.Xauthority:/home/gcs/.Xauthority:ro
+      - /etc/machine-id:/etc/machine-id:ro
+    devices:
+      - /dev/dri:/dev/dri
     build:
       context: .
       dockerfile: ./ground-control-station/Dockerfile
     depends_on:
       - companion-computer
-    volumes:
-      - shared-builds:/opt/shared-builds  # Shared volume for supply chain compromise
     networks:
       simulator:
         ipv4_address: 10.13.0.4
 
   simulator:
+    image: n1ckaleks/damn-vulnerable-drone-simulator:latest
     container_name: simulator
     privileged: true
     ulimits:
@@ -92,10 +84,6 @@ services:
 volumes:
   serial-uart-socket:
   ardupilot:
-  # DVD CTF volumes
-  developer-home:
-  shared-builds:
-  drone-logs:
 
 networks:
   simulator:

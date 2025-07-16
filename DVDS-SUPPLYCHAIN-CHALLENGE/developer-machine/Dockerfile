@@ -1,7 +1,9 @@
 # DEVELOPER MACHINE - DAMN VULNERABLE DRONE EDITION
-# WARNING: This container contains intentional vulnerabilities for educational purposes
-FROM ubuntu:22.04
-ENV DEBIAN_FRONTEND=noninteractive
+
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PIP_BREAK_SYSTEM_PACKAGES=1
 
 # Copy restart service script from context
 COPY developer-machine/restart-gcs-service.sh /bin/restart-gcs-service.sh
