@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.3.25)  16 JUL 2025 22:33
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.3.25)  16 JUL 2025 23:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1067,7 +1067,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 283--284
 
  []
 
-<docker-install.png, id=93, 1113.15875pt x 653.94313pt>
+<docker-install.png, id=95, 1113.15875pt x 653.94313pt>
 File: docker-install.png Graphic file (type png)
 <use docker-install.png>
 Package pdftex.def Info: docker-install.png  used on input line 290.
@@ -1078,7 +1078,7 @@ File: lstlang1.sty 2024/09/23 1.10c listings language file
 (/usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2024/09/23 1.10c listings language file
 )
-<hello-world.png, id=95, 563.60562pt x 325.71687pt>
+<hello-world.png, id=97, 563.60562pt x 325.71687pt>
 File: hello-world.png Graphic file (type png)
 <use hello-world.png>
 Package pdftex.def Info: hello-world.png  used on input line 302.
@@ -1090,7 +1090,7 @@ Package pdftex.def Info: hello-world.png  used on input line 302.
 [7]
 
 [8]
-<developer-cmd.png, id=126, 384.43625pt x 30.1125pt>
+<developer-cmd.png, id=128, 384.43625pt x 30.1125pt>
 File: developer-cmd.png Graphic file (type png)
 <use developer-cmd.png>
 Package pdftex.def Info: developer-cmd.png  used on input line 432.
@@ -1100,7 +1100,7 @@ Package pdftex.def Info: developer-cmd.png  used on input line 432.
 [9 <./developer-cmd.png>]
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
 (Font)              Font shape `T1/cmtt/m/n' tried instead on input line 451.
-<damn-vulnerable-drone.png, id=154, 1126.70938pt x 712.16063pt>
+<damn-vulnerable-drone.png, id=156, 1126.70938pt x 712.16063pt>
 File: damn-vulnerable-drone.png Graphic file (type png)
 <use damn-vulnerable-drone.png>
 Package pdftex.def Info: damn-vulnerable-drone.png  used on input line 459.
@@ -1138,7 +1138,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 499--501
 [11]
 
 [12]
-<sudo.png, id=187, 447.17062pt x 102.88437pt>
+<sudo.png, id=189, 447.17062pt x 102.88437pt>
 File: sudo.png Graphic file (type png)
 <use sudo.png>
 Package pdftex.def Info: sudo.png  used on input line 564.
@@ -1146,7 +1146,7 @@ Package pdftex.def Info: sudo.png  used on input line 564.
 
 
 [13 <./sudo.png>]
-<ssh-keys.png, id=202, 498.86375pt x 90.3375pt>
+<ssh-keys.png, id=204, 498.86375pt x 90.3375pt>
 File: ssh-keys.png Graphic file (type png)
 <use ssh-keys.png>
 Package pdftex.def Info: ssh-keys.png  used on input line 597.
@@ -1154,7 +1154,7 @@ Package pdftex.def Info: ssh-keys.png  used on input line 597.
 
 
 [14 <./ssh-keys.png>]
-<cron-output.png, id=213, 752.0597pt x 848.4197pt>
+<cron-output.png, id=215, 752.0597pt x 848.4197pt>
 File: cron-output.png Graphic file (type png)
 <use cron-output.png>
 Package pdftex.def Info: cron-output.png  used on input line 660.
@@ -1174,7 +1174,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 665--669
 
 
 [16 <./cron-output.png>]
-<script-permissions.png, id=235, 657.95813pt x 83.5622pt>
+<script-permissions.png, id=237, 657.95813pt x 83.5622pt>
 File: script-permissions.png Graphic file (type png)
 <use script-permissions.png>
 Package pdftex.def Info: script-permissions.png  used on input line 684.
@@ -1202,7 +1202,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 744--748
 
  []
 
-<directory-out.png, id=249, 791.20593pt x 176.91093pt>
+<directory-out.png, id=251, 791.20593pt x 176.91093pt>
 File: directory-out.png Graphic file (type png)
 <use directory-out.png>
 Package pdftex.def Info: directory-out.png  used on input line 751.
@@ -1258,7 +1258,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 819--833
 [21]
 
 [22]
-<restart.png, id=388, 528.17325pt x 25.2945pt>
+<restart.png, id=390, 528.17325pt x 25.2945pt>
 File: restart.png Graphic file (type png)
 <use restart.png>
 Package pdftex.def Info: restart.png  used on input line 959.
@@ -1268,7 +1268,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 963--968
 
  []
 
-<crash.png, id=389, 760.0395pt x 558.28575pt>
+<crash.png, id=391, 760.0395pt x 558.28575pt>
 File: crash.png Graphic file (type png)
 <use crash.png>
 Package pdftex.def Info: crash.png  used on input line 971.
@@ -1281,8 +1281,25 @@ Underfull \hbox (badness 10000) in paragraph at lines 975--980
 
 
 [23 <./restart.png> <./crash.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 985--992
 
-[24] (./ctf-walkthrough.aux)
+ []
+
+<docker-logs.png, id=400, 623.83063pt x 163.10938pt>
+File: docker-logs.png Graphic file (type png)
+<use docker-logs.png>
+Package pdftex.def Info: docker-logs.png  used on input line 1004.
+(pdftex.def)             Requested size: 455.24411pt x 119.03151pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1010--1016
+
+ []
+
+
+
+[24 <./docker-logs.png>]
+
+[25] (./ctf-walkthrough.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -1291,10 +1308,10 @@ Package rerunfilecheck Info: File `ctf-walkthrough.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 29860 strings out of 475171
- 575511 string characters out of 5767095
+ 29876 strings out of 475171
+ 575760 string characters out of 5767095
  1520344 words of memory out of 5000000
- 52128 multiletter control sequences out of 15000+600000
+ 52137 multiletter control sequences out of 15000+600000
  574362 words of font info for 70 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  108i,11n,107p,10957b,1309s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1307,10 +1324,10 @@ re/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/share/texmf-dist/f
 onts/type1/public/cm-super/sfsx1728.pfb></usr/share/texmf-dist/fonts/type1/publ
 ic/cm-super/sfti1095.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sft
 t1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on ctf-walkthrough.pdf (24 pages, 1623775 bytes).
+Output written on ctf-walkthrough.pdf (25 pages, 1689589 bytes).
 PDF statistics:
- 591 PDF objects out of 1000 (max. 8388607)
- 514 compressed objects within 6 object streams
- 252 named destinations out of 1000 (max. 500000)
- 284 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 611 PDF objects out of 1000 (max. 8388607)
+ 531 compressed objects within 6 object streams
+ 259 named destinations out of 1000 (max. 500000)
+ 297 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -980,6 +980,47 @@
 
     \newpage
 
+    \section{Switching Perspectives}
+
+    \noindent
+    \textbf{Blue Team Perspective} \\
+    \\
+    \noindent
+    As a blue team member, it migth be interesting to know how to detect such attacks.
+    You can trace the attack by looking at the logs of the build-update script or checking the logs of the docker container.
+    This can be done by looking at the logs of the docker container:
+    \begin{lstlisting}[language=bash, caption=Checking the logs of the ground control station container]
+    # Check the logs of the ground control station container
+    docker logs ground-control-station
+    \end{lstlisting}
+
+    \vspace{1em}
+
+    \noindent
+    This will show you the logs of the container, where we notice the following:
+
+    \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=1.0\textwidth]{docker-logs.png}
+        \caption{Output of the docker logs command}
+    \end{figure}
+
+    \vspace{1em}
+
+    \noindent
+    This shows us that the fourth stage of the flight was never finished and the drone crashed during the "return to home" stage. \\
+    \\
+    \noindent
+    If we want to look at how to prevent such attacks, there are several measures we can take:
+    \begin{itemize}
+        \item Implementing static code analysis and vulnerability scanning in the build pipeline to detect malicious code
+        \item Using code signing to ensure that only trusted code is executed
+        \item Implementing access controls to restrict who can modify the build pipeline
+        \item Monitoring the logs of the build pipeline and the containers for suspicious activity
+    \end{itemize}
+    
+    \newpage
+
     \section{Closing remarks}
 
     \noindent
