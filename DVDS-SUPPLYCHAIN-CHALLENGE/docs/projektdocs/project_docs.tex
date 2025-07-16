@@ -137,15 +137,15 @@
     \cleardoublepage
 
     \section{Einleitung und Projektübersicht}
-    
-    Dieses Dokument beschreibt die Entwicklung und technische Umsetzung des „Damn Vulnerable Drone Supply Chain Compromise" CTF-Projekts. Das Projekt wurde im Rahmen des Studiengangs Cyber-Security an der Technischen Hochschule Deggendorf entwickelt und dient als praktische Lernumgebung für Supply-Chain-Angriffe im Kontext von Drohnensystemen.
+
+    Dieses Dokument beschreibt die Entwicklung und technische Umsetzung des „Damn Vulnerable Drone Supply Chain Compromise" Projekts im Rahmen des Moduls "Wahlpflichtfach Projekt". Dabei wird auf dem originalen Projekt "Damn Vulnerable Drone" von Nicholas Aleks aufgebaut.
 
     \subsection{Zielsetzung}
     
     Das Hauptziel dieses Projekts bestand darin, eine realistische Simulationsumgebung zu schaffen, in der Studierende praxisnah die Konzepte und Techniken von Supply-Chain-Angriffen erlernen und anwenden können. Dabei wurden folgende spezifische Lernziele definiert:
     
     \begin{itemize}
-        \item Verständnis der grundlegenden Architektur von Drohnensystemen
+        \item Verständnis der Grundlagen von Supply-Chain-Angriffen in der Softwareentwicklung
         \item Praktische Anwendung von Reconnaissance-Techniken in Linux-Umgebungen
         \item Identifikation und Ausnutzung von Schwachstellen in Build-Prozessen
         \item Implementierung von Supply-Chain-Angriffen zur Kompromittierung von Drohnensoftware
@@ -153,8 +153,8 @@
     \end{itemize}
     
     \subsection{Projektkontext}
-    
-    Das Projekt basiert auf dem Open-Source-Projekt „Damn Vulnerable Drone" von Nicholas Aleks, das eine virtuelle Drohnenumgebung für Sicherheitstests bietet. Für unsere Zwecke haben wir dieses Projekt erweitert und ein spezifisches CTF-Szenario entwickelt, das auf Supply-Chain-Angriffe fokussiert ist. Die Herausforderung besteht darin, durch Ausnutzung einer Sicherheitslücke im Entwicklungsprozess einer simulierten Drohnensoftwarefirma, eine Drohne zum Absturz zu bringen.
+
+    Wie bereits angesprochen basiert unser Projekt auf dem Open-Source-Projekt „Damn Vulnerable Drone" von Nicholas Aleks, das eine virtuelle Drohnenumgebung für Sicherheitstests bietet. Für unsere Zwecke haben wir dieses Projekt erweitert und ein spezifisches CTF-Szenario entwickelt, das auf Supply-Chain-Angriffe fokussiert ist. Die Herausforderung besteht darin, durch Ausnutzung einer Sicherheitslücke im Entwicklungsprozess einer simulierten Drohnensoftwarefirma, eine Drohne zum Absturz zu bringen.
 
     \section{Technische Architektur}
     
@@ -162,38 +162,16 @@
     
     Die Simulationsumgebung wurde vollständig mit Docker-Containern realisiert, um eine konsistente und isolierte Lernumgebung zu gewährleisten. Die Hauptkomponenten des Systems sind:
     
-    \begin{figure}[h]
-    \centering
-    \begin{tikzpicture}[node distance=2.5cm, every node/.style={rectangle, rounded corners, draw, align=center, minimum width=4cm, minimum height=1.5cm}]
-        % Container nodes
-        \node[fill=gray!15] (dev) {Entwickler-Maschine\\(Einstiegspunkt)};
-        \node[fill=blue!15, below=of dev] (gcs) {Ground Control Station\\(Steuerungszentrale)};
-        \node[fill=green!15, right=of gcs] (companion) {Companion Computer\\(Bordcomputer)};
-        \node[fill=red!15, below=of gcs] (flight) {Flight Controller\\(Flugsteuerung)};
-        \node[fill=yellow!15, right=of flight] (simulator) {Simulator\\(Gazebo)};
-        
-        % Connections
-        \draw[->, thick] (dev) -- node[right] {Build-Pipeline} (gcs);
-        \draw[<->, thick] (gcs) -- node[above] {MAVLink} (companion);
-        \draw[<->, thick] (gcs) -- node[left] {Telemetrie} (flight);
-        \draw[<->, thick] (companion) -- node[right] {Serial} (flight);
-        \draw[<->, thick] (flight) -- node[above] {Physik-Simulation} (simulator);
-    \end{tikzpicture}
-    \caption{Architektur der Simulationsumgebung}
-    \end{figure}
-    
-    \subsection{Containerdetails}
-    
     \begin{itemize}
-        \item \textbf{Entwickler-Maschine:} Dient als Einstiegspunkt für die Teilnehmer und simuliert die Arbeitsumgebung eines Entwicklers bei einer Drohnensoftwarefirma. Enthält Entwicklungswerkzeuge und automatisierte Build-Skripte.
+        \item \textbf{Entwickler-Maschine:} Simuliert die Arbeitsumgebung eines Entwicklers bei einer Drohnensoftwarefirma.
         
-        \item \textbf{Ground Control Station (GCS):} Stellt die Bodenkontrollstation dar, von der aus die Drohne gesteuert wird. Implementiert das zu kompromittierende "Return-to-Land"-Modul.
+        \item \textbf{Ground Control Station (GCS):} Steuert die Drohne und enthält das zu kompromittierende "Return-to-Land"-Modul.
         
-        \item \textbf{Companion Computer:} Simuliert den Bordcomputer der Drohne, der für fortgeschrittene Funktionen wie Bildverarbeitung, Navigation und Kommunikation zuständig ist.
+        \item \textbf{Companion Computer:} Simuliert den Bordcomputer der Drohne für fortgeschrittene Funktionen.
         
-        \item \textbf{Flight Controller:} Repräsentiert die eigentliche Flugsteuerung der Drohne, basierend auf ArduPilot-Firmware, und verarbeitet die Steuerbefehle.
+        \item \textbf{Flight Controller:} Repräsentiert die eigentliche Flugsteuerung der Drohne, basierend auf ArduPilot-Firmware.
         
-        \item \textbf{Simulator:} Gazebo-basierte 3D-Umgebung, die die physikalischen Eigenschaften der Drohne und ihre Interaktion mit der Umgebung simuliert.
+        \item \textbf{Simulator:} Gazebo-basierte 3D-Umgebung zur Simulation der Drohnenphysik und -interaktion.
     \end{itemize}
     
     \subsection{Netzwerkstruktur}
@@ -205,30 +183,14 @@
         
         \item \textbf{Simuliertes WLAN (192.168.13.0/24):} Simuliert die drahtlose Verbindung zwischen der Ground Control Station und dem Companion Computer. Dieses Netzwerk wird virtuell über Container-Links implementiert.
     \end{itemize}
-    
-    \begin{figure}[h]
-    \centering
-    \begin{tikzpicture}[scale=0.8, node distance=2cm]
-        % Draw networks
-        \draw[rounded corners, fill=blue!10] (0,0) rectangle (10,5) node[pos=.5] {Infrastrukturnetzwerk (10.13.0.0/24)};
-        \draw[rounded corners, fill=green!10] (1,1) rectangle (9,4) node[pos=.5] {Simuliertes WLAN (192.168.13.0/24)};
-        
-        % Draw network components
-        \node[draw, fill=white, rounded corners] (dev) at (2,3.5) {Entwickler (10.13.0.2)};
-        \node[draw, fill=white, rounded corners] (gcs) at (3,2.5) {GCS (10.13.0.4/192.168.13.14)};
-        \node[draw, fill=white, rounded corners] (comp) at (7,2.5) {Companion (10.13.0.3/192.168.13.1)};
-        \node[draw, fill=white, rounded corners] (flight) at (5,1.5) {Flight Controller (10.13.0.2)};
-        \node[draw, fill=white, rounded corners] (sim) at (8,1.5) {Simulator (10.13.0.5)};
-    \end{tikzpicture}
-    \caption{Netzwerkstruktur der Simulationsumgebung}
-    \end{figure}
 
     \section{Entwicklungsprozess}
     
     \subsection{Konzeption und Planung}
     
-    Die Entwicklung des CTF-Szenarios begann mit einer detaillierten Konzeptphase. Zuerst analysierten wir die ursprüngliche Damn Vulnerable Drone-Plattform, um ein Verständnis für ihre Funktionsweise und Möglichkeiten zu entwickeln. Anschließend definierten wir das Szenario eines Supply-Chain-Angriffs, bei dem ein Angreifer Zugriff auf die Entwicklungsumgebung einer Drohnensoftwarefirma erhält und versucht, schädlichen Code in den Build-Prozess einzuschleusen.
-    
+    Die Entwicklung des CTF-Szenarios begann mit einer detaillierten Konzeptphase. Zuerst analysierten wir die ursprüngliche Damn Vulnerable Drone-Plattform, um ein Verständnis für ihre Funktionsweise und Möglichkeiten zu entwickeln. Anschließend definierten wir das Szenario eines Supply-Chain-Angriffs, bei dem ein Angreifer Zugriff auf die Entwicklungsumgebung einer Drohnensoftwarefirma erhält und versucht, schädlichen Code in den Build-Prozess einzuschleusen. \\
+    \\
+    \noindent
     Wir legten folgende Designprinzipien fest:
     
     \begin{itemize}
@@ -241,6 +203,8 @@
         \item \textbf{Skalierbarkeit:} Die Umgebung sollte auf verschiedenen Systemen lauffähig sein, mit minimalen Anforderungen.
     \end{itemize}
     
+    \newpage
+
     \subsection{Technische Implementierung}
     
     Die Implementierung erfolgte in mehreren Phasen:
@@ -278,7 +242,7 @@
         
         \item \textbf{Impact:} Auslösen des "Return-to-Land"-Befehls, der nun durch den injizierten Code die Drohne zum Absturz bringt.
     \end{enumerate}
-    
+    \noindent
     Diese Schritte entsprechen mehreren Taktiken des MITRE ATT\&CK-Frameworks, darunter Initial Access, Discovery, Persistence, Privilege Escalation, Defense Evasion und Impact.
 
     \section{Arbeitsaufteilung}
@@ -287,24 +251,24 @@
     
     \begin{longtable}{|p{3cm}|p{5cm}|p{6cm}|}
     \hline
-    \textbf{Teammitglied} & \textbf{Hauptverantwortlichkeiten} & \textbf{Spezifische Aufgaben} \\
+    \textbf{Teammitglied} & \textbf{Hauptaufgaben} & \textbf{Spezifische Aufgaben} \\
     \hline
     \endhead
     
     Christof Renner & Technische Architektur \& Docker-Integration & 
     \begin{itemize}
       \item Entwicklung der Container-Architektur
-      \item Konfiguration der Netzwerkstruktur
-      \item Integration der Build-Pipeline
-      \item Implementation der Schwachstellen
+      \item Konfiguration der verschiedenen Docker-Container
+      \item Ausarbeitung des Pipeline Compromise
+      \item Ausarbeitung des Walkthroughs
     \end{itemize} \\
     \hline
-    
-    Manuel Friedl & Drohnensimulation \& Web-Interface & 
+
+    Manuel Friedl & Dokumentation \& Start-Skript & 
     \begin{itemize}
-      \item Konfiguration von ArduPilot SITL
-      \item Integration von Gazebo
-      \item Entwicklung des MAVLink-Kommunikationssystems
+      \item Ausarbeitung des Walkthroughs
+      \item Konzeptionierung des Szenarios
+      \item Ausarbeitung der start.sh Skriptlogik
       \item Erstellung der Simulationsszenarien
     \end{itemize} \\
     \hline
@@ -314,37 +278,26 @@
       \item Erstellung der technischen Dokumentation
       \item Entwicklung des Walkthroughs
       \item Qualitätssicherung und Testing
-      \item Erstellung von Lernmaterialien
+      \item Konzeptionierung des Szenarios
     \end{itemize} \\
     \hline
     \end{longtable}
-    
-    Die Arbeitsverteilung basierte auf den individuellen Stärken und Interessen der Teammitglieder, wobei regelmäßige Abstimmungen und gemeinsame Review-Sessions sicherstellten, dass alle Komponenten nahtlos zusammenarbeiten. Die Entwicklung erfolgte in einem agilen Prozess mit wöchentlichen Sprints und kontinuierlicher Integration der Teilkomponenten.
+
+    Dabei wurde in regelmäßige Abstimmungen und gemeinsame Review-Sessions sichergestellt, dass alle Komponenten nahtlos zusammenarbeiten.
 
     \section{Technische Herausforderungen und Lösungen}
     
     \subsection{Blockers: Schwierigkeiten mit virtuellen Maschinen}
     
     Während der Entwicklung des Projekts stießen wir auf mehrere signifikante technische Herausforderungen, insbesondere im Zusammenhang mit der Ausführung in virtuellen Maschinen:
+    Das ursprüngliche Projekt war dabei nur für eine Kali-Linux VM konzeptioniert, dies führte ursprünglich zu Problemen, da für den Start der ersten Phase der Drohnensimulation eine GPU erforderlich war, die in der VM nicht verfügbar war. Aufgrund verschiedener Treiberprobleme gestaltete sich ein GPU-Passtrhough als schwierig.
+    Nach weiterem Testing wurde jedoch klar, dass die Simulation ebenso auf Barebone-Systemen lauffähig war, was die Abhängigkeit von einer GPU in der VM überflüssig machte.
     
-    \begin{warningbox}
-    \textbf{Hauptproblem: Grafikbeschleunigung in VMs}
-    
-    Eine der größten Herausforderungen war die fehlende Grafikbeschleunigung in virtuellen Maschinen. Der Gazebo-Simulator erfordert OpenGL-Unterstützung für die 3D-Visualisierung der Drohne und ihrer Umgebung. In virtuellen Maschinen ohne durchgereichte GPU war die Performance extrem eingeschränkt oder die Simulation funktionierte gar nicht.
-    \end{warningbox}
-    
-    \subsubsection{Spezifische VM-bezogene Probleme}
-    
-    \begin{itemize}
-        \item \textbf{Grafikprobleme:} Die 3D-Darstellung in Gazebo benötigt OpenGL-Unterstützung, die in Standard-VMs oft nicht verfügbar ist.
-        
-        \item \textbf{Performance-Engpässe:} Die Simulation der Drohnenphysik und der 3D-Umgebung ist rechenintensiv und führte in VMs zu erheblichen Leistungseinbußen.
-        
-        \item \textbf{Netzwerk-Isolation:} Die komplexe Netzwerkstruktur mit Docker-Containern und virtuellen Netzwerken führte in verschachtelten Virtualisierungsumgebungen zu Konnektivitätsproblemen.
-        
-        \item \textbf{Instabilität:} In virtuellen Umgebungen kam es häufiger zu Abstürzen der Simulation, insbesondere bei längerer Laufzeit.
-    \end{itemize}
-    
+    \subsection{Blockers: Performance bei Start der Simulation}
+
+    Ein weiteres Problem trat beim Start der Simulation auf, da mehrere Container gleichzeitig gestartet wurden, was zu einer hohen Systemlast führte.
+    Dieses Problem konnte nur teilweise gelöst werden. Da bei der 
+
     \subsection{Lösungsansätze}
     
     Um diese Herausforderungen zu bewältigen, haben wir verschiedene Lösungsansätze entwickelt:
@@ -397,60 +350,60 @@
         
         \item \textbf{Caching-Strategien:} Implementierung von Caching-Mechanismen für häufig verwendete Daten und Simulationsergebnisse.
     \end{itemize}
-    
-    \begin{table}[h]
-    \centering
-    \begin{tabular}{|l|l|l|}
-    \hline
-    \textbf{Performance-Maßnahme} & \textbf{Vor Optimierung} & \textbf{Nach Optimierung} \\
-    \hline
-    CPU-Auslastung & 95-100\% & 60-75\% \\
-    \hline
-    RAM-Verbrauch & 8+ GB & 4-6 GB \\
-    \hline
-    Simulationsgeschwindigkeit & 0.5x Echtzeit & 1.0x Echtzeit \\
-    \hline
-    Container-Startzeit & 90+ Sekunden & 45-60 Sekunden \\
-    \hline
-    \end{tabular}
-    \caption{Performance-Verbesserungen durch Optimierungsmaßnahmen}
-    \end{table}
+
+    \newpage
 
     \section{Testergebnisse und Evaluation}
-    
+
     \subsection{Testmethodik}
     
-    Um die Funktionalität und Benutzererfahrung der CTF-Challenge zu evaluieren, führten wir verschiedene Tests durch:
+    Um die grundlegende Funktionalität der CTF-Challenge zu validieren, wurden interne Reviews durchgeführt:
     
     \begin{itemize}
-        \item \textbf{Funktionalitätstests:} Überprüfung aller Komponenten und deren Zusammenspiel.
+        \item \textbf{Explorative Tests:} Manuelle Durchführung des vorgesehenen Angriffspfades zur Verifizierung der Funktionalität.
         
-        \item \textbf{Usability-Tests:} Bewertung der Benutzerfreundlichkeit und Zugänglichkeit der Challenge.
+        \item \textbf{Ad-hoc Usability-Überprüfung:} Informelle Bewertung der Benutzerführung durch Teammitglieder.
         
-        \item \textbf{Performance-Tests:} Messung der Systemleistung unter verschiedenen Bedingungen.
+        \item \textbf{Ressourcenverbrauch-Beobachtung:} Allgemeine Überwachung der Systemauslastung während des Betriebs.
         
-        \item \textbf{Kompatibilitätstests:} Überprüfung der Lauffähigkeit auf verschiedenen Host-Systemen.
+        \item \textbf{Betriebssystem-Kompatibilität:} Grundlegende Überprüfung auf Ubuntu- und Windows-Systemen mit Docker-Installation.
+    \end{itemize}
+    \noindent
+    Die Testphase wurde dabei bewusst iterativ gestaltet, um schnell auf beobachtete Probleme reagieren zu können, ohne einen formalisierten Testplan zu implementieren.
+    
+    \subsection{Fehlerbehandlung in Docker-Containern}
+    
+    Zur Verbesserung der Stabilität wurden verschiedene Fehlerbehandlungsmechanismen implementiert:
+    
+    \begin{itemize}
+        \item \textbf{Container-Gesundheitsüberwachung:} Implementierung von Docker-Healthchecks zur automatischen Erkennung von Fehlzuständen.
+        
+        \item \textbf{Automatische Neustarts:} Konfiguration der Container mit Restart-Policies (restart: unless-stopped), um bei Abstürzen selbstständig neu zu starten.
+        
+        \item \textbf{Graceful Degradation:} Implementierung von Fallback-Mechanismen, die bei Ausfall nicht-kritischer Komponenten einen eingeschränkten Betrieb ermöglichen.
+        
+        \item \textbf{Verbesserte Startskripte:} Ergänzung der Docker-Compose-Konfiguration um Abhängigkeitsbeziehungen und Wartezeiten, um Race-Conditions beim Systemstart zu vermeiden.
     \end{itemize}
     
     \subsection{Feedback und Iterationen}
     
-    Auf Basis des Teilnehmerfeedbacks wurden mehrere Verbesserungen vorgenommen:
+    Basierend auf internem Feedback wurden mehrere Verbesserungen vorgenommen:
     
     \begin{itemize}
-        \item \textbf{Verbesserte Dokumentation:} Ergänzung der Anleitungen mit mehr Hintergrundinformationen und Konzepterklärungen.
+        \item \textbf{Verbesserte Dokumentation:} Ergänzung der Anleitungen mit spezifischeren Erläuterungen zu den Supply-Chain-Angriffsvektoren.
         
-        \item \textbf{Performance-Optimierungen:} Weitere Maßnahmen zur Reduzierung des Ressourcenverbrauchs für bessere Kompatibilität.
-        
-        \item \textbf{Alternative Lösungswege:} Implementierung mehrerer möglicher Angriffspfade, um unterschiedliche Lernerfahrungen zu ermöglichen.
-        
-        \item \textbf{Checkpoints:} Einführung von Zwischenzielen, um den Fortschritt besser verfolgen zu können.
+        \item \textbf{Performance-Optimierungen:} Reduzierung der Container-Baseline-Images und Entfernung nicht benötigter Dienste zur Verringerung des Ressourcenverbrauchs.
+          
+        \item \textbf{Resiliente Netzwerkkonfiguration:} Verbesserte Netzwerkeinstellungen, um mit temporären Verbindungsunterbrechungen zwischen Containern besser umgehen zu können.
     \end{itemize}
+
+    \newpage
 
     \section{Fazit und Ausblick}
     
     \subsection{Projektergebnisse}
     
-    Das Damn Vulnerable Drone Supply Chain Compromise CTF-Projekt wurde erfolgreich entwickelt und implementiert. Es bietet eine realistische und lehrreiche Umgebung, in der Studierende praktische Erfahrungen mit Supply-Chain-Angriffen sammeln können. Die wichtigsten Errungenschaften des Projekts sind:
+    Das "Damn Vulnerable Drone Supply Chain Compromise"-Projekt wurde erfolgreich entwickelt und implementiert. Es bietet eine realistische und lehrreiche Umgebung, in der Studierende praktische Erfahrungen mit Supply-Chain-Angriffen sammeln können. Die wichtigsten Errungenschaften des Projekts sind:
     
     \begin{itemize}
         \item Eine vollständig funktionsfähige Drohnensimulationsumgebung, die realistische Angriffszenarien ermöglicht.
@@ -472,16 +425,11 @@
         \item Containerisierung bietet erhebliche Vorteile für die Erstellung konsistenter und portabler Lernumgebungen.
         
         \item Die Leistungsoptimierung ist ein kritischer Faktor, insbesondere für rechenintensive Simulationen.
-        
-        \item Klare Dokumentation und Anleitungen sind ebenso wichtig wie die technische Implementierung selbst.
     \end{itemize}
     
     \subsection{Abschließende Bemerkungen}
     
     Das Damn Vulnerable Drone Supply Chain Compromise Projekt demonstriert die Wichtigkeit praktischer, realitätsnaher Übungen in der Cybersecurity-Ausbildung. Durch die Kombination von Drohnentechnologie, containerisierter Virtualisierung und realistischen Angriffsszenarien bietet es eine wertvolle Lernumgebung für angehende Sicherheitsexperten. Die gewonnenen Erkenntnisse und entwickelten Techniken können auch auf andere Bereiche der IT-Sicherheitsausbildung übertragen werden.
-    
-    \begin{quotation}
-    „Die praktische Anwendung theoretischer Konzepte ist der Schlüssel zum tieferen Verständnis der Cybersecurity. Unser Projekt bietet genau diese Brücke zwischen Theorie und Praxis."
-    \end{quotation}
+
 
 \end{document}
