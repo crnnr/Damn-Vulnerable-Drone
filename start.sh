@@ -1,15 +1,64 @@
 #!/bin/bash
+set -euo pipefail  # Exit on error, undefined vars, and pipe failures
+
 echo "🚁 Starting Damn Vulnerable Drone CTF Environment..."
+
+# Check if we're in the right directory
+if [ ! -d "DVDS-SUPPLYCHAIN-CHALLENGE" ]; then
+    echo "❌ Error: DVDS-SUPPLYCHAIN-CHALLENGE directory not found!"
+    echo "Please run this script from the root of the repository."
+    exit 1
+fi
+
 cd DVDS-SUPPLYCHAIN-CHALLENGE
 
-echo "🧹 Cleaning up any existing containers..."
-docker-compose down 2>/dev/null || true
-docker container rm -f simulator qgc-container flight-controller companion-computer ground-control-station dvd-developer-machine 2>/dev/null || true
-docker network rm damn-vulnerable-drone_default 2>/dev/null || true
-docker network rm simulator 2>/dev/null || true
+# Function to check if Docker is running
+check_docker() {
+    if ! docker info >/dev/null 2>&1; then
+        echo "❌ Error: Docker is not running or not accessible!"
+        echo "Please start Docker and try again."
+        exit 1
+    fi
+    echo "✅ Docker is running"
+}
+
+# Function to cleanup existing containers
+cleanup_containers() {
+    echo "🧹 Cleaning up any existing containers..."
+    local containers=("simulator" "qgc-container" "flight-controller" "companion-computer" "ground-control-station" "dvd-developer-machine")
+    
+    # Stop docker-compose services
+    docker-compose down 2>/dev/null || true
+    
+    # Remove specific containers
+    for container in "${containers[@]}"; do
+        if docker ps -a --format "table {{.Names}}" | grep -q "^${container}$"; then
+            echo "  🗑️  Removing container: $container"
+            docker container rm -f "$container" 2>/dev/null || true
+        fi
+    done
+    
+    # Remove networks
+    local networks=("damn-vulnerable-drone_default" "simulator")
+    for network in "${networks[@]}"; do
+        if docker network ls --format "table {{.Name}}" | grep -q "^${network}$"; then
+            echo "  🗑️  Removing network: $network"
+            docker network rm "$network" 2>/dev/null || true
+        fi
+    done
+}
+
+check_docker
+cleanup_containers
 
 echo "📦 Building and starting containers (forcing rebuild)..."
-docker-compose up -d --build --remove-orphans
+if ! docker-compose up -d --build --remove-orphans; then
+    echo "❌ Error: Failed to start containers with docker-compose"
+    echo "Please check the docker-compose.yaml file and try again."
+    exit 1
+fi
+
+echo "✅ Main containers started successfully"
 
 echo "🔧 Building and starting developer machine separately..."
 # Build developer machine image from the correct context
