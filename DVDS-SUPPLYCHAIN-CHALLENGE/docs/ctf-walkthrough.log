@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.3.25)  16 JUL 2025 21:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2026/dev/Arch Linux) (preloaded format=pdflatex 2025.3.25)  16 JUL 2025 22:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1138,89 +1138,89 @@ Underfull \hbox (badness 10000) in paragraph at lines 499--501
 [11]
 
 [12]
-<sudo.png, id=190, 447.17062pt x 102.88437pt>
+<sudo.png, id=187, 447.17062pt x 102.88437pt>
 File: sudo.png Graphic file (type png)
 <use sudo.png>
-Package pdftex.def Info: sudo.png  used on input line 575.
+Package pdftex.def Info: sudo.png  used on input line 564.
 (pdftex.def)             Requested size: 455.24411pt x 104.74442pt.
 
 
 [13 <./sudo.png>]
-<ssh-keys.png, id=205, 498.86375pt x 90.3375pt>
+<ssh-keys.png, id=202, 498.86375pt x 90.3375pt>
 File: ssh-keys.png Graphic file (type png)
 <use ssh-keys.png>
-Package pdftex.def Info: ssh-keys.png  used on input line 608.
+Package pdftex.def Info: ssh-keys.png  used on input line 597.
 (pdftex.def)             Requested size: 455.24411pt x 82.44157pt.
 
 
 [14 <./ssh-keys.png>]
-<cron-output.png, id=216, 752.0597pt x 848.4197pt>
+<cron-output.png, id=213, 752.0597pt x 848.4197pt>
 File: cron-output.png Graphic file (type png)
 <use cron-output.png>
-Package pdftex.def Info: cron-output.png  used on input line 671.
+Package pdftex.def Info: cron-output.png  used on input line 660.
 (pdftex.def)             Requested size: 282.46924pt x 318.66948pt.
 
 
 [15]
-Underfull \hbox (badness 10000) in paragraph at lines 676--680
+Underfull \hbox (badness 10000) in paragraph at lines 665--669
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 676--680
+Underfull \hbox (badness 10000) in paragraph at lines 665--669
 
  []
 
 
 
 [16 <./cron-output.png>]
-<script-permissions.png, id=238, 657.95813pt x 83.5622pt>
+<script-permissions.png, id=235, 657.95813pt x 83.5622pt>
 File: script-permissions.png Graphic file (type png)
 <use script-permissions.png>
-Package pdftex.def Info: script-permissions.png  used on input line 695.
+Package pdftex.def Info: script-permissions.png  used on input line 684.
 (pdftex.def)             Requested size: 455.24411pt x 57.81862pt.
 
-Overfull \hbox (8.20221pt too wide) in paragraph at lines 702--704
+Overfull \hbox (8.20221pt too wide) in paragraph at lines 691--693
 []\T1/cmr/bx/n/12 File Per-mis-sions: \T1/cmr/m/n/12 The first col-umn shows th
 e file's per-mis-sions, such as \T1/cmtt/m/n/12 -rwxr-xr-x\T1/cmr/m/n/12 .
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 717--723
+Underfull \hbox (badness 10000) in paragraph at lines 706--712
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 717--723
+Underfull \hbox (badness 10000) in paragraph at lines 706--712
 
  []
 
 
 
 [17 <./script-permissions.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 755--759
+Underfull \hbox (badness 10000) in paragraph at lines 744--748
 
  []
 
-<directory-out.png, id=252, 791.20593pt x 176.91093pt>
+<directory-out.png, id=249, 791.20593pt x 176.91093pt>
 File: directory-out.png Graphic file (type png)
 <use directory-out.png>
-Package pdftex.def Info: directory-out.png  used on input line 762.
+Package pdftex.def Info: directory-out.png  used on input line 751.
 (pdftex.def)             Requested size: 455.24411pt x 101.79047pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 767--770
+Underfull \hbox (badness 10000) in paragraph at lines 756--759
 []\T1/cmr/m/n/12 Look at the con-tent of the \T1/cmtt/m/n/12 /sourcecode \T1/cm
 r/m/n/12 di-rec-tory. Where do
  []
 
 
-Underfull \hbox (badness 8038) in paragraph at lines 767--770
+Underfull \hbox (badness 8038) in paragraph at lines 756--759
 \T1/cmr/m/n/12 we need to go if we want to mod-ify the \T1/cmtt/m/n/12 return t
 o land \T1/cmr/m/n/12 step?
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 767--770
+Underfull \hbox (badness 10000) in paragraph at lines 756--759
 
  []
 
@@ -1232,22 +1232,22 @@ File: lstlang1.sty 2024/09/23 1.10c listings language file
 )
 
 [19]
-Underfull \hbox (badness 10000) in paragraph at lines 830--844
+Underfull \hbox (badness 10000) in paragraph at lines 819--833
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 830--844
+Underfull \hbox (badness 10000) in paragraph at lines 819--833
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 830--844
+Underfull \hbox (badness 10000) in paragraph at lines 819--833
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 830--844
+Underfull \hbox (badness 10000) in paragraph at lines 819--833
 
  []
 
@@ -1258,23 +1258,23 @@ Underfull \hbox (badness 10000) in paragraph at lines 830--844
 [21]
 
 [22]
-<restart.png, id=394, 528.17325pt x 25.2945pt>
+<restart.png, id=388, 528.17325pt x 25.2945pt>
 File: restart.png Graphic file (type png)
 <use restart.png>
-Package pdftex.def Info: restart.png  used on input line 973.
+Package pdftex.def Info: restart.png  used on input line 959.
 (pdftex.def)             Requested size: 455.24411pt x 21.80223pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 977--982
+Underfull \hbox (badness 10000) in paragraph at lines 963--968
 
  []
 
-<crash.png, id=395, 760.0395pt x 558.28575pt>
+<crash.png, id=389, 760.0395pt x 558.28575pt>
 File: crash.png Graphic file (type png)
 <use crash.png>
-Package pdftex.def Info: crash.png  used on input line 985.
+Package pdftex.def Info: crash.png  used on input line 971.
 (pdftex.def)             Requested size: 455.24411pt x 334.39474pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 989--994
+Underfull \hbox (badness 10000) in paragraph at lines 975--980
 
  []
 
@@ -1291,10 +1291,10 @@ Package rerunfilecheck Info: File `ctf-walkthrough.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 29863 strings out of 475171
- 575566 string characters out of 5767095
+ 29855 strings out of 475171
+ 575462 string characters out of 5767095
  1520344 words of memory out of 5000000
- 52125 multiletter control sequences out of 15000+600000
+ 52123 multiletter control sequences out of 15000+600000
  574362 words of font info for 70 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  108i,11n,107p,10957b,1309s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -1307,10 +1307,10 @@ re/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/share/texmf-dist/f
 onts/type1/public/cm-super/sfsx1728.pfb></usr/share/texmf-dist/fonts/type1/publ
 ic/cm-super/sfti1095.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sft
 t1000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1200.pfb>
-Output written on ctf-walkthrough.pdf (24 pages, 1624591 bytes).
+Output written on ctf-walkthrough.pdf (24 pages, 1623754 bytes).
 PDF statistics:
- 599 PDF objects out of 1000 (max. 8388607)
- 522 compressed objects within 6 object streams
- 258 named destinations out of 1000 (max. 500000)
+ 591 PDF objects out of 1000 (max. 8388607)
+ 514 compressed objects within 6 object streams
+ 252 named destinations out of 1000 (max. 500000)
  284 words of extra memory for PDF output out of 10000 (max. 10000000)
 

